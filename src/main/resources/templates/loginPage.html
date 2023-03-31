@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<!-- Mirrored from thevectorlab.net/codelab/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 30 Dec 2018 19:29:15 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+
+    <!--favicon icon-->
+<!--    <link rel="icon" type="image/png" href="assets/img/favicon.png"/>-->
+
+    <title>Connexion</title>
+    <!--    fontawesome-->
+    <link href="assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!--    feuilles de styles-->
+    <link rel="stylesheet" type="text/css" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/vendor/bootstrap/css/main.css" />
+
+</head>
+
+<body class="signin-up-bg">
+
+
+<!--<div class="leftHalf" style="background-image: url('assets/img/logo.jpg');background-repeat: no-repeat;background-position: center;">-->
+<div class="leftHalf bg-dark">
+    <div class="login-promo-txt">
+        <h1 class="text-light text-center">INVENTAIRE<sup>+</sup></h1>
+    </div>
+</div>
+
+
+<div class="rightHalf">
+    <div class="position-relative">
+        <!--login form-->
+        <div class="login-form">
+            <h1 class="text-uppercase text-center mb-5">Connexion</h1>
+            <div class="text-center mb-3">
+                <i class="fa fa-user-circle fa-5x"></i>
+            </div>
+            <form name="myForm" th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Entrez le nom d'utilisateur">
+                </div>
+                <div class="form-group mb-4">
+                    <input type="password" id="password" name="password"  class="form-control" placeholder="Entrez votre mot de passe">
+                </div>
+                <div class="form-divider"></div>
+                <div th:if="${param.error}" >
+                    <h4 class="alert alert-worning text-center text-danger">Nom d'utilisateur ou mot de passe incorrect</h4>
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success text-center">
+                    <h4 class="alert alert-worning text-center text-danger">Vous avez été déconnecté(e) avec succès</h4>
+                </div>
+                <button  type="submit" class="btn btn-facebook btn-dark p-2 mb-2 btn-pill text-uppercase form-control"><i class="fa fa-arrow-circle-right"></i> Connexion</button>
+                <button  type="reset" class="btn btn-light p-2 btn-pill conv_text_color text-uppercase form-control"> Annuler</button>
+            </form>
+        </div>
+        <!--/login form-->
+    </div>
+</div>
+
+</body>
+</html>
+

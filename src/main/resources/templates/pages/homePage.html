@@ -1,0 +1,151 @@
+<!--formulaire de suivi du dossier-->
+
+<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="homeController">
+
+    <!--    menu de la page-->
+    <span layout:fragment="custum-menu">
+         <!--            menu de l'inventaire-->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" href="#"><i class="fa fa-bars"></i> Rubriques</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="inventaire">Comptage</a>
+                <a class="dropdown-item" href="ecarts">Gestion des écarts</a>
+                <a class="dropdown-item" href="stocks">Mise à jour du stock</a>
+                <a class="dropdown-item" href="historique">Historiques</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" th:href="@{/logout}"> Déconnexion</a>
+        </li>
+     </span>
+
+    <div layout:fragment="custum-permalien" >
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
+                <h4 style="letter-spacing: 1px;text-transform: uppercase">Bienvenue dans votre espace de gestion !</h4>
+                <h6 style="letter-spacing: 1px;">Veuillez choisir une application</h6>
+            </div>
+        </div>
+
+    </div>
+
+    <!--    contenu de la page-->
+    <span layout:fragment="custum-content">
+        <div class="row justify-content-around">
+
+            <!--        application de l'accreditation-->
+            <div class="col-xl-4 col-sm-4">
+                <a href="auth" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-key"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Authentification</h3>
+                                    <span class="text-muted">Gérez les utilisateurs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!--            application inventaire-->
+            <div class="col-xl-4 col-sm-4">
+                <a href="inventaire" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-list-alt"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Liste des inventaires</h3>
+                                    <span class="text-muted">Gérez les inventaires</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xl-4 col-sm-4">
+                <a href="comptage" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-sort-numeric-asc"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Comptage</h3>
+                                    <span class="text-muted">Gérez les comptages</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!--            application de tableaux de bord-->
+            <div class="col-xl-4 col-sm-4">
+                 <a href="ecarts" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-bolt"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Ecart</h3>
+                                    <span class="text-muted">Gérez des écarts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xl-4 col-sm-4">
+                 <a href="stocks" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-upload"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Mise à jour</h3>
+                                    <span class="text-muted">Effectuez les mises à jour</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xl-4 col-sm-4">
+                 <a href="historique" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-history"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Historique </h3>
+                                    <span class="text-muted">Consultez les tableaux de bord</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </span>
+
+
+</section>

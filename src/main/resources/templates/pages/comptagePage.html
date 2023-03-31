@@ -1,0 +1,218 @@
+<!--formulaire de suivi du dossier-->
+
+<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="comptageController">
+
+    <!--    menu de la page-->
+    <span layout:fragment="custum-menu">
+         <!--            menu de l'inventaire-->
+        <li class="nav-item">
+            <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
+        </li>
+
+      </span>
+
+    <div layout:fragment="custum-permalien" >
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
+                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > COMPTAGE</h4>
+                <div layout:fragment="username">
+                    <h4 class="text-center text-danger">{{user.nomPrenom}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    contenu de la page-->
+    <div layout:fragment="custum-content">
+
+        <div class="row" ng-if="showForm==true">
+            <div class="col-xl-4 col-sm-4">
+                <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
+            </div>
+        </div>
+
+        <!--        formulaire de gestion-->
+        <div class="mt-2" ng-show="showForm==false">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-primary">
+                        <div class="custom-title">Comptage</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form name="fnForm">
+                        <div class="row justify-content-around">
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <h1 class="text-dark mt-3">INV-2023-0001</h1>
+                            </div>
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label><span class="text-danger">*</span> Localisation</label>
+                                <select class="form-control form-control-sm" name="col" ng-model="chosedRayon" required="required">
+                                    <optgroup label="Sélectionnez une localisation"></optgroup>
+                                    <option ng-repeat="opt in localisationByUser" value="{{opt.code}}">
+                                        {{opt.code}} ==> {{opt.libelle}}
+                                    </option>
+                                </select>
+                                <label class="text-danger" ng-show="fnForm.col.$invalid">Champ requis</label>
+                            </div>
+                            <div class="col-sm-2 form-group-sm mb-2">
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="fnForm.col.$invalid" ng-click="toggleForm();countedList(chosedRayon);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--        tableau de gestion -->
+        <div class="row mt-xl-3" ng-if="showForm==false">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">
+                                <div class="row">
+                                    <div class="col-sm-4">Produits inventoriés</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="table-responsive">
+                            <table ng-table="comptagesTable" class="display table table-striped" cellspacing="0">
+                                <tbody ng-show="">
+                                <tr ng-repeat="i in data">
+                                    <td style="width: 2%;text-align: center;" data-title="'N'">{{$index + 1}}</td>
+                                    <td data-title="'Localisation concernée'">{{}}</td>
+                                    <td data-title="'Produit(s)'">{{}}</td>
+                                    <td data-title="'Quantité Inventoriée'"><input type="number" class="form-control" value="0" ></td>
+                                    <td data-title="'Action'" ><button class="btn btn-pill btn-dark"><i class="fa fa-edit"></i> Valider</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        tableau de comptage -->
+        <div class="row mt-xl-3" ng-if="showForm==true">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">
+                                <div class="row">
+                                    <div class="col-sm-4">Recherchez un produit</div>
+                                    <div class="col-sm-5"><input type="search" ng-model="codeNomProduit" class="form-control text-center form-control-sm mt-1" placeholder="Code Cip/ Nom du produit"></div>
+                                    <div class="col-sm-3 text-right">
+                                        <button class="btn btn-pill btn-sm btn-dark" ng-click="aCompter(chosedRayon,codeNomProduit);"><i class="fa fa-search"></i><b> Chercher</b></button>
+                                        <button class="btn btn-pill btn-sm btn-outline-dark" ng-click="reset();codeNomProduit=null"><i class="fa fa-times"></i> <b>Annuler</b></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2" ng-if="produit.id!=null">
+                        <div class="table-responsive">
+                            <table class="display table table-striped" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Code Cip</th>
+                                        <th>Libellé</th>
+                                        <th>Fournisseur</th>
+                                        <th>Date Péremption</th>
+                                        <th>Prix Vente</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{produit.codeIp}}</td>
+                                        <td>{{produit.libelle}}</td>
+                                        <td style="width: 20%"><input type="text" class="form-control form-control-sm" ng-model="produit.fournisseur"></td>
+                                        <td style="width: 12%"><input type="date" class="form-control form-control-sm" ng-model="produit.datePeremption"></td>
+                                        <td style="width: 10%"><input type="number" class="form-control form-control-sm text-center" ng-model="produit.qte"></td>
+                                        <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-click="saveProduit(chosedRayon);"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="text-center" ng-if="showForm==true">Validation des lignes comptées</h4>
+
+        <!-- lignes des produis comptés pour un rayon -->
+        <div class="row mt-xl-3" ng-if="showForm==true">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">
+                                <div class="row">
+                                    <div class="col-sm-4">Lignes à validés</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="table-responsive">
+                            <table class="display table table-striped" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Code Cip</th>
+                                    <th>Libellé</th>
+                                    <th>Fournisseur</th>
+                                    <th>Date Péremption</th>
+                                    <th>Prix Vente</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="p in countedData">
+                                    <td>{{p.codeIp}}</td>
+                                    <td>{{p.libelle}}</td>
+                                    <td style="width: 20%">{{p.fournisseur}}</td>
+                                    <td style="width: 12%">{{p.datePeremption}}</td>
+                                    <td style="width: 10%">{{p.qte}}</td>
+                                    <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-confirm-click="Voulez vous modifier la ligne << {{p.code}} {{p.libelle}} >> ?" confirmed-click="aCompter(chosedRayon,p.codeIp);"><i class="fa fa-floppy-o fa-1x"></i><b> Editer</b></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="showForm==true">
+                <div class="col-xl-4 col-sm-4">
+                    <button class="btn btn-dark btn-pill mb-2" ng-click=""><i class="fa fa-edit fa-2x"></i> Valider le comptage</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</section>

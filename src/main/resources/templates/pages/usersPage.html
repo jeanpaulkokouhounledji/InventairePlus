@@ -1,0 +1,121 @@
+<!--Page d'inventaire et comptage-->
+
+<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="userController">
+
+    <!--    menu de la page-->
+    <span layout:fragment="custum-menu">
+         <!--            menu de l'inventaire-->
+        <li class="nav-item">
+            <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
+        </li>
+
+      </span>
+
+    <div layout:fragment="custum-permalien" >
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
+                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > AUTHENTIFICATION</h4>
+                <!--        <h6 style="letter-spacing: 1px;">Veuillez sélectionner une application</h6>-->
+            </div>
+        </div>
+
+    </div>
+
+    <!--    contenu de la page-->
+    <div layout:fragment="custum-content">
+
+      <!--        bouton d'action -->
+        <div class="row" ng-if="showForm==false">
+            <div class="col-xl-4 col-sm-4">
+                <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour créer un nouvel utilisateur</button>
+            </div>
+        </div>
+
+<!--        formulaire de gestion-->
+        <div class="mt-2" ng-if="showForm==true">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-primary">
+                        <div class="custom-title">Création d'un utilisateur</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form name="fnForm">
+                        <div class="row">
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Nom & prénom(s)</label>
+                                <input type="text" name="nomEtPrenom" ng-model="appUser.nomPrenom" placeholder="Nom et prénom(s) de l'utilisateur" class="form-control form-control-sm" required="required">
+                            </div>
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Identifiant</label>
+                                <input type="text" name="identifiant" ng-model="appUser.username" placeholder="Identifiant" class="form-control form-control-sm" required="required">
+                            </div>
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Mot de passe</label>
+                                <input type="text" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="text-center row justify-content-center mt-4">
+                            <div class="col-sm-2">
+                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check fa-2x"></i> <b>Créer l'utilisateur</b> </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-times fa-2x"></i> <b>Annuler/ Fermer</b></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--        tableau de gestion -->
+        <div class="row mt-xl-3">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">Liste Des Utilisateurs</div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="table-responsive">
+                            <table ng-table="usersTable" class="display table table-striped" cellspacing="0">
+                                <tbody>
+                                    <tr ng-repeat="u in data">
+                                        <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                        <td sortable="'nomPrenom'" data-title="'Nom & prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
+                                        <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
+                                        <td  data-title="'Etat'">
+                                            <button ng-show="u.etat==false" ng-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
+                                            <button ng-show="u.etat==true" ng-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
+                                        </td>
+                                        <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-pill btn-dark" ng-click="editUser(u.id);"><i class="fa fa-edit"></i> Editer</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

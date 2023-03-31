@@ -1,0 +1,222 @@
+<!--Page d'inventaire et comptage-->
+
+<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="inventaireController">
+
+  <!--    menu de la page-->
+    <span layout:fragment="custum-menu">
+         <!--            menu de l'inventaire-->
+        <li class="nav-item">
+            <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
+        </li>
+
+    </span>
+
+      <div layout:fragment="custum-permalien" >
+        <div class="row">
+          <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
+              <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > GESTION DES INVENTAIRES</h4>
+              <div layout:fragment="username">
+                  <h4 class="text-center text-danger">{{user.nomPrenom}}</h4>
+              </div>
+          </div>
+        </div>
+      </div>
+
+  <!--    contenu de la page-->
+    <div layout:fragment="custum-content">
+
+        <!--        bouton d'action -->
+        <div class="row" ng-if="showForm==false">
+            <div class="col-xl-4 col-sm-4">
+                <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour créer une ligne d'inventaire</button>
+            </div>
+        </div>
+
+        <!--        formulaire de gestion-->
+        <div class="mt-2" ng-if="showForm==true">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-primary">
+                        <div class="custom-title">Création d'un inventaire</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form name="fnForm">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Libellé</label>
+                                <input type="text" name="libelle" ng-model="inventaire.libelle" placeholder="Libellé de l'inventaire" class="form-control form-control-sm" required="required">
+                            </div>
+                           <!-- <div class="col-sm-4 form-group-sm mb-2 text-center" ng-if="inventaire.date!=''">
+                                <h6>Dernière modification</h6>
+                                <h4>{{inventaire.date}}</h4>
+                            </div>-->
+                           <!-- <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Date de l'inventaire</label>
+                                <input type="date" name="dateInv" ng-model="inventaire.date" class="form-control form-control-sm">
+                            </div>-->
+                        </div>
+                        <div class="text-center row justify-content-center mt-4">
+                            <div class="col-sm-2">
+                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-click="createInventaire();"><i class="fa fa-check fa-2x"></i> <b>Créer l'inventaire</b> </button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="toggleForm();resetInventaire()"><i class="fa fa-times fa-2x"></i> <b>Annuler/ Fermer</b></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--        tableau de gestion -->
+        <div class="row mt-xl-3">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">Liste Des Inventaires</div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="table-responsive">
+                            <table ng-table="inventairesTable" class="display table table-striped" cellspacing="0">
+                                <tbody>
+                                    <tr ng-repeat="i in data">
+                                        <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                        <td sortable="'numero'" data-title="'N° d\'inventaire'" filter="{ 'numero' : 'text'}">{{i.numero}}</td>
+                                        <td sortable="'libelle'" data-title="'Libellé de l\'inventaire'" filter="{ 'libelle' : 'text'}">{{i.libelle}}</td>
+                                        <td style="width: 10%;text-align: center;" sortable="'statut'"  data-title="'Statut'">
+                                            <button ng-show="i.statut==false" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-danger"><b>cloturé</b></button>
+                                            <button ng-show="i.statut==true" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-success"><b>En cours</b></button>
+                                        </td>
+<!--                                        <td sortable="'date'"  data-title="'Date prévue'" filter="{ 'date' : 'text'}">{{i.date}}</td>-->
+                                        <td style="width: 25%;text-align: center;" data-title="'Action'" >
+                                            <button class="btn btn-pill btn-sm btn-dark" ng-click="editInventaire(i.id);toggleForm();"><i class="fa fa-edit"></i> Editer</button>
+                                            <button data-toggle="modal" data-target="#param" ng-click="editInventaire(i.id);" class="btn btn-dark btn-sm btn-pill"><i class="fa fa-cog"></i> Paramétrage</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  modale de parametrage-->
+        <div class="modal fade" id="param">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title text-dark text-center">Paramétrage des participations aux inventaires </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="mt-2">
+
+                            <div class="card card-shadow mb-4">
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-primary">
+                                        <div class="custom-title">Paramétrage</div>
+                                    </div>
+                                    <div class="custom-title-wrap text-center">
+                                        <div class="custom-title"><h1>{{inventaire.numero}}</h1></div>
+                                        <div class="custom-title"><h5>{{inventaire.libelle}}</h5></div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <form name="paramForm">
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Sélectionner un utilisateur</label>
+                                                <select class="form-control form-control-sm" ng-model="participerUserId" required="required">
+                                                    <optgroup label="Utilisateurs"></optgroup>
+                                                    <option ng-repeat="opt in listUsersActif" value="{{opt.id}}">
+                                                        {{opt.nomPrenom}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Sélectionner une localisation</label>
+                                                <select class="form-control form-control-sm" ng-model="participerRayonId" required="required">
+                                                    <optgroup label="Localisations"></optgroup>
+                                                    <option ng-repeat="opt in listRayons" value="{{opt.id}}">
+                                                        {{opt.code}} => {{opt.libelle}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-center row justify-content-center mt-4">
+                                            <div class="col-sm">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-click="createParticiper(participerUserId,inventaire.id,participerRayonId);"><i class="fa fa-check fa-2x"></i> <b>Affecter la localisation</b> </button>
+                                            </div>
+                                            <div class="col-sm">
+                                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="participerUserId=null;participerRayonId=null"><i class="fa fa-times fa-2x"></i> <b>Annuler</b></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-primary">
+                                    <div class="custom-title">Affectations</div>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <div class="table-responsive">
+                                    <table ng-table="participationsTable" class="display table table-striped" cellspacing="0">
+                                        <tbody>
+                                        <tr ng-repeat="p in dat">
+                                            <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                            <td sortable="'p.appUser.nomPrenom'" data-title="'Utilisateur(s)'" filter="{ 'p.appUser.nomPrenom' : 'text'}">{{p.appUser.nomPrenom}}</td>
+                                            <td sortable="'p.inventaire.numero'" data-title="'Inventaire(s)'" filter="{ 'p.inventaire.numero' : 'text'}">{{p.inventaire.numero}}</td>
+                                            <td style="width: 10%;text-align: center;" sortable="'p.localisation.code'" data-title="'Localisation(s)'" filter="{ 'p.localisation.code' : 'text'}">{{p.localisation.code}}</td>
+                                            <td style="width: 5%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-click="deleteParticiper(p.id)"><i class="fa fa-times"></i></button></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <div class="text-center">
+                           <!--            validation-->
+                            <a class="btn btn-sm btn-pill mb-2 text-light btn-dark" data-dismiss="modal"><i class="fa fa-times fa-2x"></i> Fermer ce message </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>

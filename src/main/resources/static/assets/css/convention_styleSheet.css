@@ -1,0 +1,27 @@
+
+/*style de label*/
+.conv_label{
+    color: whitesmoke !important;
+    padding: 1px;
+}
+
+.conv_back_bg{
+    background-color: #214E37;
+}
+
+[type="text"],[type="file"],[type="date"],[type="email"],[type="select"],
+input{
+    background-color: #E7E9EB;
+}
+
+option,select{
+    background-color: #E7E9EB;
+}
+
+.form-control{
+    background-color: #E7E9EB;
+}
+
+.conv_text_color{
+    color: #214E37;
+}

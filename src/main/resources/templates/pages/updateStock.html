@@ -1,0 +1,60 @@
+<!--formulaire de suivi du dossier-->
+
+<section layout:decorate="~{layout}">
+
+  <!--    menu de la page-->
+    <span layout:fragment="custum-menu">
+         <!--            menu de l'inventaire-->
+        <li class="nav-item">
+            <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
+        </li>
+
+      </span>
+
+  <div layout:fragment="custum-permalien" >
+    <div class="row">
+      <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
+        <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > MISE A JOUR DU STOCK</h4>
+        <!--        <h6 style="letter-spacing: 1px;">Veuillez sélectionner une application</h6>-->
+      </div>
+    </div>
+
+  </div>
+
+  <!--    contenu de la page-->
+  <span layout:fragment="custum-content">
+      <!--        Formulaire de gestion -->
+        <div class="row justify-content-around">
+            <div class="col-xl-4 col-sm-4 text-center">
+                <div><h7>Page en construction !!</h7></div>
+                <iframe src="https://embed.lottiefiles.com/animation/82561" width="500px" style="border: none;"></iframe>
+            </div>
+        </div>
+
+    <!--        Formulaire de gestion -->
+      <div class="row justify-content-around">
+            <div class="col-xl-4 col-sm-4">
+
+            </div>
+        </div>
+    </span>
+
+</section>

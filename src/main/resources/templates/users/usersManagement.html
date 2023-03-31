@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Conventionnement | users management</title>
+    <span layout:fragment="permalink"> Gestion des utilisateurs</span>
+</head>
+
+<body class="left-sidebar-fixed" ng-app="conventionApp" ng-controller="userController">
+    <section layout:fragment="costum-content">
+        <!--main content wrapper-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-warning">
+                                <div class="custom-title">Créez un utilisateur ici !</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-horizontal" name="fnForm" enctype="multipart/form-data">
+                                <div class="form-group-sm">
+                                    <label><span class="text-danger">*</span> Nom d'utilisateur</label>
+                                    <input type="text" ng-model="appUser.username"  name="username"  title="Ce champs est reservé à la saisie du nom d'utilisateur" class="form-control form-control-sm mb-1" required>
+                                </div>
+                                <div class="form-group-sm">
+                                    <label><span class="text-danger">*</span> Saisissez votre nouveau mot de passe
+                                    <input type="password" ng-model="appUser.password" name="password" title="Mot de passe" class="form-control form-control-sm mb-1" required ng-pattern="pat"></label>
+                                    <span ng-show="fnForm.password.$error.pattern" class="text-danger">
+                                        Mot de passe non valide (Au moins : 9 caractères , 1 Majuscule(s), 1 Minuscule(s), 1 caractère spécial dans $@$!%*#_?& ).
+                                    </span>
+
+                                </div>
+                                <div class="form-group-sm">
+                                    <label><span class="text-danger">*</span> Confirmez le mot de passe ici
+                                    <input type="password" ng-model="repass"  title="Confirmez le mot de passe" class="form-control form-control-sm mb-1" required
+                                           ng-keyup="compare(repass)" name="repass"
+                                           ng-pattern="pat"></label>
+                                    <span ng-show="repass!=''">
+<!--                                        <span ng-show="isconfirm && fnForm.repass.$dirty">-->
+                                        <small>Correspondance des mots de passe : <span ng-show="appUser.password==repass && appUser.password!=null" class="text-success"><i class="fa fa-check-circle-o text-success fa-2x"></i></span> <span ng-show="appUser.password!=repass"  class="text-danger"><i class="fa fa-times-circle-o text-danger fa-2x"></i></span></small>
+                                    </span>
+                                </div><br>
+                                <form-row>
+                                    <button ng-click="saveUser();repass=null" ng-disabled="appUser.password!=repass || fnForm.username.$invalid || appUser.password==null || repass==null " class="btn btn-sm btn-success mb-2 form-control" ><i class="fa fa-check fa-2x"></i> Valider </button>
+                                    <button ng-click="resetUserData();repass=null" class="btn btn-sm btn-primary mb-2 form-control" type="button"><i class="fa fa-times fa-2x"></i> Annuler </button>
+                                </form-row>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Liste des utilisateurs</div>
+                            </div>
+                        </div>
+                        <div class="pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table ng-table="allUsersTable" class="display table table-bordered table-striped" cellspacing="0">
+                                    <tbody>
+                                    <tr ng-repeat="d in data">
+                                        <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                        <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{d.username}}</td>
+                                        <td data-title="'Editer'"><button class="btn btn-sm btn-dark form-control"  ng-click="loadUser(d.username)"><i class="fa fa-edit fa-2x"></i> Editer </button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
