@@ -25,16 +25,16 @@ public class ProduitController {
     }
 
     //recherche de produit par localisation et critere
-    @GetMapping(value = "/recherche/{localisation}/{critere}")
-    public Produit produitTrouve(@PathVariable String localisation, @PathVariable String critere){
-        return produitService.produitTrouver(localisation,critere);
+    @GetMapping(value = "/recherche/{critere}")
+    public Produit produitTrouve(@PathVariable String critere){
+        return produitService.produitTrouver(critere);
     }
 
     //listr des produit comptés pour un rayon
-    @GetMapping(value = "/checkedList/{rayon}")
+  /*  @GetMapping(value = "/checkedList/{rayon}")
     List<Produit> getCheckedProduct(@PathVariable String rayon){
         return produitService.getProduitsInventories(rayon);
-    }
+    }*/
 
 
 }

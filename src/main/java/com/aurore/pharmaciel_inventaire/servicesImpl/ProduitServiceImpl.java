@@ -46,14 +46,14 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public Produit produitTrouver(String codeRayon, String critere) {
-        return produitRepository.produitTrouver(codeRayon,critere);
+    public Produit produitTrouver(String critere) {
+        return produitRepository.produitTrouver(critere);
     }
 
-    @Override
+    /*@Override
     public List<Produit> getProduitsInventories(String rayon) {
         return produitRepository.getCounted(rayon);
     }
-
+*/
 
 }
