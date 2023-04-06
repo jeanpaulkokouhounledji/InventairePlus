@@ -19,24 +19,19 @@ public class Traitement implements Serializable {
     @Column
     private Long id;
 
-    /*@ManyToOne
-    @JoinColumn(name = "participer_id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "participer")
     Participer participer;
 
     @ManyToOne
-    @JoinColumn(name = "produit_id", unique = true)
-    Produit produit;*/
-    @Column
-    private long participer_id;
-
-    @Column
-    private long produit_id;
+    @JoinColumn(name = "produit", unique = true)
+    Produit produit;
 
     @Column
     private double qteCompte = .0;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private String datePeremption;
+    private Date datePeremption;
 
     @Column(length = 150)
     private String codeFournisseur = "";
@@ -48,7 +43,7 @@ public class Traitement implements Serializable {
     private String motif = "";
 
     @Column
-    private double statut = 0;
+    private double statut = .0;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dateComptage = new Date();

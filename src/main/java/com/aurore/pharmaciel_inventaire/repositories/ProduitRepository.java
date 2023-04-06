@@ -18,4 +18,7 @@ public interface ProduitRepository extends JpaRepository<Produit,Long> {
     /*@Query("select p from Produit p where p.localisation=:code_rayon and p.etat=1")
     List<Produit> getCounted(@Param("code_rayon") String code_rayon);*/
 
+    @Query("select p from Produit p where p.id=:x")
+    Produit findById(@Param("x") long x);
+
 }

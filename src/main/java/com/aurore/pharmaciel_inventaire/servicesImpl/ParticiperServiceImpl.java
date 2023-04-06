@@ -79,7 +79,7 @@ public class ParticiperServiceImpl implements ParticiperService {
 
 
     @Override
-    public List<Localisation> localisationByUser(String username) {
+    public List<Participer> localisationByUser(String username) {
         return participerRepository.findUserLocalisations(username);
     }
 

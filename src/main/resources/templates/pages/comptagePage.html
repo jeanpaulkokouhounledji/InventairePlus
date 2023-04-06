@@ -45,7 +45,7 @@
 
         <div class="row" ng-if="showForm==true">
             <div class="col-xl-4 col-sm-4">
-                <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
+                <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm();listTraitement()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
             </div>
         </div>
 
@@ -60,22 +60,24 @@
                 <div class="card-body">
                     <form name="fnForm">
                         <div class="row justify-content-around">
-<!--                            Affichage de l'inventaire de l'untilisateur-->
+                            <h1>{{userInventaire}}</h1>
                             <div class="col-sm-4 form-group-sm mb-2">
-                                <h1 class="mt-3">{{usersInventaire}}</h1>
+                                <h1 class="mt-3" ng-repeat="par in participerByUser" ng-show="par.id==chosedParticiper">
+                                   {{par.inventaire.numero}}
+                                </h1>
                             </div>
                             <div class="col-sm-4 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Localisation</label>
-                                <select class="form-control form-control-sm" name="col" ng-model="chosedRayon" required="required">
+                                <select class="form-control form-control-sm" name="col" ng-model="chosedParticiper" required="required">
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
-                                    <option ng-repeat="opt in localisationByUser" value="{{opt.code}}">
-                                        {{opt.code}} ==> {{opt.libelle}}
+                                    <option ng-repeat="opt in participerByUser" value="{{opt.id}}">
+                                        {{opt.localisation.code}} ==> {{opt.localisation.libelle}}
                                     </option>
                                 </select>
                                 <label class="text-danger" ng-show="fnForm.col.$invalid">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="fnForm.col.$invalid" ng-click="toggleForm();countedList(chosedRayon);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="fnForm.col.$invalid" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -100,13 +102,15 @@
                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="t in data">
-                                        <td style="width: 2%;" data-title="'N°'">{{$index + 1}}</td>
-                                        <td data-title="'N° Inventaire'">{{t.codeFournisseur}}</td>
-                                        <td data-title="'Localisation Concernée'">{{t.datePeremption}}</td>
-                                        <td data-title="'Produit(s)'">{{t.qteCompte}}</td>
-                                        <td data-title="'Quantité Inventoriée'">{{t.dateComptage}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark"><i class="fa fa-edit"></i> Editer</button></td>
+                                    <tr ng-repeat="t in data" ng-if="t.participer.id==chosedParticiper">
+<!--                                        <td style="width: 2%;" data-title="'N°'">{{$index + 1}}</td>-->
+                                        <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
+                                        <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
+                                        <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
+                                        <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
+                                        <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
+                                        <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash fa-2x"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -165,7 +169,7 @@
                                             <td style="width: 10%"><input ng-model="datePeremption" name="dateF"  type="date" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 10%"><input ng-model="qteCompte" name="qteC" type="number" class="form-control form-control-sm text-center" required="required"></td>
 <!--                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-disabled="cForm.qteC.$invalid" ng-click="saveTraitement();codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>-->
-                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,5,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
                                         </form>
                                        </tr>
                                 </tbody>
@@ -193,28 +197,17 @@
                     </div>
                     <div class="pt-2">
                         <div class="table-responsive">
-                            <table class="display table table-striped" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>N°</th>
-                                        <th>Code Cip</th>
-                                        <th>Libellé</th>
-                                        <th>Fournisseur</th>
-                                        <th>Date Péremption</th>
-                                        <th>Prix Vente</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="p in countedData">
-                                        <td>{{p.id}}</td>
-                                        <td>{{p.codeIp}}</td>
-                                        <td>{{p.libelle}}</td>
-                                        <td style="width: 20%">{{p.fournisseur}}</td>
-                                        <td style="width: 12%">{{p.datePeremption}}</td>
-                                        <td style="width: 10%">{{p.qte}}</td>
-                                        <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-confirm-click="Voulez vous modifier la ligne << {{p.code}} {{p.libelle}} >> ?" confirmed-click="aCompter(chosedRayon,p.codeIp);"><i class="fa fa-floppy-o fa-1x"></i><b> Editer</b></button></td>
-                                    </tr>
+                            <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
+                                <tbody>
+                                <tr ng-repeat="t in data" ng-if="t.participer.id==chosedParticiper&&t.statut==1">
+                                    <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
+                                    <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
+                                    <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
+                                    <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
+                                    <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
+                                    <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
+                                    <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash fa-2x"></i></button></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

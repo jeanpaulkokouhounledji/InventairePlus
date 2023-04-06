@@ -505,10 +505,17 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     //etat d'affichage du formulaire
     $scope.showForm = false;
     //code du rayon choisi
-    $scope.chosedRayon;
+    $scope.chosedParticiper = {};
     //predit du medicament à inventorié
     $scope.codeNomProduit;
+    //tableau de l'inventaire correspondant
+    $scope.userInventaire;
 
+    //reccuperation des deux parties d'une chaine de caractere de part et d'autre d'un virgule
+    $scope.mySplit = function(string, nb) {
+        var array = string.split(',');
+        return array[nb];
+    }
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
@@ -540,15 +547,51 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.localisationUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/localisationByUser/"+username)
             .then(function (response) {
-                $scope.localisationByUser = response.data;
+                $scope.participerByUser = response.data;
+
             })
     };
+
+    //supression d'un comptage
+    $scope.deleteTraitement = function (id){
+        $http.delete("/pharmaxiel/api/v1/traitement/delete/"+id)
+            .then(function (){
+                $scope.listTraitement();
+
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Suppression Effectuée",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                },
+                function errorCallback() {
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Échec de la suppression, Veuillez réessayez",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 2500,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+
+    }
 
     //Inventaire de l'utilisateur
     $scope.inventaireUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
-            .then(function (response) {
-                $scope.usersInventaire = response;
+            .then(function() {
+
+                // $scope.userInventaire = response.data;
+                alert("===============");
+
             })
     };
 
@@ -557,8 +600,9 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.saveRealTraitement = function(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur){
         $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ produit_id + "/" + participer_id + "/"+ qteCompte + "/" + datePeremption +"/"+ codeFournisseur)
             .then(function (response) {
-                $scope.savedTraitement = response.data;
-
+                    $scope.savedTraitement = response.data;
+                    //recharge de la liste
+                    $scope.listTraitement();
                     new PNotify({
                         title: "Inventaire+ | Notification",
                         text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
@@ -579,7 +623,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 function errorCallback(response) {
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Désolé, la saisie n'a pas été enrégistrée",
+                        text: "Désolé << "+ $scope.produit.libelle +" >> déjà inventorié",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,
@@ -589,78 +633,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
                 })
     };
-
-    //sauvegarde du traitement
-    $scope.saveTraitement = function(){
-        $http.post("/pharmaxiel/api/v1/traitement/save",$scope.traitement)
-            .then(function (response) {
-                $scope.savedTraitement = response.data;
-
-                    new PNotify({
-                        title: "Inventaire+ | Notification",
-                        text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
-                        type: "success",
-                        styling: "bootstrap3",
-                        delay: 2000,
-                        history: false,
-                        sticker: true,
-                    });
-
-                    //reinitialisation des données de traitement
-                    $scope.traitement = {};
-
-                    //reinitialisation du produit
-                    $scope.produit = {};
-
-                },
-                function errorCallback(response) {
-                    new PNotify({
-                        title: "Inventaire+ | Notification",
-                        text: "Désolé, la saisie n'a pas été enrégistrée",
-                        type: "error",
-                        styling: "bootstrap3",
-                        delay: 3000,
-                        history: false,
-                        sticker: true,
-                    });
-
-                })
-    };
-
-    //sauvegarde d'un produit
-    $scope.saveProduit = function(rayon){
-        $http.post("/pharmaxiel/api/v1/produit/save",$scope.produit)
-            .then(function (response) {
-                $scope.savedProduct = response.data;
-                    //mise à jour de la liste des données comptées
-                    $scope.countedList(rayon);
-                    //reinitialisation des données de produit
-                    $scope.produit = {};
-                    new PNotify({
-                        title: "Inventaire+ | Notification",
-                        text: "<< "+$scope.savedProduct.libelle+" >> inventorié avec succès",
-                        type: "success",
-                        styling: "bootstrap3",
-                        delay: 2000,
-                        history: false,
-                        sticker: true,
-                    });
-
-                },
-                function errorCallback(response) {
-                    new PNotify({
-                        title: "Inventaire+ | Notification",
-                        text: "Désolé, les modifications n'ont pas étés enregistrées",
-                        type: "error",
-                        styling: "bootstrap3",
-                        delay: 3000,
-                        history: false,
-                        sticker: true,
-                    });
-
-                })
-    };
-
 
     //liste des produit
     $scope.produitList = function (){
@@ -697,14 +669,14 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.traitementData = response.data;
                 $scope.traitementsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
-                    page: 1,
-                    count: 5
+                    /*page: 1,
+                    count: 5*/
                 }, {
                     total: $scope.traitementData.length,
                     getData: function (params) {
                         $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
                         $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                         return $scope.data;
                     }
                 });

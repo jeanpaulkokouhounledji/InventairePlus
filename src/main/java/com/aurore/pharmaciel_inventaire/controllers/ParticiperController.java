@@ -39,7 +39,7 @@ public class ParticiperController {
 
     //reccuperation des rayons d'un utilisateur x
     @GetMapping(value = "/localisationByUser/{username}")
-    public List<Localisation> localisationsParUtilisateur(@PathVariable String username){
+    public List<Participer> localisationsParUtilisateur(@PathVariable String username){
         return participerService.localisationByUser(username);
     }
 

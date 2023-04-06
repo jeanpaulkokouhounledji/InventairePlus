@@ -23,7 +23,7 @@ public interface ParticiperService {
     String getInventaireForUser(String username);
 
     //selection des rayons pour un utilisateur par inventaire actif
-    List<Localisation> localisationByUser(String username);
+    List<Participer> localisationByUser(String username);
 
 
 

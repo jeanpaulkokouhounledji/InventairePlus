@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,16 +37,19 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, String datePeremption, String codeFournisseur) {
+    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String codeFournisseur) {
         Traitement traitement = new Traitement();
-        /*Optional<Produit> produit = produitRepository.findById(produit_id);
+        Optional<Produit> produit = Optional.of(produitRepository.findById(produit_id));
+        Optional<Participer> participer = Optional.of(participerRepository.findById(participer_id));
+        //produit correspondant
+        traitement.setProduit(produit.get());
         //participer correspondant
-        Optional<Participer> participer = participerRepository.findById(participer_id);*/
-        traitement.setProduit_id(produit_id);
-        traitement.setParticiper_id(participer_id);
+        traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
         traitement.setDatePeremption(datePeremption);
         traitement.setCodeFournisseur(codeFournisseur);
+        //flag de comptage
+        traitement.setStatut(1);
         //sauvegarde
         return traitementRepository.save(traitement);
     }
@@ -74,6 +78,13 @@ public class TraitementServiceImpl implements TraitementService {
     @Override
     public List<Traitement> listTraitement() {
         return traitementRepository.listeDesTraitements();
+    }
+
+    @Override
+    public List<Traitement> listTraitementHash() {
+
+
+        return null;
     }
 
 

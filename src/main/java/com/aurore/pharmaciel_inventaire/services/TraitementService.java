@@ -11,7 +11,7 @@ public interface TraitementService {
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);
 
-    Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, String datePeremption, String codeFournisseur);
+    Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String codeFournisseur);
 
     //Reccuperation du traitement pour modification
     Optional<Traitement> getForEdit(Long id);
@@ -23,5 +23,8 @@ public interface TraitementService {
 
     //Liste de tous les traitements
     List<Traitement> listTraitement();
+
+    //liste de traitement avec ashmap
+    List<Traitement> listTraitementHash();
 
 }
