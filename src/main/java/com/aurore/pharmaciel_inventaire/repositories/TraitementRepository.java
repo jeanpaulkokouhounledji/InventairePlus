@@ -10,8 +10,8 @@ import java.util.List;
 public interface TraitementRepository extends JpaRepository<Traitement,Long>{
 
     //recherche de traitement par rayon
-    @Query("select t from Traitement t where t.participer.localisation.code=:codeRayon")
-    List<Traitement> getTraitementByCodeRayon(@Param("codeRayon") String codeRayon);
+   /* @Query("select t from Traitement t where t.participer.localisation.code=:codeRayon")
+    List<Traitement> getTraitementByCodeRayon(@Param("codeRayon") String codeRayon);*/
 
     @Query("select t from Traitement t order by t.id desc")
     List<Traitement> listeDesTraitements();

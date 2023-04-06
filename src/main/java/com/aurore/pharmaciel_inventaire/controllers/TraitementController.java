@@ -5,6 +5,7 @@ import com.aurore.pharmaciel_inventaire.services.ProduitService;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +30,9 @@ public class TraitementController {
     }
 
     //sauvegarde de tout le traitement
-    @PostMapping(value = "/realSave")
-    public Traitement saveLeTraitement(@RequestBody Traitement traitement, @PathVariable long produit_id, @PathVariable long participer_id){
-        return traitementService.saveLeTraitement(traitement,produit_id,participer_id);
+    @PostMapping(value = "/realSave/{produit_id}/{participer_id}/{qteCompte}/{datePeremption}/{codeFournisseur}")
+    public Traitement saveLeTraitement(@PathVariable long produit_id, @PathVariable long participer_id,@PathVariable double qteCompte, @PathVariable String datePeremption,@PathVariable String codeFournisseur){
+        return traitementService.saveLeTraitement(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur);
     }
 
     //supression d'un traitement

@@ -553,6 +553,43 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     };
 
 
+    //sauvegarde reelle du traitement
+    $scope.saveRealTraitement = function(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur){
+        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ produit_id + "/" + participer_id + "/"+ qteCompte + "/" + datePeremption +"/"+ codeFournisseur)
+            .then(function (response) {
+                $scope.savedTraitement = response.data;
+
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                    //reinitialisation des données de traitement
+                    $scope.traitement = {};
+
+                    //reinitialisation du produit
+                    $scope.produit = {};
+
+                },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Désolé, la saisie n'a pas été enrégistrée",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+
     //sauvegarde du traitement
     $scope.saveTraitement = function(){
         $http.post("/pharmaxiel/api/v1/traitement/save",$scope.traitement)

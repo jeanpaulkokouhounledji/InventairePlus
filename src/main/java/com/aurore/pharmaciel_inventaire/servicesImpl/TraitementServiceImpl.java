@@ -10,6 +10,7 @@ import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,16 +36,20 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(Traitement traitement, long produit_id, long participer_id) {
-        //produit correspondant
-        Optional<Produit> produit = produitRepository.findById(produit_id);
+    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, String datePeremption, String codeFournisseur) {
+        Traitement traitement = new Traitement();
+        /*Optional<Produit> produit = produitRepository.findById(produit_id);
         //participer correspondant
-        Optional<Participer> participer = participerRepository.findById(participer_id);
-        traitement.setProduit(produit.get());
-        traitement.setParticiper(participer.get());
+        Optional<Participer> participer = participerRepository.findById(participer_id);*/
+        traitement.setProduit_id(produit_id);
+        traitement.setParticiper_id(participer_id);
+        traitement.setQteCompte(qteCompte);
+        traitement.setDatePeremption(datePeremption);
+        traitement.setCodeFournisseur(codeFournisseur);
         //sauvegarde
         return traitementRepository.save(traitement);
     }
+
 
     @Override
     public Optional<Traitement> getForEdit(Long id) {
@@ -58,8 +63,13 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public List<Traitement> getTraitementByRayon(String codeRayon) {
-        return traitementRepository.getTraitementByCodeRayon(codeRayon);
+        return null;
     }
+
+   /* @Override
+    public List<Traitement> getTraitementByRayon(String codeRayon) {
+        return traitementRepository.getTraitementByCodeRayon(codeRayon);
+    }*/
 
     @Override
     public List<Traitement> listTraitement() {

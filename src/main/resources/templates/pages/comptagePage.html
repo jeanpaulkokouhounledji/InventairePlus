@@ -161,11 +161,11 @@
                                         <td>{{produit.libelle}}</td>
                                         <td>{{produit.qteDispo}}</td>
                                         <form name="cForm">
-                                            <td style="width: 15%"><input ng-model="traitement.codeFournisseur" name="codeF" type="text" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><input ng-model="traitement.datePeremption" name="dateF"  type="date" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><input ng-model="traitement.qteCompte" name="qteC" type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <!--                                        <td style="width: 10%"><input type="number" class="form-control form-control-sm text-center" ng-model="produit.qte"></td>-->
-                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-disabled="cForm.qteC.$invalid" ng-click="saveTraitement();codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 15%"><input ng-model="codeFournisseur" name="codeF" type="text" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%"><input ng-model="datePeremption" name="dateF"  type="date" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%"><input ng-model="qteCompte" name="qteC" type="number" class="form-control form-control-sm text-center" required="required"></td>
+<!--                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-disabled="cForm.qteC.$invalid" ng-click="saveTraitement();codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>-->
+                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,5,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
                                         </form>
                                        </tr>
                                 </tbody>
