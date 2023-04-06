@@ -42,4 +42,11 @@ public class ParticiperController {
     public List<Localisation> localisationsParUtilisateur(@PathVariable String username){
         return participerService.localisationByUser(username);
     }
+
+    //trouver un ligne de participation pour un utilisateur
+    @GetMapping(value = "/inventaireParticiper/{username}")
+    public String findParticiperByUser(@PathVariable String username){
+        return participerService.getInventaireForUser(username);
+    }
+
 }

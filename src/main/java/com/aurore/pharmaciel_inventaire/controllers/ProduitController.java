@@ -30,11 +30,10 @@ public class ProduitController {
         return produitService.produitTrouver(critere);
     }
 
-    //listr des produit comptés pour un rayon
-  /*  @GetMapping(value = "/checkedList/{rayon}")
-    List<Produit> getCheckedProduct(@PathVariable String rayon){
-        return produitService.getProduitsInventories(rayon);
-    }*/
-
+    //liste des produits
+    @GetMapping(value = "/list")
+    public List<Produit> listProduit(){
+        return produitService.produitsLists();
+    }
 
 }

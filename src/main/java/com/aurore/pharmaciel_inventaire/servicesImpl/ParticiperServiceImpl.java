@@ -73,6 +73,12 @@ public class ParticiperServiceImpl implements ParticiperService {
     }
 
     @Override
+    public String getInventaireForUser(String username) {
+        return participerRepository.findInventaireParticiper(username);
+    }
+
+
+    @Override
     public List<Localisation> localisationByUser(String username) {
         return participerRepository.findUserLocalisations(username);
     }

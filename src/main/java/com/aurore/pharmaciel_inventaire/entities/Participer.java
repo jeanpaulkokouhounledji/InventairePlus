@@ -31,14 +31,9 @@ public class Participer implements Serializable {
     @JoinColumn(name = "inventaire_id")
     private Inventaire inventaire;
 
-
     @ManyToOne
     @JoinColumn(name = "localisation_id")
     private Localisation localisation;
-
- /*   @ManyToOne
-    @JoinColumn(name = "produit_id")
-    private Produit produit;*/
 
 
 }

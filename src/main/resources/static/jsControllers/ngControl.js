@@ -247,7 +247,7 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
-        $http.get("http://localhost:3000/pharmaxiel/api/v1/getLogedUser")
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
             .then(function (response) {
                 $scope.user = response.data;
             })
@@ -435,15 +435,6 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
                 })
     };
 
-   /* $scope.produitToCount = function (localisation,critere){
-        $http.get("/pharmaxiel/api/v1/produit/recherche/"+localisation+"/"+critere)
-            .then(function (response) {
-                $scope.toCount = response.data;
-                    alert("OK");
-                })
-    }*/
-
-
     //recharge de la liste
     $scope.inventairesList = function () {
         $http.get("/pharmaxiel/api/v1/inventaire/list")
@@ -503,11 +494,14 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
 //======================================================
 
 
-app.controller('comptageController',comptageController);
-function comptageController($scope , $http , $filter , fileUpload , NgTableParams){
+app.controller('traitementController',traitementController);
+function traitementController($scope , $http , $filter , fileUpload , NgTableParams){
     $scope.comptageData = {data:[]};
+    $scope.traitementData = {data:[]};
     //objet produit
     $scope.produit = {};
+    //objet traitement
+    $scope.traitement = {};
     //etat d'affichage du formulaire
     $scope.showForm = false;
     //code du rayon choisi
@@ -516,14 +510,31 @@ function comptageController($scope , $http , $filter , fileUpload , NgTableParam
     $scope.codeNomProduit;
 
 
+    //parametres utilisateur
+    $scope.getUserDetails = function (){
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
+                //localisations pour un utilisateur
+                $scope.localisationUser($scope.user.username);
+                $scope.inventaireUser($scope.user.username);
+            })
+    }
+    $scope.getUserDetails();
+
+    //recherche dans un select
+    $(function() {
+        $('.selectpicker').selectpicker();
+    });
+
     $scope.reset = function () {
         $scope.produit = {};
-    }
+    };
 
     //ouvrir la fenetre de comptage
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
-    }
+    };
 
     //liste des rayons d'un utilisateur
     $scope.localisationUser = function(username){
@@ -531,7 +542,53 @@ function comptageController($scope , $http , $filter , fileUpload , NgTableParam
             .then(function (response) {
                 $scope.localisationByUser = response.data;
             })
-    }
+    };
+
+    //Inventaire de l'utilisateur
+    $scope.inventaireUser = function(username){
+        $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
+            .then(function (response) {
+                $scope.usersInventaire = response;
+            })
+    };
+
+
+    //sauvegarde du traitement
+    $scope.saveTraitement = function(){
+        $http.post("/pharmaxiel/api/v1/traitement/save",$scope.traitement)
+            .then(function (response) {
+                $scope.savedTraitement = response.data;
+
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                    //reinitialisation des données de traitement
+                    $scope.traitement = {};
+
+                    //reinitialisation du produit
+                    $scope.produit = {};
+
+                },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Désolé, la saisie n'a pas été enrégistrée",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
 
     //sauvegarde d'un produit
     $scope.saveProduit = function(rayon){
@@ -568,26 +625,24 @@ function comptageController($scope , $http , $filter , fileUpload , NgTableParam
     };
 
 
-    //parametres utilisateur
-    $scope.getUserDetails = function (){
-        $http.get("/pharmaxiel/api/v1/getLogedUser")
+    //liste des produit
+    $scope.produitList = function (){
+        $http.get("/pharmaxiel/api/v1/produit/list")
             .then(function (response) {
-                $scope.user = response.data;
-                $scope.localisationUser($scope.user.username)
+                $scope.listProduits = response.data;
             })
     }
-    $scope.getUserDetails();
-
+    $scope.produitList();
 
     //ligne de produit à compter
-    $scope.aCompter = function (rayon,codeNomProduit) {
-        $http.get("/pharmaxiel/api/v1/produit/recherche/"+rayon+"/"+codeNomProduit)
+    $scope.aCompter = function (codeNomProduit) {
+        $http.get("/pharmaxiel/api/v1/produit/recherche/"+codeNomProduit)
             .then(function (response) {
                 $scope.produit = response.data;
                 if($scope.produit==''){
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Aucune ligne correspondande à "+rayon+" dans le rayon << "+$scope.chosedRayon+" >>",
+                        text: "Aucun produit correspondant",
                         type: "warning",
                         styling: "bootstrap3",
                         delay: 5000,
@@ -596,17 +651,32 @@ function comptageController($scope , $http , $filter , fileUpload , NgTableParam
                     });
                 }
             })
-    }
-
-
-    //Liste des produits comptés
-    $scope.countedList = function(rayon) {
-        $http.get("/pharmaxiel/api/v1/produit/checkedList/"+rayon)
-            .then(function (response) {
-                $scope.countedData = response.data;
-            })
     };
 
+    //recharge de la liste
+    $scope.listTraitement = function () {
+        $http.get("/pharmaxiel/api/v1/traitement/list")
+            .then(function (response) {
+                $scope.traitementData = response.data;
+                $scope.traitementsTable = new NgTableParams({
+                    //nombre de lignes a afficher par defaut
+                    page: 1,
+                    count: 5
+                }, {
+                    total: $scope.traitementData.length,
+                    getData: function (params) {
+                        $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
+                        $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
+                        $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        return $scope.data;
+                    }
+                });
+                // $scope.traitement = null;
+                $scope.traitementData.data = null;
+            });
+
+    };
+    $scope.listTraitement();
 
 
 }
@@ -661,6 +731,21 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
 
     };
     $scope.ecartList();
+
+
+}
+
+app.controller('acceuilController',acceuilController);
+function acceuilController($scope , $http , $filter , fileUpload , NgTableParams){
+
+    //parametres utilisateur
+    $scope.getUserDetails = function (){
+        $http.get("http://localhost:3000/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
+            })
+    }
+    $scope.getUserDetails();
 
 
 }

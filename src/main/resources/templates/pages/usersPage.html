@@ -32,11 +32,12 @@
     <div layout:fragment="custum-permalien" >
         <div class="row">
             <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
-                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > AUTHENTIFICATION</h4>
-                <!--        <h6 style="letter-spacing: 1px;">Veuillez sélectionner une application</h6>-->
+                    <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > AUTHENTIFICATION</h4>
+                <div layout:fragment="username">
+                    <h4 class="text-center text-danger">{{user.nomPrenom}}</h4>
+                </div>
             </div>
         </div>
-
     </div>
 
     <!--    contenu de la page-->

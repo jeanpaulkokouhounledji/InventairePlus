@@ -22,35 +22,20 @@ public class Produit implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(nullable = false, length = 50)
+    private String codeCip = "";
+
+    @Column(nullable = false, length = 200)
+    private String libelle = "";
+
+    @Column(nullable = false, length = 200)
+    private String dci="";
+
     @Column
-    private String localisation;
+    private double qteDispo = .0;
+
     @Column
-    private String fournisseur;
-    @Column(nullable = false, length = 50, columnDefinition = "")
-    private String codeIp;
-    @Column(nullable = false, length = 200, columnDefinition = "")
-    private String libelle;
-    @Column
-    private double prixAchat = .0;
-    @Column
-    private double prixVente = .0;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private String datePeremption;
-    @Column
-    private double qte = .0;
-    @Column
-    private double qteTotale;
-    @Column
-    private double qteDepot;
-    @Column
-    private double codeUtilisateur;
-    @Column
-    private double id_produit;
-    @Column
-    private double id_ligne;
-    @Column
-    private double id_fournisseur;
-    @Column
-    private int etat=0;
+    private double etat= .0;
 
 }
