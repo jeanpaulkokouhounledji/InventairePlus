@@ -5,6 +5,9 @@ import com.aurore.pharmaciel_inventaire.entities.AppUser;
 import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
 import lombok.Data;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +34,22 @@ public class AccountRestController {
         this.appUserRepository = appUserRepository;
     }
 
+    @PutMapping(path = "/changeAccountStatus/{id}")
+    public ResponseEntity<?> activerDesactiverUnCompte(@PathVariable("id") Long id){
+        AppUser appUser = accountService.changeStatus(id);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        try {
+            if(appUser.isEtat()){
+                httpHeaders.add("desc", "Compte activé avec succès");
+            }else{
+                httpHeaders.add("desc", "Compte désactivé avec succès");
+            }
+        }catch (Exception e){
+            httpHeaders.add("desc", "Une erreur est survenu lors de l'activation/désactivation du compte");
+        }
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+    }
 
 
     //users list

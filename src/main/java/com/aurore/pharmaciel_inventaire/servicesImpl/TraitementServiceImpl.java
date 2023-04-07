@@ -31,6 +31,8 @@ public class TraitementServiceImpl implements TraitementService {
         this.participerRepository = participerRepository;
     }
 
+    private double ecart = .0;
+
     @Override
     public Traitement saveTraitement(Traitement traitement) {
         return traitementRepository.save(traitement);
@@ -48,6 +50,9 @@ public class TraitementServiceImpl implements TraitementService {
         traitement.setQteCompte(qteCompte);
         traitement.setDatePeremption(datePeremption);
         traitement.setCodeFournisseur(codeFournisseur);
+        //calcul de l'ecart entre qté compté et qté disponible
+        this.ecart = produit.get().getQteDispo() - qteCompte;
+        traitement.setEcart(ecart);
         //flag de comptage
         traitement.setStatut(1);
         //sauvegarde

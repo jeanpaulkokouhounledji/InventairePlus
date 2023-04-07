@@ -3,6 +3,7 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 import com.aurore.pharmaciel_inventaire.entities.AppRole;
 import com.aurore.pharmaciel_inventaire.entities.AppUser;
+import com.aurore.pharmaciel_inventaire.entities.Inventaire;
 import com.aurore.pharmaciel_inventaire.repositories.AppRoleRepository;
 import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
@@ -47,6 +48,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AppUser changeStatus(Long id) {
+        Optional<AppUser> user = appUserRepository.findById(id);
+        if(user.get().isEtat()){
+            user.get().setEtat(false);
+        }else {
+            user.get().setEtat(true);
+        }
+        return appUserRepository.save(user.get());
+    }
+
+    @Override
     public AppUser findByUsernameToEdit(Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
         return appUser.get();
@@ -71,4 +83,5 @@ public class AccountServiceImpl implements AccountService {
     public List<AppUser> selectActifUsers() {
         return appUserRepository.findAllActif();
     }
+
 }

@@ -132,6 +132,36 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
     }
     $scope.getUserDetails();
 
+    //Activation desactivation d'un compte utilisateur
+    $scope.activeOrDesactivate = function (id){
+        $http.put("/pharmaxiel/api/v1/changeAccountStatus/" + id)
+            .then(function () {
+                    $scope.usersList();
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Succès de l'action",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 5000,
+                        history: false,
+                        sticker: true,
+
+                    });
+                },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Désolé, une erreur est survenue",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+
     //création d'un utilisateur
     $scope.createUser = function (){
         $http.post("/pharmaxiel/api/v1/saveUser", $scope.appUser)
@@ -196,8 +226,6 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
 
                 })
     };
-
-
 
     //recharge de la liste
     $scope.usersList = function () {
@@ -407,7 +435,7 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
         $http.put("/pharmaxiel/api/v1/inventaire/changeStatus/" + id)
             .then(function (response) {
                     $scope.inventaire = response.data;
-
+                    $scope.inventairesList();
                         new PNotify({
                             title: "Inventaire+ | Notification",
                             text: "Inventaire activé/ désactivé avec succès",
@@ -417,9 +445,6 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
                             history: false,
                             sticker: true,
                         });
-
-                    $scope.inventairesList();
-
                 },
                 function errorCallback(response) {
                     new PNotify({
@@ -642,6 +667,15 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.produitList();
+
+    //liste des fournisseurs
+    $scope.fournisseurList = function (){
+        $http.get("/pharmaxiel/api/v1/fournisseur/list")
+            .then(function (response) {
+                $scope.listFournisseurs = response.data;
+            })
+    }
+    $scope.fournisseurList();
 
     //ligne de produit à compter
     $scope.aCompter = function (codeNomProduit) {

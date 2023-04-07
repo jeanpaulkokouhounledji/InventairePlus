@@ -17,6 +17,8 @@ public interface AccountService {
     //octroie d'un role a un utilisateur
     void addRoleToUser(String username, String roleName);
 
+    //activer ou desactiver un compte
+    AppUser changeStatus(Long id);
 
     AppUser findByUsernameToEdit(Long id);
 

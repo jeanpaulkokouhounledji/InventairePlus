@@ -18,14 +18,10 @@ public class Fournisseur implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, length = 250)
-    private String raisonSociale;
+    @Column(length = 150)
+    private String codeFournisseur = "";
+    @Column(length = 250)
+    private String raisonSociale = "";
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
-        return id;
-    }
 }

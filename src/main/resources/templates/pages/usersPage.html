@@ -102,11 +102,11 @@
                                 <tbody>
                                     <tr ng-repeat="u in data">
                                         <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
-                                        <td sortable="'nomPrenom'" data-title="'Nom & prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
+                                        <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
                                         <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
                                         <td  data-title="'Etat'">
-                                            <button ng-show="u.etat==false" ng-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
-                                            <button ng-show="u.etat==true" ng-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
+                                            <button ng-show="u.etat==false" ng-confirm-click="Voulez-vous vraiment activer le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
+                                            <button ng-show="u.etat==true" ng-confirm-click="Voulez-vous vraiment désactiver le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
                                         </td>
                                         <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-pill btn-dark" ng-click="editUser(u.id);"><i class="fa fa-edit"></i> Editer</button></td>
                                     </tr>

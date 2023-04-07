@@ -152,8 +152,8 @@
                                     <tr>
                                         <th>Code Cip</th>
                                         <th>Libellé</th>
-                                        <th>Qté Disponible</th>
-                                        <th>Code Fournisseur</th>
+                                        <th>Prix Vente</th>
+                                        <th>Fournisseur</th>
                                         <th>Date Péremption</th>
                                         <th>Qté Comptée</th>
                                         <th>Action</th>
@@ -163,13 +163,20 @@
                                     <tr>
                                         <td>{{produit.codeCip}}</td>
                                         <td>{{produit.libelle}}</td>
-                                        <td>{{produit.qteDispo}}</td>
                                         <form name="cForm">
-                                            <td style="width: 15%"><input ng-model="codeFournisseur" name="codeF" type="text" class="form-control form-control-sm text-center" required="required"></td>
+<!--                                            <td style="width: 15%"><input ng-model="codeFournisseur" name="codeF" type="text" class="form-control form-control-sm text-center" required="required"></td>-->
+                                            <td style="width: 10%"><input ng-model="produit.prixVente" name="prixV" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 15%">
+                                                <select class="form-control form-control-sm" name="col" ng-model="codeFournisseur" ng-change="aCompter(codeNomProduit);" required="required">
+                                                    <optgroup label="Sélectionnez un autre fournisseur"></optgroup>
+                                                    <option ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
+                                                        {{four.raisonSociale}}
+                                                    </option>
+                                                </select>
+                                            </td>
                                             <td style="width: 10%"><input ng-model="datePeremption" name="dateF"  type="date" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 10%"><input ng-model="qteCompte" name="qteC" type="number" class="form-control form-control-sm text-center" required="required"></td>
-<!--                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark" ng-disabled="cForm.qteC.$invalid" ng-click="saveTraitement();codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>-->
-                                            <td style="width: 10%"><button class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
                                         </form>
                                        </tr>
                                 </tbody>
@@ -190,7 +197,7 @@
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
                                 <div class="row">
-                                    <div class="col-sm-4">Lignes à validés</div>
+                                    <div class="col-sm-4">Inventaire en cours</div>
                                 </div>
                             </div>
                         </div>
@@ -203,9 +210,10 @@
                                     <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
                                     <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
                                     <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
+                                    <td data-title="'Prix Vente'">{{t.produit.prixVente}}</td>
                                     <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
                                     <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
-                                    <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
+                                    <td data-title="'Quantité Comptée'" class="font-weight-bold">{{t.qteCompte}}</td>
                                     <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash fa-2x"></i></button></td>
                                 </tr>
                                 </tbody>
