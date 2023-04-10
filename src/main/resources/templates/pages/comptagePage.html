@@ -102,15 +102,14 @@
                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="t in data" ng-if="t.participer.id==chosedParticiper">
-<!--                                        <td style="width: 2%;" data-title="'N°'">{{$index + 1}}</td>-->
+                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==chosedParticiper">
                                         <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
-                                        <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
+                                        <td data-title="'Localisation'">{{t.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
-                                        <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
+                                        <td data-title="'Fournisseur'">{{t.codeFournisseur}}</td>
                                         <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
                                         <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash fa-2x"></i></button></td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -176,9 +175,9 @@
                                             </td>
                                             <td style="width: 10%"><input ng-model="datePeremption" name="dateF"  type="date" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 10%"><input ng-model="qteCompte" name="qteC" type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o fa-1x"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur);codeNomProduit=null"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
-                                       </tr>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -204,18 +203,18 @@
                     </div>
                     <div class="pt-2">
                         <div class="table-responsive">
-                            <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
+                            <table ng-table="traitementsTable" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
-                                <tr ng-repeat="t in data" ng-if="t.participer.id==chosedParticiper&&t.statut==1">
-                                    <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
-                                    <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
-                                    <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
-                                    <td data-title="'Prix Vente'">{{t.produit.prixVente}}</td>
-                                    <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
-                                    <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
-                                    <td data-title="'Quantité Comptée'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                    <td data-title="'Action(s)'" ><button class="btn btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash fa-2x"></i></button></td>
-                                </tr>
+                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==chosedParticiper&&t.statut==1">
+                                        <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
+                                        <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
+                                        <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
+                                        <td data-title="'Prix Vente'">{{t.produit.prixVente}}</td>
+                                        <td data-title="'Code Fournisseur'">{{t.codeFournisseur}}</td>
+                                        <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
+                                        <td data-title="'Quantité Comptée'" class="font-weight-bold">{{t.qteCompte}}</td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

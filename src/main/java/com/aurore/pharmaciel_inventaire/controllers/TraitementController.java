@@ -58,6 +58,10 @@ public class TraitementController {
         return traitementService.listTraitement();
     }
 
-
+    //sauvegarde du motif d'un traitement
+    @PutMapping(value = "/saveMotif/{id}/{motif}")
+    Traitement saveMotif(@PathVariable long id, @PathVariable String motif){
+        return traitementService.saveTraitementMotif(id,motif);
+    }
 
 }

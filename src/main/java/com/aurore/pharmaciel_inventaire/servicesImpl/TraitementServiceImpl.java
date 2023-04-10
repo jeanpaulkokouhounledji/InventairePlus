@@ -87,9 +87,15 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public List<Traitement> listTraitementHash() {
-
-
         return null;
+    }
+
+    @Override
+    public Traitement saveTraitementMotif(long id, String motif) {
+        Optional<Traitement> traitement = Optional.of(traitementRepository.findById(id).get());
+        traitement.get().setMotif(motif.toString());
+        traitementRepository.save(traitement.get());
+        return traitement.get();
     }
 
 

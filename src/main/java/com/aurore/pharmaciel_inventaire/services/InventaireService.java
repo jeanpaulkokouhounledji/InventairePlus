@@ -20,6 +20,10 @@ public interface InventaireService {
     //modification de l'etat d'un inventaire
     Inventaire changeStatus(Long id);
 
+    //liste des inventaires
     List<Inventaire> findAllInventaire();
+
+    //liste des inventaire actifs
+    List<Inventaire> findInventaireActif();
 
 }

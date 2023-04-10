@@ -72,5 +72,10 @@ public class InventaireController {
         return inventaireService.findAllInventaire();
     }
 
+    @GetMapping(path = "/list/actifs")
+    public List<Inventaire> listInventaireActifs(){
+        return inventaireService.findInventaireActif();
+    }
+
 
 }

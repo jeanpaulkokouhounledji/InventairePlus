@@ -27,4 +27,7 @@ public interface TraitementService {
     //liste de traitement avec ashmap
     List<Traitement> listTraitementHash();
 
+    //sauvegarde d'un motif
+    Traitement saveTraitementMotif(long id,String motif);
+
 }

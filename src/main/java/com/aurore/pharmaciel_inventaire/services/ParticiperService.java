@@ -1,5 +1,6 @@
 package com.aurore.pharmaciel_inventaire.services;
 
+import com.aurore.pharmaciel_inventaire.entities.Inventaire;
 import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.entities.Participer;
 
@@ -24,6 +25,9 @@ public interface ParticiperService {
 
     //selection des rayons pour un utilisateur par inventaire actif
     List<Participer> localisationByUser(String username);
+
+    //localisation par inventaire
+    List<Localisation> localisationByInventaire(String codeInventaire);
 
 
 

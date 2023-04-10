@@ -61,4 +61,10 @@ public class InventaireServiceImpl implements InventaireService {
     public List<Inventaire> findAllInventaire() {
         return inventaireRepository.findAll();
     }
+
+    //liste des inventaires actifs
+    @Override
+    public List<Inventaire> findInventaireActif() {
+        return inventaireRepository.allInventaireActif();
+    }
 }

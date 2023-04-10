@@ -27,9 +27,6 @@ public class Inventaire implements Serializable {
     @Column(nullable = false, length = 200)
     private String libelle = "";
 
-    /*@Temporal(TemporalType.DATE)
-    private Date date;*/
-
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date date = new Date();

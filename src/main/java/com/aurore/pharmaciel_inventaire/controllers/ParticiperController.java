@@ -49,4 +49,10 @@ public class ParticiperController {
         return participerService.getInventaireForUser(username);
     }
 
+    //trouver les localisations liees à un inventaire
+    @GetMapping(value = "/localisationByInventaire/{codeInventaire}")
+    public List<Localisation> getLocalisationByInventaire(@PathVariable String codeInventaire){
+        return participerService.localisationByInventaire(codeInventaire);
+    }
+
 }
