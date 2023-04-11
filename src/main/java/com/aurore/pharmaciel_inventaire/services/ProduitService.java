@@ -20,6 +20,4 @@ public interface ProduitService {
     //Produit rechercher par code ou nom pour comptage
     Produit produitTrouver(String critere);
 
-    //selection des produit comptés pour un rayon
-//    List<Produit> getProduitsInventories(String rayon);
 }

@@ -3,9 +3,10 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 import com.aurore.pharmaciel_inventaire.entities.AppRole;
 import com.aurore.pharmaciel_inventaire.entities.AppUser;
-import com.aurore.pharmaciel_inventaire.entities.Inventaire;
+import com.aurore.pharmaciel_inventaire.entities.Logs;
 import com.aurore.pharmaciel_inventaire.repositories.AppRoleRepository;
 import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
+import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,13 @@ public class AccountServiceImpl implements AccountService {
     private final AppRoleRepository appRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder) {
+    private final LogsRepository logsRepository;
+
+    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, LogsRepository logsRepository) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logsRepository = logsRepository;
     }
 
     @Override
@@ -50,10 +54,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AppUser changeStatus(Long id) {
         Optional<AppUser> user = appUserRepository.findById(id);
+        Logs log = new Logs();
         if(user.get().isEtat()){
             user.get().setEtat(false);
+            log.setDescription("Désactivation du compte de "+user.get().getNomPrenom());
+            logsRepository.save(log);
         }else {
             user.get().setEtat(true);
+            log.setDescription("Activation du compte de "+user.get().getNomPrenom());
+            logsRepository.save(log);
         }
         return appUserRepository.save(user.get());
     }

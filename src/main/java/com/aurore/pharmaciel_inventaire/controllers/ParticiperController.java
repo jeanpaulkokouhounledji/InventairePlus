@@ -1,5 +1,6 @@
 package com.aurore.pharmaciel_inventaire.controllers;
 
+import com.aurore.pharmaciel_inventaire.entities.Inventaire;
 import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.entities.Participer;
 import com.aurore.pharmaciel_inventaire.entities.Produit;
@@ -45,7 +46,7 @@ public class ParticiperController {
 
     //trouver un ligne de participation pour un utilisateur
     @GetMapping(value = "/inventaireParticiper/{username}")
-    public String findParticiperByUser(@PathVariable String username){
+    public Inventaire findParticiperByUser(@PathVariable String username){
         return participerService.getInventaireForUser(username);
     }
 

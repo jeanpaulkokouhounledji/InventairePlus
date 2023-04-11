@@ -11,7 +11,7 @@ public interface TraitementService {
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);
 
-    Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String codeFournisseur);
+    Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String fournisseur,double prixVente);
 
     //Reccuperation du traitement pour modification
     Optional<Traitement> getForEdit(Long id);

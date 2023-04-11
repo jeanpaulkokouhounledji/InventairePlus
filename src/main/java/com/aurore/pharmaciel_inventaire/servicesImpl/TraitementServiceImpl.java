@@ -39,17 +39,19 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String codeFournisseur) {
+    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String fournisseur,double prixVente) {
         Traitement traitement = new Traitement();
         Optional<Produit> produit = Optional.of(produitRepository.findById(produit_id));
         Optional<Participer> participer = Optional.of(participerRepository.findById(participer_id));
         //produit correspondant
         traitement.setProduit(produit.get());
+        //prix de vente du produit
+        produit.get().setPrixVente(prixVente);
         //participer correspondant
         traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
         traitement.setDatePeremption(datePeremption);
-        traitement.setCodeFournisseur(codeFournisseur);
+        traitement.setCodeFournisseur(fournisseur);
         //calcul de l'ecart entre qté compté et qté disponible
         this.ecart = produit.get().getQteDispo() - qteCompte;
         traitement.setEcart(ecart);

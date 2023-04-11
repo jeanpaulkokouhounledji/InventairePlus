@@ -584,8 +584,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.chosedParticiper = {};
     //predit du medicament à inventorié
     $scope.codeNomProduit;
-    //tableau de l'inventaire correspondant
-    $scope.userInventaire;
+
 
     //reccuperation des deux parties d'une chaine de caractere de part et d'autre d'un virgule
     $scope.mySplit = function(string, nb) {
@@ -628,6 +627,15 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     };
 
+    //Inventaire actif d'un utilisateur
+    $scope.inventaireUser = function(username){
+        $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
+            .then(function(response) {
+                $scope.userInventaire = response.data;
+                //alert("===============");
+            })
+    };
+
     //supression d'un comptage
     $scope.deleteTraitement = function (id){
         $http.delete("/pharmaxiel/api/v1/traitement/delete/"+id)
@@ -660,30 +668,14 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     }
 
-    //Inventaire de l'utilisateur
-    $scope.inventaireUser = function(username){
-        $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
-            .then(function() {
-
-                // $scope.userInventaire = response.data;
-                alert("===============");
-
-            })
-    };
-
 
     //sauvegarde reelle du traitement
-    $scope.saveRealTraitement = function(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur){
-        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ produit_id + "/" + participer_id + "/"+ qteCompte + "/" + datePeremption +"/"+ codeFournisseur)
+    $scope.saveRealTraitement = function(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur,prixVente){
+        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ produit_id + "/" + participer_id + "/"+ qteCompte + "/" + datePeremption +"/"+ codeFournisseur+"/"+prixVente)
             .then(function (response) {
                     $scope.savedTraitement = response.data;
                     //recharge de la liste
                     $scope.listTraitement();
-                    //reinitialisation des données de traitement
-                    $scope.traitement = {};
-
-                    //reinitialisation du produit
-                    $scope.produit = {};
                     new PNotify({
                         title: "Inventaire+ | Notification",
                         text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
@@ -693,6 +685,12 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                         history: false,
                         sticker: true,
                     });
+
+                    //reinitialisation du produit
+                    $scope.produit = {};
+
+                    //reinitialisation des données de traitement
+                    $scope.traitement = {};
 
                 },
                 function errorCallback(response) {

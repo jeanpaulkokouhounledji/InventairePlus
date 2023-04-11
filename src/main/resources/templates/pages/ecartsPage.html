@@ -3,8 +3,7 @@
 <section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="ecartsController">
 
   <!--    menu de la page-->
-    <span layout:fragment="custum-menu">
-         <!--            menu de l'inventaire-->
+     <span layout:fragment="custum-menu">
         <li class="nav-item">
             <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
         </li>
@@ -26,8 +25,7 @@
         <li class="nav-item">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
-
-      </span>
+     </span>
 
       <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -112,7 +110,7 @@
                                     <td data-title="'Ecart (a-b)'" class="font-weight-bold bg-dark text-warning">{{t.ecart}}</td>
                                     <td data-title="'Motif'" class="font-weight-bold"><input type="text" class="form-control form-control-sm" ng-model="t.motif"/></td>
                                     <td data-title="'Action(s)'" >
-                                        <button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Enregister le motif pour << {{t.produit.libelle}} >> ?" confirmed-click="saveMotif(t.id,t.motif);"><i class="text-warning fa fa-upload"></i></button>
+                                        <button class="btn btn-sm btn-pill btn-dark" ng-disabled="t.motif==''" ng-confirm-click="Enregister le motif pour << {{t.produit.libelle}} >> ?" confirmed-click="saveMotif(t.id,t.motif);"><i class="text-warning fa fa-upload"></i></button>
                                     </td>
                                 </tr>
                                 </tbody>
