@@ -1,17 +1,15 @@
 package com.aurore.pharmaciel_inventaire.servicesImpl;
 
+import com.aurore.pharmaciel_inventaire.entities.Fournisseur;
 import com.aurore.pharmaciel_inventaire.entities.Participer;
-import com.aurore.pharmaciel_inventaire.entities.Produit;
+import com.aurore.pharmaciel_inventaire.entities.StockProduit;
 import com.aurore.pharmaciel_inventaire.entities.Traitement;
-import com.aurore.pharmaciel_inventaire.repositories.ParticiperRepository;
-import com.aurore.pharmaciel_inventaire.repositories.ProduitRepository;
-import com.aurore.pharmaciel_inventaire.repositories.TraitementRepository;
+import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +21,18 @@ public class TraitementServiceImpl implements TraitementService {
 
     private final ProduitRepository produitRepository;
 
+    private final StockProduitRepository stockProduitRepository;
+
     private final ParticiperRepository participerRepository;
 
-    public TraitementServiceImpl(TraitementRepository traitementRepository, ProduitRepository produitRepository, ParticiperRepository participerRepository) {
+    private final FournisseurRepository fournisseurRepository;
+
+    public TraitementServiceImpl(TraitementRepository traitementRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, ParticiperRepository participerRepository, FournisseurRepository fournisseurRepository) {
         this.traitementRepository = traitementRepository;
         this.produitRepository = produitRepository;
+        this.stockProduitRepository = stockProduitRepository;
         this.participerRepository = participerRepository;
+        this.fournisseurRepository = fournisseurRepository;
     }
 
     private double ecart = .0;
@@ -39,21 +43,22 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(long produit_id, long participer_id, double qteCompte, Date datePeremption, String fournisseur,double prixVente) {
+    public Traitement saveLeTraitement(long id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
         Traitement traitement = new Traitement();
-        Optional<Produit> produit = Optional.of(produitRepository.findById(produit_id));
-        Optional<Participer> participer = Optional.of(participerRepository.findById(participer_id));
+        Optional<StockProduit> stockProduit = Optional.of(stockProduitRepository.findById(id_stockproduit));
+        Optional<Participer> participer = Optional.of(participerRepository.findById(id_participer));
+        Optional<Fournisseur> fournisseur = Optional.of(fournisseurRepository.findById(id_fournisseur));
         //produit correspondant
-        traitement.setProduit(produit.get());
+        traitement.setStockProduit(stockProduit.get());
         //prix de vente du produit
-        produit.get().setPrixVente(prixVente);
+        stockProduit.get().setPrixVente(prixVente);
         //participer correspondant
         traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
         traitement.setDatePeremption(datePeremption);
-        traitement.setCodeFournisseur(fournisseur);
+        traitement.setFournisseur(fournisseur.get());
         //calcul de l'ecart entre qté compté et qté disponible
-        this.ecart = produit.get().getQteDispo() - qteCompte;
+        this.ecart = stockProduit.get().getQuantite() - qteCompte;
         traitement.setEcart(ecart);
         //flag de comptage
         traitement.setStatut(1);

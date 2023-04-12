@@ -21,7 +21,7 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Override
     public Produit createProduit(Produit produit) {
-        produit.setEtat(1);
+        //produit.setEtat(1);
         return produitRepository.save(produit);
     }
 
@@ -50,10 +50,5 @@ public class ProduitServiceImpl implements ProduitService {
         return produitRepository.produitTrouver(critere);
     }
 
-    /*@Override
-    public List<Produit> getProduitsInventories(String rayon) {
-        return produitRepository.getCounted(rayon);
-    }
-*/
 
 }

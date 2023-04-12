@@ -24,8 +24,12 @@ public class Traitement implements Serializable {
     Participer participer;
 
     @ManyToOne
-    @JoinColumn(name = "produit", unique = true)
-    Produit produit;
+    @JoinColumn(name = "stockProduit")
+    StockProduit stockProduit;
+
+    @ManyToOne
+    @JoinColumn(name = "fournisseur")
+    Fournisseur fournisseur;
 
     @Column
     private double qteCompte = .0;
@@ -33,8 +37,6 @@ public class Traitement implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date datePeremption;
 
-    @Column(length = 150)
-    private String codeFournisseur = "";
 
     @Column
     private double ecart = .0;

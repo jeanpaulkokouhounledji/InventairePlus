@@ -23,21 +23,17 @@ public class Produit implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false, length = 50)
-    private String codeCip = "";
+    private String codeProduit = "";
     @Column(nullable = false, length = 200)
     private String libelle = "";
     @Column(nullable = false, length = 200)
     private String dci="";
     @Column
-    private double qteDispo = .0;
+    private double idForme;
     @Column
-    private double etat= .0;
-    @Column(nullable = true)
-    private double prixVente = .0;
-    @Column
-    private String datePeremtion = "";
+    private double idFamille;
     @ManyToOne
-    @JoinColumn(name = "fournisseur_id")
-    Fournisseur fournisseur;
+    @JoinColumn(name = "id_localisation")
+    Localisation localisation;
 
 }

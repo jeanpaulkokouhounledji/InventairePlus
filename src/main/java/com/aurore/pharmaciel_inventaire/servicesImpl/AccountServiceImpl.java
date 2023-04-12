@@ -35,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AppUser addNewUser(AppUser appUser) {
         String pw = appUser.getPassword();
+        Logs log = new Logs();
+        log.setDescription("Création de l'utilisateur "+appUser.getNomPrenom());
+        logsRepository.save(log);
         appUser.setPassword(passwordEncoder.encode(pw));
         return appUserRepository.save(appUser);
     }
@@ -48,6 +51,9 @@ public class AccountServiceImpl implements AccountService {
     public void addRoleToUser(String username, String roleName) {
         AppUser appUser = appUserRepository.findByUsername(username);
         AppRole appRole = appRoleRepository.findByRoleName(roleName);
+        Logs log = new Logs();
+        log.setDescription("Attribution du role "+ roleName +" à "+ username);
+        logsRepository.save(log);
         appUser.getAppRoles().add(appRole);
     }
 

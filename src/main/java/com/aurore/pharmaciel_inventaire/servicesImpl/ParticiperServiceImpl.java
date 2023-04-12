@@ -1,14 +1,8 @@
 package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 
-import com.aurore.pharmaciel_inventaire.entities.AppUser;
-import com.aurore.pharmaciel_inventaire.entities.Inventaire;
-import com.aurore.pharmaciel_inventaire.entities.Localisation;
-import com.aurore.pharmaciel_inventaire.entities.Participer;
-import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
-import com.aurore.pharmaciel_inventaire.repositories.InventaireRepository;
-import com.aurore.pharmaciel_inventaire.repositories.LocalisationRepository;
-import com.aurore.pharmaciel_inventaire.repositories.ParticiperRepository;
+import com.aurore.pharmaciel_inventaire.entities.*;
+import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.ParticiperService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +22,14 @@ public class ParticiperServiceImpl implements ParticiperService {
 
     private final LocalisationRepository localisationRepository;
 
-    public ParticiperServiceImpl(ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository) {
+    private final LogsRepository logsRepository;
+
+    public ParticiperServiceImpl(ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository, LogsRepository logsRepository) {
         this.participerRepository = participerRepository;
         this.appUserRepository = appUserRepository;
         this.inventaireRepository = inventaireRepository;
         this.localisationRepository = localisationRepository;
+        this.logsRepository = logsRepository;
     }
 
 
@@ -64,6 +61,9 @@ public class ParticiperServiceImpl implements ParticiperService {
 
     @Override
     public void deleteParticiper(Long id) {
+        Logs log = new Logs();
+        log.setDescription("Ligne de parametrage "+ id +" supprimée");
+        logsRepository.save(log);
         participerRepository.deleteById(id);
     }
 

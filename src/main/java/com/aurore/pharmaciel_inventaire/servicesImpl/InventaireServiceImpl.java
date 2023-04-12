@@ -2,17 +2,14 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 
 import com.aurore.pharmaciel_inventaire.entities.Inventaire;
+import com.aurore.pharmaciel_inventaire.entities.Logs;
 import com.aurore.pharmaciel_inventaire.repositories.InventaireRepository;
+import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.services.InventaireService;
-import org.jfree.data.time.Day;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.Month;
-import java.time.MonthDay;
 import java.time.Year;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +20,11 @@ public class InventaireServiceImpl implements InventaireService {
 
     private final InventaireRepository inventaireRepository;
 
-    public InventaireServiceImpl(InventaireRepository inventaireRepository) {
+    private final LogsRepository logsRepository;
+
+    public InventaireServiceImpl(InventaireRepository inventaireRepository, LogsRepository logsRepository) {
         this.inventaireRepository = inventaireRepository;
+        this.logsRepository = logsRepository;
     }
 
     @Override
@@ -43,7 +43,17 @@ public class InventaireServiceImpl implements InventaireService {
 
     @Override
     public void deleteInventaire(Long id) {
-        inventaireRepository.deleteById(id);
+        try{
+            Logs log = new Logs();
+            log.setDescription("Supression de la ligne d'inventaire à l'id "+ id);
+            logsRepository.save(log);
+            inventaireRepository.deleteById(id);
+        }catch (Exception e){
+            Logs log = new Logs();
+            log.setDescription("Tentative de suppression du traitement "+ id);
+            logsRepository.save(log);
+        }
+
     }
 
     @Override
@@ -51,8 +61,14 @@ public class InventaireServiceImpl implements InventaireService {
         Optional<Inventaire> inventaire = inventaireRepository.findById(id);
         if(inventaire.get().isStatut()){
             inventaire.get().setStatut(false);
+            Logs log = new Logs();
+            log.setDescription("Désactivation de l'inventaire "+ inventaire.get().getNumero());
+            logsRepository.save(log);
         }else {
             inventaire.get().setStatut(true);
+            Logs log = new Logs();
+            log.setDescription("Activation de l'inventaire "+ inventaire.get().getNumero());
+            logsRepository.save(log);
         }
         return inventaireRepository.save(inventaire.get());
     }

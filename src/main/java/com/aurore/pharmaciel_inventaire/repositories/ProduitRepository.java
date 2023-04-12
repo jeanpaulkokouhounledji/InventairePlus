@@ -11,12 +11,9 @@ import java.util.List;
 public interface ProduitRepository extends JpaRepository<Produit,Long> {
 
     //produit par code ou par nom
-    @Query("select p from Produit p where p.codeCip like %:critere% or p.libelle like %:critere%")
+    @Query("select p from Produit p where p.codeProduit like %:critere% or p.libelle like %:critere%")
     Produit produitTrouver(@Param("critere") String critere);
 
-    //reccuperation des produits comptés par rayon
-    /*@Query("select p from Produit p where p.localisation=:code_rayon and p.etat=1")
-    List<Produit> getCounted(@Param("code_rayon") String code_rayon);*/
 
     @Query("select p from Produit p where p.id=:x")
     Produit findById(@Param("x") long x);
