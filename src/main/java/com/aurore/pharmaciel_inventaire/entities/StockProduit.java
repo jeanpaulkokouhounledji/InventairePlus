@@ -33,7 +33,7 @@ public class StockProduit implements Serializable {
     @Column
     private double quantite;
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date datePeremption;
+    private String datePeremption;
     @Column
     private String lot;
     @Column

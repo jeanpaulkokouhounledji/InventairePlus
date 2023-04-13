@@ -1,6 +1,5 @@
 package com.aurore.pharmaciel_inventaire.repositories;
 
-import com.aurore.pharmaciel_inventaire.entities.Produit;
 import com.aurore.pharmaciel_inventaire.entities.StockProduit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +11,7 @@ public interface StockProduitRepository extends JpaRepository<StockProduit,Long>
     StockProduit stockProduitTrouver(@Param("critere") String critere);
 
 
-    @Query("select p from StockProduit p where p.id=:x")
+    @Query("select p from StockProduit p where p.codeUnique=:x")
     StockProduit findById(@Param("x") long x);
 
 }

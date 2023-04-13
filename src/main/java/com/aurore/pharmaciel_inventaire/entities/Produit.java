@@ -29,9 +29,9 @@ public class Produit implements Serializable {
     @Column(nullable = false, length = 200)
     private String dci="";
     @Column
-    private double idForme;
+    private double idForme = .0;
     @Column
-    private double idFamille;
+    private double idFamille = .0;
     @ManyToOne
     @JoinColumn(name = "id_localisation")
     Localisation localisation;

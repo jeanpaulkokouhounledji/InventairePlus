@@ -69,7 +69,7 @@
                                 <select class="form-control form-control-sm" name="xx" ng-model="chosedParticiper" required="required">
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerByUser" value="{{opt.id}}">
-                                        {{opt.localisation.code}} ==> {{opt.localisation.libelle}}
+                                        {{opt.localisation.libelle}}
                                     </option>
                                 </select>
                                 <label class="text-danger" ng-show="fnForm.xx.$invalid">Champ requis</label>
@@ -127,22 +127,21 @@
                                 <div class="row">
                                     <div class="col-sm-4">Recherchez un produit</div>
                                     <div class="col-sm-5">
-                                        <select class="form-control form-control-sm"  ng-model="codeNomProduit" ng-change="aCompter(codeNomProduit);" required="required">
+                                        <select class="form-control form-control-sm"  ng-model="codeUnique" ng-change="aCompter(codeUnique);" required="required">
                                             <optgroup label="Sélectionnez un produit"></optgroup>
-                                            <option ng-repeat="opt in listProduits" value="{{opt.codeCip}}">
-                                                 {{opt.libelle}}
+                                            <option ng-repeat="opt in listStockProduit" value="{{opt.codeUnique}}">
+                                                {{opt.produit.libelle}} ==> {{opt.codeUnique}}
                                             </option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3 text-right">
-<!--                                        <button class="btn btn-pill btn-sm btn-dark" ng-click="aCompter(codeNomProduit);"><i class="fa fa-search"></i><b> Chercher</b></button>-->
-                                        <button class="btn btn-pill btn-sm btn-outline-dark" ng-click="reset();codeNomProduit=null"><i class="fa fa-times"></i> <b>Annuler</b></button>
+                                        <button class="btn btn-pill btn-sm btn-outline-dark" ng-click="reset();codeUnique=null"><i class="fa fa-times"></i> <b>Annuler</b></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-2" ng-if="produit.id!=null">
+                    <div class="pt-2" ng-if="codeUnique!=null">
                         <div class="table-responsive">
                             <table class="display table table-striped" cellspacing="0">
                                 <thead>
@@ -158,10 +157,10 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{{produit.codeCip}}</td>
-                                        <td>{{produit.libelle}}</td>
+                                        <td>{{stockProduit.produit.codeProduit}}</td>
+                                        <td>{{stockProduit.produit.libelle}}</td>
                                         <form name="cForm">
-                                            <td style="width: 10%"><input ng-model="produit.prixVente" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%"><input ng-model="prixVente" type="number" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 15%">
                                                 <select class="form-control form-control-sm" ng-model="codeFournisseur" required="required">
                                                     <optgroup label="Sélectionnez un autre fournisseur"></optgroup>
@@ -172,7 +171,7 @@
                                             </td>
                                             <td style="width: 10%"><input ng-model="datePeremption"  type="date" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 10%"><input ng-model="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(produit.id,chosedParticiper,qteCompte,datePeremption,codeFournisseur,produit.prixVente);codeNomProduit=null"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);codeUnique=null"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>
                                 </tbody>
@@ -218,11 +217,6 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="row" ng-if="showForm==true">
-                <div class="col-xl-4 col-sm-4">
-                    <button class="btn btn-dark btn-pill mb-2" ng-click=""><i class="fa fa-edit fa-2x"></i> Valider le comptage</button>
-                </div>
-            </div>-->
         </div>
     </div>
 

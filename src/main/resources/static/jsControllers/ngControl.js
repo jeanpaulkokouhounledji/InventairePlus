@@ -575,7 +575,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.comptageData = {data:[]};
     $scope.traitementData = {data:[]};
     //objet produit
-    $scope.produit = {};
+    $scope.stockProduit = {};
     //objet traitement
     $scope.traitement = {};
     //etat d'affichage du formulaire
@@ -610,7 +610,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     });
 
     $scope.reset = function () {
-        $scope.produit = {};
+        $scope.stockProduit = {};
     };
 
     //ouvrir la fenetre de comptage
@@ -670,15 +670,15 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
 
     //sauvegarde reelle du traitement
-    $scope.saveRealTraitement = function(produit_id,participer_id,qteCompte,datePeremption,codeFournisseur,prixVente){
-        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ produit_id + "/" + participer_id + "/"+ qteCompte + "/" + datePeremption +"/"+ codeFournisseur+"/"+prixVente)
+    $scope.saveRealTraitement = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
+        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ id_stockproduit + "/" + id_participer + "/"+ id_fournisseur + "/" + qteCompte +"/"+ datePeremption+"/"+prixVente)
             .then(function (response) {
                     $scope.savedTraitement = response.data;
                     //recharge de la liste
                     $scope.listTraitement();
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "<< "+ $scope.produit.libelle +" >> inventorié avec succès",
+                        text: "<< "+ $scope.stockProduit.produit.libelle +" >> inventorié avec succès",
                         type: "success",
                         styling: "bootstrap3",
                         delay: 2000,
@@ -696,7 +696,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 function errorCallback(response) {
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Désolé << "+ $scope.produit.libelle +" >> déjà inventorié",
+                        text: "Désolé << "+ $scope.stockProduit.produit.libelle +" >> déjà inventorié",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,
@@ -708,13 +708,13 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     };
 
     //liste des produit
-    $scope.produitList = function (){
-        $http.get("/pharmaxiel/api/v1/produit/list")
+    $scope.stockProduitList = function (){
+        $http.get("/pharmaxiel/api/v1/stockproduit/list")
             .then(function (response) {
-                $scope.listProduits = response.data;
+                $scope.listStockProduit = response.data;
             })
     }
-    $scope.produitList();
+    $scope.stockProduitList();
 
     //liste des fournisseurs
     $scope.fournisseurList = function (){
@@ -726,14 +726,14 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.fournisseurList();
 
     //ligne de produit à compter
-    $scope.aCompter = function (codeNomProduit) {
-        $http.get("/pharmaxiel/api/v1/produit/recherche/"+codeNomProduit)
+    $scope.aCompter = function (codeUnique) {
+        $http.get("/pharmaxiel/api/v1/stockproduit/recherche/"+codeUnique)
             .then(function (response) {
-                $scope.produit = response.data;
-                if($scope.produit==''){
+                $scope.stockProduit = response.data;
+                if($scope.stockProduit==''){
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Aucun produit correspondant",
+                        text: "Aucune ligne de produit en stock correspondante",
                         type: "warning",
                         styling: "bootstrap3",
                         delay: 5000,
