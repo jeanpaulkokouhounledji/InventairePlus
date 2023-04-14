@@ -33,7 +33,7 @@
 
     <!--    contenu de la page-->
     <span layout:fragment="custum-content">
-        <div class="row justify-content-around">
+        <div class="row justify-content-between">
 
             <!--        application de l'accreditation-->
             <div class="col-xl-4 col-sm-4">
@@ -64,7 +64,8 @@
                                     <i class="fa fa-list-alt"></i>
                                 </div>
                                 <div class="media-body">
-                                    <h3 class="text-uppercase mb-0 weight200">Liste des inventaires</h3>
+<!--                                    <h3 class="text-uppercase mb-0 weight200">Liste des inventaires</h3>-->
+                                    <h3 class="text-uppercase mb-0 weight200">inventaires</h3>
                                     <span class="text-muted">Gérez les inventaires</span>
                                 </div>
                             </div>
@@ -73,6 +74,27 @@
                 </a>
             </div>
 
+            <!--            application inventaire-->
+            <div class="col-xl-4 col-sm-4">
+                <a href="chargement" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-hourglass-3"></i>
+                                </div>
+                                <div class="media-body">
+<!--                                    <h3 class="text-uppercase mb-0 weight200">Liste des inventaires</h3>-->
+                                    <h3 class="text-uppercase mb-0 weight200">Chargements</h3>
+                                    <span class="text-muted">Gérez vos données</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!--            application comptage-->
             <div class="col-xl-4 col-sm-4">
                 <a href="comptage" class="text-dark">
                     <div class="card card-shadow mb-4 pt-3 pb-3">

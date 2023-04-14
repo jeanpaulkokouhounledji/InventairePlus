@@ -8,22 +8,25 @@
         <li class="nav-item">
             <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        <li class="nav-item ml-sm-2 ml-lg-4">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
+            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
+        </li>
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
 
@@ -103,11 +106,11 @@
                                     <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==chosedParticiper">
                                         <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation'">{{t.participer.localisation.code}}</td>
-                                        <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
-                                        <td data-title="'Fournisseur'">{{t.codeFournisseur}}</td>
+                                        <td data-title="'Produit(s)'">{{t.stockProduit.produit.libelle}}</td>
+                                        <td data-title="'Fournisseur'">{{t.stockProduit.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
                                         <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.stockProduit.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -164,14 +167,14 @@
                                             <td style="width: 15%">
                                                 <select class="form-control form-control-sm" ng-model="codeFournisseur" required="required">
                                                     <optgroup label="Sélectionnez un autre fournisseur"></optgroup>
-                                                    <option ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
+                                                    <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
                                                         {{four.raisonSociale}}
                                                     </option>
                                                 </select>
                                             </td>
                                             <td style="width: 10%"><input ng-model="datePeremption"  type="date" class="form-control form-control-sm text-center" required="required"></td>
                                             <td style="width: 10%"><input ng-model="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);codeUnique=null"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>
                                 </tbody>
@@ -204,12 +207,12 @@
                                     <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
-                                        <td data-title="'Produit(s)'">{{tr.produit.libelle}}</td>
-                                        <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.produit.prixVente | number}}</td>
-                                        <td data-title="'Code Fournisseur'">{{tr.codeFournisseur}}</td>
+                                        <td data-title="'Produit(s)'">{{tr.stockProduit.produit.libelle}}</td>
+                                        <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.stockProduit.prixVente | number}}</td>
+                                        <td data-title="'Code Fournisseur'">{{tr.stockProduit.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{tr.datePeremption}}</td>
                                         <td data-title="'Quantité Comptée'" class="font-weight-bold">{{tr.qteCompte}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.stockProduit.produit.libelle}} >> ?" confirmed-click="deleteTraitement(tr.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>

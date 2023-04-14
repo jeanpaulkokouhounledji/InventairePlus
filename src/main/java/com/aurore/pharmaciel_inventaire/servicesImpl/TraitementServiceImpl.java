@@ -43,9 +43,9 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(long id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
+    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
         Traitement traitement = new Traitement();
-        Optional<StockProduit> stockProduit = Optional.of(stockProduitRepository.findById(id_stockproduit));
+        Optional<StockProduit> stockProduit = Optional.ofNullable(stockProduitRepository.findStockProduitByCodeUnique(id_stockproduit));
         Optional<Participer> participer = Optional.of(participerRepository.findById(id_participer));
         Optional<Fournisseur> fournisseur = Optional.of(fournisseurRepository.findById(id_fournisseur));
         //produit correspondant

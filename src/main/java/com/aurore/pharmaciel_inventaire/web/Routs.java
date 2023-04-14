@@ -47,6 +47,12 @@ public class Routs {
         return "pages/historyPage";
     }
 
+    //page de chargement
+    @RequestMapping(value = "chargement")
+    public String charge(){
+        return "pages/chargementPage";
+    }
+
     //============= Utilisateur ========================
 
     //route vers la page de gestion des utilisateur (Creation, modifier, ...)

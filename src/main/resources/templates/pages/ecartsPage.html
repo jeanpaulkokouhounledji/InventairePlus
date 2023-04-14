@@ -7,22 +7,25 @@
         <li class="nav-item">
             <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaire</a>
+        <li class="nav-item ml-sm-2 ml-lg-4">
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
+            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
+        </li>
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ml-sm-2 ml-lg-4">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
      </span>
@@ -69,7 +72,7 @@
                                 <select class="form-control form-control-sm" name="col" ng-model="chosedLocalisationCode" required="required">
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerLocalisations" value="{{opt.code}}">
-                                        {{opt.code}} ==> {{opt.libelle}}
+                                        {{opt.libelle}}
                                     </option>
                                 </select>
                                 <label class="text-danger" ng-show="fnForm.col.$invalid">Champ requis</label>
@@ -97,22 +100,22 @@
                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.localisation.code==chosedLocalisationCode">
-                                    <td data-title="'Etat'">
-                                        <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
-                                        <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
-                                    </td>
-                                    <td data-title="'Produit(s)'">{{t.produit.libelle}}</td>
-                                    <td data-title="'Fournisseur'">{{t.codeFournisseur}}</td>
-                                    <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
-                                    <td data-title="'Quantité Base (a)'" class="font-weight-bold">{{t.produit.qteDispo}}</td>
-                                    <td data-title="'Quantité Inventoriée (b)'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                    <td data-title="'Ecart (a-b)'" class="font-weight-bold bg-dark text-warning">{{t.ecart}}</td>
-                                    <td data-title="'Motif'" class="font-weight-bold"><input type="text" class="form-control form-control-sm" ng-model="t.motif"/></td>
-                                    <td data-title="'Action(s)'" >
-                                        <button class="btn btn-sm btn-pill btn-dark" ng-disabled="t.motif==''" ng-confirm-click="Enregister le motif pour << {{t.produit.libelle}} >> ?" confirmed-click="saveMotif(t.id,t.motif);"><i class="text-warning fa fa-upload"></i></button>
-                                    </td>
-                                </tr>
+                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.localisation.code==chosedLocalisationCode">
+                                        <td data-title="'Etat'">
+                                            <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
+                                            <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
+                                        </td>
+                                        <td data-title="'Produit(s)'">{{t.stockProduit.produit.libelle}}</td>
+                                        <td data-title="'Fournisseur'">{{t.stockProduit.fournisseur.raisonSociale}}</td>
+                                        <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
+                                        <td data-title="'Quantité Base (a)'" class="font-weight-bold">{{t.stockProduit.quantite}}</td>
+                                        <td data-title="'Quantité Inventoriée (b)'" class="font-weight-bold">{{t.qteCompte}}</td>
+                                        <td data-title="'Ecart (a-b)'" class="font-weight-bold bg-dark text-warning">{{t.ecart}}</td>
+                                        <td data-title="'Motif'" class="font-weight-bold"><input type="text" class="form-control form-control-sm" ng-model="t.motif"/></td>
+                                        <td data-title="'Action(s)'" >
+                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="t.motif==''" ng-confirm-click="Enregister le motif pour << {{t.stockProduit.produit.libelle}} >> ?" confirmed-click="saveMotif(t.id,t.motif);"><i class="text-warning fa fa-upload"></i></button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

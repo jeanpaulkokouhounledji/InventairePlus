@@ -125,7 +125,7 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
-        $http.get("http://localhost:3000/pharmaxiel/api/v1/getLogedUser")
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
             .then(function (response) {
                 $scope.user = response.data;
             })
@@ -258,54 +258,7 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
 
 
 
-//======================================================
-//==========  Ecarts Controller  ======================
-//======================================================
 
-
-app.controller('ecartsController',ecartsController);
-function ecartsController($scope , $http , $filter , fileUpload , NgTableParams ){
-
-    //affichage du formulaire
-    $scope.toggleForm = function () {
-        $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
-    };
-
-    //parametres utilisateur
-    $scope.getUserDetails = function (){
-        $http.get("/pharmaxiel/api/v1/getLogedUser")
-            .then(function (response) {
-                $scope.user = response.data;
-            })
-    }
-    $scope.getUserDetails();
-
-    //recharge de la liste
-    $scope.listTraitement = function () {
-        $http.get("/pharmaxiel/api/v1/traitement/list")
-            .then(function (response) {
-                $scope.traitementData = response.data;
-                $scope.traitementsTable = new NgTableParams({
-                    //nombre de lignes a afficher par defaut
-                    /*page: 1,
-                    count: 5*/
-                }, {
-                    total: $scope.traitementData.length,
-                    getData: function (params) {
-                        $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
-                        $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                        return $scope.data;
-                    }
-                });
-                // $scope.traitement = null;
-                $scope.traitementData.data = null;
-            });
-
-    };
-    $scope.listTraitement();
-
-}
 
 //======================================================
 //==========  inventaire Controller  ======================
@@ -687,10 +640,11 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     });
 
                     //reinitialisation du produit
-                    $scope.produit = {};
+                    $scope.stockProduit = {};
 
                     //reinitialisation des données de traitement
                     $scope.traitement = {};
+
 
                 },
                 function errorCallback(response) {
@@ -891,12 +845,13 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
 
 }
 
+//controller de la page d'acceuil
 app.controller('acceuilController',acceuilController);
 function acceuilController($scope , $http , $filter , fileUpload , NgTableParams){
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
-        $http.get("http://localhost:3000/pharmaxiel/api/v1/getLogedUser")
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
             .then(function (response) {
                 $scope.user = response.data;
             })
@@ -905,6 +860,68 @@ function acceuilController($scope , $http , $filter , fileUpload , NgTableParams
 
 
 }
+
+//controller de chargement des données dans la base
+app.controller('chargementController',chargementController);
+function chargementController($scope , $http , $filter , fileUpload , NgTableParams){
+
+    //parametres utilisateur
+    /*$scope.downloadProduitModel = function (){
+        $http.get("/pharmaxiel/api/v1/chargement/model_des_produits")
+            .then(function () {
+            })
+    };*/
+
+}
+
+//controller de chargement des données dans la base
+app.controller('updateStockController',updateStockController);
+function updateStockController($scope , $http , $filter , fileUpload , NgTableParams){
+    $scope.showForm = false;
+
+    $scope.toggleForm = function () {
+        $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
+    };
+
+    //parametres utilisateur
+    $scope.getUserDetails = function (){
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
+            })
+    }
+    $scope.getUserDetails();
+
+    //liste des inventaires
+    $scope.inventaireList = function (){
+        $http.get("/pharmaxiel/api/v1/inventaire/list")
+            .then(function (response) {
+                $scope.allInventaire = response.data;
+            })
+    };
+    $scope.inventaireList();
+
+    //localisations par inventaire
+    $scope.localisationByInventaire = function(inventaireCode){
+        $http.get("/pharmaxiel/api/v1/participer/localisationByInventaire/"+inventaireCode)
+            .then(function (response) {
+                $scope.participerLocalisations = response.data;
+            })
+    };
+
+    //Listes des participations
+    $scope.participerList = function (){
+        $http.get("/pharmaxiel/api/v1/participer/list")
+            .then(function (response) {
+                $scope.allParticiper = response.data;
+            })
+    };
+    $scope.participerList();
+
+}
+
+
+
 
 
 

@@ -31,7 +31,7 @@ public class TraitementController {
 
     //sauvegarde de tout le traitement
     @PostMapping(value = "/realSave/{id_stockproduit}/{id_participer}/{id_fournisseur}/{qteCompte}/{datePeremption}/{prixVente}")
-    public Traitement saveLeTraitement(@PathVariable long id_stockproduit, @PathVariable long id_participer,@PathVariable long id_fournisseur,@PathVariable double qteCompte, @PathVariable Date datePeremption,@PathVariable double prixVente){
+    public Traitement saveLeTraitement(@PathVariable String id_stockproduit, @PathVariable long id_participer,@PathVariable long id_fournisseur,@PathVariable double qteCompte, @PathVariable Date datePeremption,@PathVariable double prixVente){
         return traitementService.saveLeTraitement(id_stockproduit,id_participer, id_fournisseur,qteCompte,datePeremption,prixVente);
     }
 

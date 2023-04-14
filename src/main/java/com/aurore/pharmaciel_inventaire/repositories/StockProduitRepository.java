@@ -12,6 +12,6 @@ public interface StockProduitRepository extends JpaRepository<StockProduit,Long>
 
 
     @Query("select p from StockProduit p where p.codeUnique=:x")
-    StockProduit findById(@Param("x") long x);
+    StockProduit findStockProduitByCodeUnique(@Param("x") String x);
 
 }
