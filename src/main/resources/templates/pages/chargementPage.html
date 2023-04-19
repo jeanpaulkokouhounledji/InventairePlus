@@ -63,10 +63,10 @@
                                             <span class="text-danger">*</span> Chargez la liste des produits ( <a ng-href="/chargement/inventaire/model/model_des_produits">Model des produits</a> )
                                         </td>
                                         <td>
-                                            <input type="file"  class="form-control font-weight-bold"/>
+                                            <input type="file" name="importFile" file-model="importFile" class="form-control font-weight-bold"/>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Lancer le chargement de la liste des produits ?" confirmed-click=""><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
+                                            <button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Lancer le chargement de la liste des produits ?" confirmed-click="chargerImport()"><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
                                         </td>
                                     </tr>
                                     <tr>

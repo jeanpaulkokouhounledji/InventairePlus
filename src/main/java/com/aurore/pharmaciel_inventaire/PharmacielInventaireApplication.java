@@ -1,8 +1,12 @@
 package com.aurore.pharmaciel_inventaire;
 
+import org.apache.catalina.connector.Connector;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer;
+import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +16,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 
 @SpringBootApplication
 public class PharmacielInventaireApplication {
@@ -29,8 +34,9 @@ public class PharmacielInventaireApplication {
     @EventListener({ ApplicationReadyEvent.class })
     public void applicationReadyEvent() {
         System.out.println("Application démarrée ... Lancement du navigateur");
-        Browse("http://localhost:3000/");
+        Browse("https://localhost:3000/");
     }
+
 
     public static void Browse(String url) {
         if (Desktop.isDesktopSupported()) {

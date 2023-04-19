@@ -866,10 +866,45 @@ app.controller('chargementController',chargementController);
 function chargementController($scope , $http , $filter , fileUpload , NgTableParams){
 
     //parametres utilisateur
-    /*$scope.downloadProduitModel = function (){
-        $http.get("/pharmaxiel/api/v1/chargement/model_des_produits")
-            .then(function () {
+    $scope.getUserDetails = function (){
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
             })
+    }
+    $scope.getUserDetails();
+
+    //upload nomenclature des actes
+    $scope.chargerImport = function(){
+        var file = $scope.importFile;
+        console.log('file is');
+        console.dir(file);
+        if (file!=undefined){
+            var uploadUrl = "/chargement/import";
+
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+
+            $("#importFile").val(null);
+        }
+    };
+
+   /* $scope.chargerImport = function() {
+        var file = $scope.importFile; // Get the file from the file input field
+        var formData = new FormData(); // Create FormData object
+
+        formData.append('file', file); // Append the file to FormData
+
+        // Make POST request to the server to upload the file
+        $http.post('/chargement/import', formData, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        }).then(function(response) {
+            // Handle success response
+            console.log(response.data); // Display success message
+        }, function(error) {
+            // Handle error response
+            console.error('Error uploading file:', error);
+        });
     };*/
 
 }
