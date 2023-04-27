@@ -9,11 +9,11 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor @ToString
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"user_id","inventaire_id", "localisation_id" })})
 public class Participer implements Serializable {
 
 

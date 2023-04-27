@@ -34,7 +34,7 @@ public class PharmacielInventaireApplication {
     @EventListener({ ApplicationReadyEvent.class })
     public void applicationReadyEvent() {
         System.out.println("Application démarrée ... Lancement du navigateur");
-        Browse("https://localhost:3000/");
+        Browse("http://localhost:3000/");
     }
 
 

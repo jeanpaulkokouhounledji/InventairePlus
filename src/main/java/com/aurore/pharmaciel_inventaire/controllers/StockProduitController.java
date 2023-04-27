@@ -5,7 +5,10 @@ import com.aurore.pharmaciel_inventaire.entities.StockProduit;
 import com.aurore.pharmaciel_inventaire.services.StockProduitService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import static com.aurore.pharmaciel_inventaire.utils.JavaConstant.API_BASE_URL;
 
@@ -32,9 +35,29 @@ public class StockProduitController {
     }
 
     //liste des produits
-    @GetMapping(value = "/list")
+   /* @GetMapping(value = "/list")
     public List<StockProduit> listStockProduit(){
         return stockProduitService.stockProduitList();
+    }*/
+
+     @GetMapping(value = "/list")
+    public Collection listStockProduit(){
+         List<StockProduit> stockProduits = stockProduitService.stockProduitList();
+         Vector collection = new Vector();
+
+         for (StockProduit pr : stockProduits) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("id",pr.getId());
+            map.put("codeCip",pr.getProduit().getCodeProduit());
+            map.put("idFournisseur",pr.getFournisseur().getId());
+            map.put("codeUnique",pr.getCodeUnique());
+            map.put("produit",pr.getProduit().getLibelle());
+            map.put("prixVente",pr.getPrixVente());
+            map.put("prixAchat",pr.getPrixAchat());
+            collection.add(map);
+         }
+
+         return collection;
     }
 
 }

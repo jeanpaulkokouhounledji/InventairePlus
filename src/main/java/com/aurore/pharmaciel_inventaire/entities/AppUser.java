@@ -29,7 +29,7 @@ public class AppUser {
 
     @Column(unique = true)
     private String username;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
+    @JsonProperty(access = JsonProperty.Access.AUTO)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
     @Column(nullable = true)
     private String password;
     private boolean etat = true;

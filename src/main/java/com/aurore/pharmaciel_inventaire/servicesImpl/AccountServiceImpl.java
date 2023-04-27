@@ -51,9 +51,6 @@ public class AccountServiceImpl implements AccountService {
     public void addRoleToUser(String username, String roleName) {
         AppUser appUser = appUserRepository.findByUsername(username);
         AppRole appRole = appRoleRepository.findByRoleName(roleName);
-        Logs log = new Logs();
-        log.setDescription("Attribution du role "+ roleName +" à "+ username);
-        logsRepository.save(log);
         appUser.getAppRoles().add(appRole);
     }
 

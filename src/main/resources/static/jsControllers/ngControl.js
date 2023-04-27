@@ -123,6 +123,25 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
         $scope.appUser = {};
     }
 
+    //attribution de role
+    $scope.addRoleTOUser = function (var1, var2) {
+        $http.post("/pharmaxiel/api/v1/addRoleToUser/"+var1+"/"+var2)
+            .then(function (response) {
+                $scope.userRole = response.data;
+                $scope.usersList();
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Role "+ var2 + " Attribuer avec succès à " + var1,
+                    type: "success",
+                    styling: "bootstrap3",
+                    delay: 5000,
+                    history: false,
+                    sticker: true,
+
+                });
+            })
+    }
+
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
@@ -131,6 +150,24 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
             })
     }
     $scope.getUserDetails();
+
+    //list des utilisateurs actif
+    $scope.listActif = function () {
+        $http.get("/pharmaxiel/api/v1/usersListActif")
+            .then(function (response) {
+                $scope.listUsersActif = response.data;
+            })
+    }
+    $scope.listActif();
+
+    //list des roles
+    $scope.listRoles = function () {
+        $http.get("/pharmaxiel/api/v1/rolesList")
+            .then(function (response) {
+                $scope.listRoles = response.data;
+            })
+    }
+    $scope.listRoles();
 
     //Activation desactivation d'un compte utilisateur
     $scope.activeOrDesactivate = function (id){
@@ -331,7 +368,7 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
                 function errorCallback(response) {
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Erreur d'affectation",
+                        text: "Erreur d'affectation, celle-ci peut déjà exister pour cet utilisateur dans cet inventaire.",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,
@@ -526,6 +563,7 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
 app.controller('traitementController',traitementController);
 function traitementController($scope , $http , $filter , fileUpload , NgTableParams){
     $scope.comptageData = {data:[]};
+    $scope.produitData = {data:[]};
     $scope.traitementData = {data:[]};
     //objet produit
     $scope.stockProduit = {};
@@ -640,7 +678,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     });
 
                     //reinitialisation du produit
-                    $scope.stockProduit = {};
+                    //$scope.stockProduit = {};
 
                     //reinitialisation des données de traitement
                     $scope.traitement = {};
@@ -662,13 +700,13 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     };
 
     //liste des produit
-    $scope.stockProduitList = function (){
+   /* $scope.stockProduitList = function (){
         $http.get("/pharmaxiel/api/v1/stockproduit/list")
             .then(function (response) {
                 $scope.listStockProduit = response.data;
             })
     }
-    $scope.stockProduitList();
+    $scope.stockProduitList();*/
 
     //liste des fournisseurs
     $scope.fournisseurList = function (){
@@ -712,7 +750,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     getData: function (params) {
                         $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
                         $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        // $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                         return $scope.data;
                     }
                 });
@@ -722,6 +760,32 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     };
     $scope.listTraitement();
+
+
+    //Tableau des produits
+    $scope.listProduits = function () {
+        $http.get("/pharmaxiel/api/v1/stockproduit/list")
+            .then(function (response) {
+                $scope.produitData = response.data;
+                $scope.produitsTable = new NgTableParams({
+                    //nombre de lignes a afficher par defaut
+                    page: 1,
+                    count: 2
+                }, {
+                    total: $scope.produitData.length,
+                    getData: function (params) {
+                        $scope.dataP = params.sorting() ? $filter('orderBy')($scope.produitData, params.orderBy()) : $scope.produitData;
+                        $scope.dataP = params.filter() ? $filter('filter')($scope.dataP, params.filter()) : $scope.dataP;
+                        $scope.dataP = $scope.dataP.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        return $scope.dataP;
+                    }
+                });
+                // $scope.traitement = null;
+                $scope.produitData.data = null;
+            });
+
+    };
+    $scope.listProduits();
 
 
 }
@@ -880,7 +944,7 @@ function chargementController($scope , $http , $filter , fileUpload , NgTablePar
         console.log('file is');
         console.dir(file);
         if (file!=undefined){
-            var uploadUrl = "/chargement/import";
+            var uploadUrl = "/chargement/uploadExcel";
 
             fileUpload.uploadFileToUrl(file, uploadUrl);
 
@@ -956,7 +1020,18 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
 }
 
 
-
+//controller de chargement des données dans la base
+app.controller('historiqueController',historiqueController);
+function historiqueController($scope , $http , $filter , fileUpload , NgTableParams){
+    //parametres utilisateur
+    $scope.getUserDetails = function (){
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
+            })
+    }
+    $scope.getUserDetails();
+}
 
 
 

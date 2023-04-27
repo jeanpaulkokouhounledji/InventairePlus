@@ -5,6 +5,7 @@ import com.aurore.pharmaciel_inventaire.entities.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -22,4 +23,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     //redefinition de la requete de liste
     @Query("select u from AppUser u where u.username<>'administrator' order by u.id desc")
     List<AppUser> findAll();
+
+    /*@Query()
+    void deleteUserRole(@Param("x") String x);*/
 }

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
-            .defaultSuccessUrl("/");
+            .defaultSuccessUrl("/").and()
+            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login");
+       // http.logout().clearAuthentication(true);
         }
 
 

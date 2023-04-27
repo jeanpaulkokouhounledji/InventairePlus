@@ -24,12 +24,15 @@ public class ParticiperServiceImpl implements ParticiperService {
 
     private final LogsRepository logsRepository;
 
-    public ParticiperServiceImpl(ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository, LogsRepository logsRepository) {
+    private final TraitementRepository traitementRepository;
+
+    public ParticiperServiceImpl(ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository, LogsRepository logsRepository, TraitementRepository traitementRepository) {
         this.participerRepository = participerRepository;
         this.appUserRepository = appUserRepository;
         this.inventaireRepository = inventaireRepository;
         this.localisationRepository = localisationRepository;
         this.logsRepository = logsRepository;
+        this.traitementRepository = traitementRepository;
     }
 
 
@@ -64,7 +67,13 @@ public class ParticiperServiceImpl implements ParticiperService {
         Logs log = new Logs();
         log.setDescription("Ligne de parametrage "+ id +" supprimée");
         logsRepository.save(log);
-        participerRepository.deleteById(id);
+        try {
+            //traitementRepository.deleteTraitementByParticiperId(id);
+            participerRepository.deleteById(id);
+        }catch (Exception e){
+            e.getMessage();
+        }
+
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.aurore.pharmaciel_inventaire.controllers;
 
+import com.aurore.pharmaciel_inventaire.entities.Import;
+import com.aurore.pharmaciel_inventaire.utils.ExcelUtils;
 import com.lowagie.text.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import static com.aurore.pharmaciel_inventaire.utils.JavaConstant.API_BASE_URL;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "chargement")
@@ -26,11 +25,18 @@ public class ChargementController {
 
     @Value("${modelsDir}")
     private String directory;
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
+
+
+    public ChargementController(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.sessionFactory = sessionFactory;
+    }
 
     //téléchargement du model de produits
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "inventaire/model/model_des_produits")
     protected void downloadProduitsModel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -114,7 +120,7 @@ public class ChargementController {
         //==================      Import des donnees dans les differentes tables            ================
         //==================================================================================================
 
-    @PostMapping("/import")
+    /*@PostMapping("/import")
     public String importData(@RequestParam("file") MultipartFile file) throws IOException {
         InputStream inputStream = file.getInputStream();
 
@@ -123,17 +129,19 @@ public class ChargementController {
         Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
 
         // Prepare the SQL query for inserting data into MySQL database
-        String sql = "INSERT INTO import (nom, prenom) VALUES (?, ?)";
+        String sql = "INSERT INTO import (id, nom, prenom) VALUES (?, ?, ?)";
 
         // Process each row and insert data into MySQL database
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = (Row) sheet.getRow(i);
-            String col2Value = (String) row.getCell(0);
-            String col3Value = (String) row.getCell(1);
+            Long col1Value = (Long) row.getCell(0);
+            String col2Value = (String) row.getCell(1);
+            String col3Value = (String) row.getCell(2);
 
             // Insert data into MySQL database using JDBC
             try {
                 PreparedStatement preparedStatement = jdbcTemplate.getDataSource().getConnection().prepareStatement(sql);
+                preparedStatement.setLong(0, col1Value);
                 preparedStatement.setString(1, col2Value);
                 preparedStatement.setString(2, col3Value);
                 preparedStatement.executeUpdate();
@@ -148,5 +156,31 @@ public class ChargementController {
         inputStream.close();
 
         return "File imported successfully";
+    }*/
+
+    // ImportExcelController.java
+
+       /* @PostMapping("/uploadExcel")
+        public String uploadExcelFile(@RequestParam("file") MultipartFile file) {
+            if (ExcelUtils.isExcelFile(file)) {
+                try {
+                    List<Import> imports = ExcelUtils.parseExcelFile(file);
+                    saveImportToDatabase(imports);
+                    return "File uploaded and data imported successfully!";
+                } catch (Exception e) {
+                    return "Failed to upload file: " + e.getMessage();
+                }
+            } else {
+                return "Please upload an Excel file!";
+            }
+        }*/
+
+    private void saveImportToDatabase(List<Import> imports) {
+        for (Import imp : imports) {
+            jdbcTemplate.update("INSERT INTO Import (nom, prenom) VALUES (?, ?)",
+                    imp.getNom(), imp.getPrenom());
+            // Set other fields in User object and add corresponding placeholders in the SQL query
+        }
     }
+
 }

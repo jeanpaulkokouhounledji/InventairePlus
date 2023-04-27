@@ -9,7 +9,10 @@ import com.aurore.pharmaciel_inventaire.services.InventaireService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Year;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,10 +32,13 @@ public class InventaireServiceImpl implements InventaireService {
 
     @Override
     public Inventaire createInventaire(Inventaire inventaire) {
+        DateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
+        String date = dateFormat.format(new Date());
         Inventaire i = inventaireRepository.save(inventaire);
         //generation du code d'inventaire
         String num = "INV-"+Year.now()+"-"+"000"+i.getId().toString();
         i.setNumero(num);
+        i.setDate(date);
         return i;
     }
 

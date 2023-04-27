@@ -10,9 +10,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Table
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"participer","stockProduit", "fournisseur" })})
 public class Traitement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

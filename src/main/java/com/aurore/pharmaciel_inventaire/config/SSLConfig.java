@@ -16,7 +16,7 @@ import org.springframework.core.io.ResourceLoader;
 @Configuration
 public class SSLConfig {
 
-    @Value("${trust.store}")
+  /*  @Value("${trust.store}")
     String trustKeyPath;
 
     @Value("${trust.store.password}")
@@ -35,6 +35,6 @@ public class SSLConfig {
         sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 
         return sslContext;
-    }
+    }*/
 
 }

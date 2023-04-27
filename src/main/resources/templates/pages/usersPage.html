@@ -5,28 +5,28 @@
     <!--    menu de la page-->
     <span layout:fragment="custum-menu">
          <!--            menu de l'inventaire-->
-        <li class="nav-item">
+        <li class="nav-item" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
 
@@ -51,6 +51,9 @@
             <div class="col-xl-4 col-sm-4">
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour créer un nouvel utilisateur</button>
             </div>
+            <div class="col-xl-4 col-sm-4">
+                <button data-toggle="modal" data-target="#param" ng-disabled="i.statut==false" class="btn btn-dark btn-pill mb-2"><i class="fa fa-cog fa-2x"></i> Cliquer pour assigner les rôles.</button>
+            </div>
         </div>
 
 <!--        formulaire de gestion-->
@@ -63,7 +66,7 @@
                 </div>
                 <div class="card-body">
                     <form name="fnForm">
-                        <div class="row">
+                        <div class="row justify-content-around">
                             <div class="col-sm-4 form-group-sm mb-2">
                                 <label>Nom & prénom(s)</label>
                                 <input type="text" name="nomEtPrenom" ng-model="appUser.nomPrenom" placeholder="Nom et prénom(s) de l'utilisateur" class="form-control form-control-sm" required="required">
@@ -72,17 +75,27 @@
                                 <label>Identifiant</label>
                                 <input type="text" name="identifiant" ng-model="appUser.username" placeholder="Identifiant" class="form-control form-control-sm" required="required">
                             </div>
-                            <div class="col-sm-4 form-group-sm mb-2">
+                            <div class="col-sm-4 form-group-sm mb-2" ng-if="!appUser.id">
                                 <label>Mot de passe</label>
-                                <input type="text" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
+                                <input type="password" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
                             </div>
+                            <div class="col-sm-4 form-group-sm mb-2" ng-show="!appUser.id">
+                                <label>Attribuer le role</label>
+                                <select class="form-control form-control-sm" ng-model="roleName" required="required">
+                                    <optgroup label="Choisissez un role"></optgroup>
+                                    <option ng-repeat="opt in listRoles" value="{{opt.definition}}">
+                                        {{opt.definition}}
+                                    </option>
+                                </select>
+                            </div>
+
                         </div>
                         <div class="text-center row justify-content-center mt-4">
                             <div class="col-sm-2">
-                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check fa-2x"></i> <b>Créer l'utilisateur</b> </button>
+                                <button class="btn  btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check font-weight-bold">Créer l'utilisateur</i></button>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-times fa-2x"></i> <b>Annuler/ Fermer</b></button>
+                                <button class="btn  btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-times font-weight-bold">Annuler/ Fermer</i></button>
                             </div>
                         </div>
                     </form>
@@ -104,14 +117,14 @@
                             <table ng-table="usersTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="u in data">
-                                        <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                        <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
                                         <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
                                         <td  data-title="'Etat'">
                                             <button ng-show="u.etat==false" ng-confirm-click="Voulez-vous vraiment activer le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
                                             <button ng-show="u.etat==true" ng-confirm-click="Voulez-vous vraiment désactiver le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
                                         </td>
-                                        <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-pill btn-dark" ng-click="editUser(u.id);"><i class="fa fa-edit"></i> Editer</button></td>
+                                        <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-pill btn-dark" ng-disabled="u.etat==false" ng-click="editUser(u.id);"><i class="fa fa-edit"></i> Editer</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -120,6 +133,98 @@
                 </div>
             </div>
         </div>
+        <!--  modale de parametrage-->
+        <div class="modal fade" id="param">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title text-dark text-center">Affectation de role </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="mt-2">
+
+                            <div class="card card-shadow mb-4">
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-primary">
+                                        <div class="custom-title">Paramétrage</div>
+                                    </div>
+                                    <div class="custom-title-wrap text-center">
+                                        <div class="custom-title"><h1>{{inventaire.numero}}</h1></div>
+                                        <div class="custom-title"><h5>{{inventaire.libelle}}</h5></div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <form name="paramForm">
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Sélectionner un utilisateur</label>
+                                                <select class="form-control form-control-sm" ng-model="participerUsername" required="required">
+                                                    <optgroup label="Utilisateurs"></optgroup>
+                                                    <option ng-repeat="opt in listUsersActif" value="{{opt.username}}">
+                                                        {{opt.nomPrenom}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Attribuer le role</label>
+                                                <select class="form-control form-control-sm" ng-model="roleName" required="required">
+                                                    <optgroup label="Choisissez un role"></optgroup>
+                                                    <option ng-repeat="opt in listRoles" value="{{opt.roleName}}">
+                                                        {{opt.definition}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-center row justify-content-center mt-4">
+                                            <div class="col-sm">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Attribuer le rôle à l'utilisateur  ?" confirmed-click="addRoleTOUser(participerUsername,roleName);"><i class="fa fa-check fa-2x"></i> <b>Affecter le rôle</b> </button>
+                                            </div>
+                                            <div class="col-sm">
+                                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="participerUsername=null;roleName=null"><i class="fa fa-times fa-2x"></i> <b>Annuler</b></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-primary">
+                                    <div class="custom-title">Utilisateurs & Rôles</div>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <div class="table-responsive">
+                                    <table ng-table="usersTable" class="display table table-striped" cellspacing="0">
+                                        <tbody>
+                                            <tr ng-repeat="p in data" ng-show="p.appRoles[0].definition!=null">
+                                                <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>
+                                                <td data-title="'Utilisateur(s)'" filter="{ 'username' : 'text'}">{{p.nomPrenom}}</td>
+                                                <td data-title="'Rôle(s)'">{{p.appRoles[0].definition}}</td>
+                                           </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <div class="text-center">
+                            <!--            validation-->
+                            <a class="btn btn-sm btn-pill mb-2 text-light btn-dark" data-dismiss="modal"><i class="fa fa-times fa-2x"></i> Fermer cette fenetre</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </section>

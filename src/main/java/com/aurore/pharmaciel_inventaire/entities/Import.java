@@ -24,4 +24,6 @@ public class Import implements Serializable {
     @Column(length = 250)
     private String prenom = "";
 
+    public Import(String nom, String prenom) {
+    }
 }

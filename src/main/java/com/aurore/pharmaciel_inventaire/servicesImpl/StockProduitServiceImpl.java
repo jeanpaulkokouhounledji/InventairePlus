@@ -31,12 +31,10 @@ public class StockProduitServiceImpl implements StockProduitService {
 
     @Override
     public void deleteStockProduit(Long id) {
-
     }
 
     @Override
     public void changeProduitStockState(Long id) {
-
     }
 
     @Override

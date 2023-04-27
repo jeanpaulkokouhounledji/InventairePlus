@@ -13,4 +13,8 @@ public interface TraitementRepository extends JpaRepository<Traitement,Long>{
     @Query("select t from Traitement t order by t.id desc")
     List<Traitement> listeDesTraitements();
 
+    //suppression du traitement correspondant à la participation
+    @Query("delete Traitement t where t.participer.id=:x")
+    void deleteTraitementByParticiperId(@Param("x") long x);
+
 }

@@ -5,32 +5,32 @@
   <!--    menu de la page-->
     <span layout:fragment="custum-menu">
          <!--            menu de l'inventaire-->
-        <li class="nav-item">
+        <li class="nav-item" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="/"><i class="fa fa-home"></i>&nbsp; Accueil</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
 
-    </span>
+      </span>
 
       <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -104,17 +104,17 @@
                             <table ng-table="inventairesTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="i in data">
-                                        <td style="width: 5%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
+                                        <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'numero'" data-title="'N° d\'inventaire'" filter="{ 'numero' : 'text'}">{{i.numero}}</td>
                                         <td sortable="'libelle'" data-title="'Libellé de l\'inventaire'" filter="{ 'libelle' : 'text'}">{{i.libelle}}</td>
                                         <td style="width: 10%;text-align: center;" sortable="'statut'"  data-title="'Statut'">
                                             <button ng-show="i.statut==false" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-danger"><b>cloturé</b></button>
                                             <button ng-show="i.statut==true" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-success"><b>En cours</b></button>
                                         </td>
-<!--                                        <td sortable="'date'"  data-title="'Date prévue'" filter="{ 'date' : 'text'}">{{i.date}}</td>-->
+                                        <td sortable="'date'"  data-title="'Date de création'" filter="{ 'date' : 'text'}">{{i.date}}</td>
                                         <td style="width: 25%;text-align: center;" data-title="'Action'" >
-                                            <button class="btn btn-pill btn-sm btn-dark" ng-click="editInventaire(i.id);toggleForm();"><i class="fa fa-edit"></i> Editer</button>
-                                            <button data-toggle="modal" data-target="#param" ng-click="editInventaire(i.id);" class="btn btn-dark btn-sm btn-pill"><i class="fa fa-cog"></i> Paramétrage</button>
+                                            <button class="btn btn-pill btn-sm btn-dark" ng-click="editInventaire(i.id);toggleForm();" ng-disabled="i.statut==true"><i class="fa fa-edit"></i> Editer</button>
+                                            <button data-toggle="modal" data-target="#param" ng-click="editInventaire(i.id);" ng-disabled="i.statut==false" class="btn btn-dark btn-sm btn-pill"><i class="fa fa-cog"></i> Paramétrage</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -200,7 +200,7 @@
                                             <td sortable="'p.appUser.nomPrenom'" data-title="'Utilisateur(s)'" filter="{ 'p.appUser.nomPrenom' : 'text'}">{{p.appUser.nomPrenom}}</td>
                                             <td sortable="'p.inventaire.numero'" data-title="'Inventaire(s)'" filter="{ 'p.inventaire.numero' : 'text'}">{{p.inventaire.numero}}</td>
                                             <td style="width: 10%;text-align: center;" sortable="'p.localisation.code'" data-title="'Localisation(s)'" filter="{ 'p.localisation.code' : 'text'}">{{p.localisation.code}}</td>
-                                            <td style="width: 5%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-click="deleteParticiper(p.id)"><i class="fa fa-times"></i></button></td>
+                                            <td style="width: 5%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous supprimer l'affectation de << {{ p.appUser.nomPrenom }} >> à la localisation << {{p.localisation.libelle}} >> ?" confirmed-click="deleteParticiper(p.id)" ><i class="fa fa-times"></i></button></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -212,7 +212,7 @@
                     <div class="modal-footer">
                         <div class="text-center">
                            <!--            validation-->
-                            <a class="btn btn-sm btn-pill mb-2 text-light btn-dark" data-dismiss="modal"><i class="fa fa-times fa-2x"></i> Fermer ce message </a>
+                            <a class="btn btn-sm btn-pill mb-2 text-light btn-dark" data-dismiss="modal"><i class="fa fa-times fa-2x"></i> Fermer cette fenetre</a>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ package com.aurore.pharmaciel_inventaire.web;
 
 import com.aurore.pharmaciel_inventaire.entities.AppRole;
 import com.aurore.pharmaciel_inventaire.entities.AppUser;
+import com.aurore.pharmaciel_inventaire.entities.Logs;
 import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
 import lombok.Data;
