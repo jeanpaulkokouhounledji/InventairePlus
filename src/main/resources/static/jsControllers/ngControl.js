@@ -131,7 +131,7 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
                 $scope.usersList();
                 new PNotify({
                     title: "Inventaire+ | Notification",
-                    text: "Role "+ var2 + " Attribuer avec succès à " + var1,
+                    text: "Role << "+ var2 + " >> Attribuer avec succès à << " + var1 + " >>",
                     type: "success",
                     styling: "bootstrap3",
                     delay: 5000,
@@ -669,7 +669,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     $scope.listTraitement();
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "<< "+ $scope.stockProduit.produit.libelle +" >> inventorié avec succès",
+                        text: "<< "+ $scope.savedTraitement.stockProduit.produit.libelle +" >> inventorié avec succès",
                         type: "success",
                         styling: "bootstrap3",
                         delay: 2000,
@@ -688,7 +688,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 function errorCallback(response) {
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Désolé << "+ $scope.stockProduit.produit.libelle +" >> déjà inventorié",
+                        text: "Désolé << "+ $scope.savedTraitement.stockProduit.produit.libelle +" >> déjà inventorié, supprimez pour modifier",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,
@@ -718,7 +718,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.fournisseurList();
 
     //ligne de produit à compter
-    $scope.aCompter = function (codeUnique) {
+    /*$scope.aCompter = function (codeUnique) {
         $http.get("/pharmaxiel/api/v1/stockproduit/recherche/"+codeUnique)
             .then(function (response) {
                 $scope.stockProduit = response.data;
@@ -734,7 +734,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     });
                 }
             })
-    };
+    };*/
 
     //recharge de la liste des traitement
     $scope.listTraitement = function () {
@@ -1033,6 +1033,89 @@ function historiqueController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.getUserDetails();
 }
 
+app.controller('profilController',profilController);
+function profilController($scope , $http , $filter , fileUpload , NgTableParams){
+
+    $scope.userData = {data: []};
+    //objet utilisateur
+    $scope.appUser = {};
+    //objet de reccuperation des details de l'utilisateur
+    $scope.user = {};
+    //objet utilisateur-role
+    $scope.userRole = {};
+    //affichage du formulaire de modification du mot de passe si vrai
+    $scope.schowEditForm = false;
+
+
+    //pattern du mot de passe
+    $scope.pat = /^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#_?&])[A-Za-z\d$@$!%*#_?&]{9,20}$/;
+
+    //verification du mot de passe
+    $scope.compare = function (repass) {
+        $scope.isconfirm = $scope.password == repass ?
+            true : false;
+    }
+
+
+    //Ajout d'un nouvel utilisateur
+    $scope.saveUser = function () {
+        $http.post("/pharmaxiel/api/v1/saveUser", $scope.user)
+            .then(function (response) {
+                    $scope.appUser = response.data;
+                    $scope.resetUserData();
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Votre mot de passe a été changé avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                },
+                function errorCallback() {
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Échec! vérifiez les données et réessayez",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 2500,
+                        history: false,
+                        sticker: true,
+                    });
+
+                });
+    }
+
+    //parametres utilisateur
+    $scope.getUserDetails = function (){
+        $http.get("/pharmaxiel/api/v1/getLogedUser")
+            .then(function (response) {
+                $scope.user = response.data;
+            })
+    }
+    $scope.getUserDetails();
+
+    //reccuperation d'un utilisateur à travers son nom d'utilisateur
+    $scope.loadUser = function (username) {
+        $http.get("/conventionnement/Api/v1/loadUser/"+username)
+            .then(function (response) {
+                $scope.appUser = response.data;
+            });
+    }
+
+    //initialisation de l'objet utilisateur
+    $scope.resetUserData = function () {
+        return $scope.appUser = {};
+    }
+
+    //reset du userRole
+    $scope.resetUserRole = function () {
+        return $scope.userRole = {};
+    }
+
+}
 
 
 

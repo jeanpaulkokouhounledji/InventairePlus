@@ -69,16 +69,16 @@
                             </div>
                             <div class="col-sm-5 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Localisation</label>
-                                <select class="form-control form-control-sm" name="xx" ng-model="chosedParticiper" required="required">
+                                <select class="form-control form-control-sm" name="chosedParticiper" ng-model="chosedParticiper" required="required">
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerByUser" value="{{opt.id}}">
                                         {{opt.localisation.libelle}}
                                     </option>
                                 </select>
-                                <label class="text-danger" ng-show="fnForm.xx.$invalid">Champ requis</label>
+                                <label class="text-danger" ng-show="participerByUser==null">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="chosedParticiper==''" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-if="userInventaire.numero!=null" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>

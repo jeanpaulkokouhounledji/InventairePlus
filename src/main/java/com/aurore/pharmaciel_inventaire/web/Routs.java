@@ -55,7 +55,7 @@ public class Routs {
 
     //============= Utilisateur ========================
 
-    //route vers la page de gestion des utilisateur (Creation, modifier, ...)
+    //route vers la page de gestion des utilisateurs (Creation, modifier, ...)
     @RequestMapping(value = "/usersManagement")
     public String conventionUsers(){
         return "users/usersManagement";
@@ -65,6 +65,12 @@ public class Routs {
     @RequestMapping(value = "/userParam")
     public String parametrageDesUtilisateurs(){
         return "users/usersSettings";
+    }
+
+    //route vers la page de profil
+    @RequestMapping(value = "/profil")
+    public String gestionDuProfil(){
+        return "users/changePassword";
     }
 
 
