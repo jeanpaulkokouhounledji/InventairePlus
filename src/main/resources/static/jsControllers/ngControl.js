@@ -938,19 +938,63 @@ function chargementController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.getUserDetails();
 
-    //upload nomenclature des actes
-    $scope.chargerImport = function(){
-        var file = $scope.importFile;
+    //chargement des produits
+    $scope.chargerProduits = function(){
+        var file = $scope.importProduit;
         console.log('file is');
         console.dir(file);
         if (file!=undefined){
-            var uploadUrl = "/chargement/uploadExcel";
+            var uploadUrl = "/chargement/chargement/produit";
 
             fileUpload.uploadFileToUrl(file, uploadUrl);
 
-            $("#importFile").val(null);
+            $("#importProduit").val(null);
         }
     };
+
+
+    //chargement des localisations
+    $scope.chargerLocalisations = function(){
+        var file = $scope.importLocalisation;
+        console.log('file is');
+        console.dir(file);
+        if (file!=undefined){
+            var uploadUrl = "/chargement/chargement/localisation";
+
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+
+            $("#importLocalisation").val(null);
+        }
+    };
+
+    //chargement des fournisseurs
+    $scope.chargerFournisseurs = function(){
+        var file = $scope.importFournisseur;
+        console.log('file is');
+        console.dir(file);
+        if (file!=undefined){
+            var uploadUrl = "/chargement/chargement/fournisseur";
+
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+
+            $("#importFournisseur").val(null);
+        }
+    };
+
+    //chargement des produits en stock
+    $scope.chargerProduitStock = function(){
+        var file = $scope.importStockProduit;
+        console.log('file is');
+        console.dir(file);
+        if (file!=undefined){
+            var uploadUrl = "/chargement/chargement/stockproduit";
+
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+
+            $("#importStockProduit").val(null);
+        }
+    };
+
 
    /* $scope.chargerImport = function() {
         var file = $scope.importFile; // Get the file from the file input field

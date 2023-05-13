@@ -1,10 +1,13 @@
 package com.aurore.pharmaciel_inventaire.controllers;
 
-import com.aurore.pharmaciel_inventaire.entities.Import;
-import com.aurore.pharmaciel_inventaire.utils.ExcelUtils;
-import com.lowagie.text.Row;
+import com.aurore.pharmaciel_inventaire.services.ChargementFournisseurServices.ChargementFournisseurService;
+import com.aurore.pharmaciel_inventaire.services.ChargementLocalisationsServices.ChargementLocalisationService;
+import com.aurore.pharmaciel_inventaire.services.ChargementProduitServices.ChargementProduitService;
+import com.aurore.pharmaciel_inventaire.services.ChargementProduitstockServices.ChargementProduitStockService;
+import com.aurore.pharmaciel_inventaire.services.ProduitService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "chargement")
@@ -29,10 +30,24 @@ public class ChargementController {
 
     private final SessionFactory sessionFactory;
 
+    private final ProduitService produitService;
 
-    public ChargementController(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory) {
+    private final ChargementProduitService chargementProduitService;
+
+    private final ChargementLocalisationService chargementLocalisationService;
+
+    private final ChargementFournisseurService chargementFournisseurService;
+
+    private final ChargementProduitStockService chargementProduitStockService;
+
+    public ChargementController(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory, ProduitService produitService, ChargementProduitService chargementProduitService, ChargementLocalisationService chargementLocalisationService, ChargementFournisseurService chargementFournisseurService, ChargementProduitStockService chargementProduitStockService) {
         this.jdbcTemplate = jdbcTemplate;
         this.sessionFactory = sessionFactory;
+        this.produitService = produitService;
+        this.chargementProduitService = chargementProduitService;
+        this.chargementLocalisationService = chargementLocalisationService;
+        this.chargementFournisseurService = chargementFournisseurService;
+        this.chargementProduitStockService = chargementProduitStockService;
     }
 
     //téléchargement du model de produits
@@ -116,71 +131,38 @@ public class ChargementController {
             out.flush();
         }
 
-        //==================================================================================================
-        //==================      Import des donnees dans les differentes tables            ================
-        //==================================================================================================
 
-    /*@PostMapping("/import")
-    public String importData(@RequestParam("file") MultipartFile file) throws IOException {
-        InputStream inputStream = file.getInputStream();
 
-        // Use Apache POI to read data from Excel file
-        Workbook workbook = WorkbookFactory.create(inputStream);
-        Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+    //chargement des produits dans la base à partir de excel
+    @PostMapping(value = "/chargement/produit")
+    public ResponseEntity<?> uploadProduitsData(@RequestParam MultipartFile file){
+        this.chargementProduitService.saveProduitsToDatabase(file);
+        return ResponseEntity.ok(Map
+                .of("Message", "Produits chargés"));
+    }
 
-        // Prepare the SQL query for inserting data into MySQL database
-        String sql = "INSERT INTO import (id, nom, prenom) VALUES (?, ?, ?)";
+    //chargement des localisations dans la base à partir de excel
+    @PostMapping(value = "/chargement/localisation")
+    public ResponseEntity<?> uploadLocalisationsData(@RequestParam MultipartFile file){
+        this.chargementLocalisationService.saveLocalisationsToDatabase(file);
+        return ResponseEntity.ok(Map
+                .of("Message", "Localisations chargées"));
+    }
 
-        // Process each row and insert data into MySQL database
-        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-            Row row = (Row) sheet.getRow(i);
-            Long col1Value = (Long) row.getCell(0);
-            String col2Value = (String) row.getCell(1);
-            String col3Value = (String) row.getCell(2);
+    //chargement des fournisseurs dans la base à partir de excel
+    @PostMapping(value = "/chargement/fournisseur")
+    public ResponseEntity<?> uploadFournisseursData(@RequestParam MultipartFile file){
+        this.chargementFournisseurService.saveFournisseursToDatabase(file);
+        return ResponseEntity.ok(Map
+                .of("Message", "Fournisseurs chargés"));
+    }
 
-            // Insert data into MySQL database using JDBC
-            try {
-                PreparedStatement preparedStatement = jdbcTemplate.getDataSource().getConnection().prepareStatement(sql);
-                preparedStatement.setLong(0, col1Value);
-                preparedStatement.setString(1, col2Value);
-                preparedStatement.setString(2, col3Value);
-                preparedStatement.executeUpdate();
-                preparedStatement.close();
-            } catch (SQLException e) {
-                // Handle exception if necessary
-                e.printStackTrace();
-            }
-        }
-
-        workbook.close();
-        inputStream.close();
-
-        return "File imported successfully";
-    }*/
-
-    // ImportExcelController.java
-
-       /* @PostMapping("/uploadExcel")
-        public String uploadExcelFile(@RequestParam("file") MultipartFile file) {
-            if (ExcelUtils.isExcelFile(file)) {
-                try {
-                    List<Import> imports = ExcelUtils.parseExcelFile(file);
-                    saveImportToDatabase(imports);
-                    return "File uploaded and data imported successfully!";
-                } catch (Exception e) {
-                    return "Failed to upload file: " + e.getMessage();
-                }
-            } else {
-                return "Please upload an Excel file!";
-            }
-        }*/
-
-    private void saveImportToDatabase(List<Import> imports) {
-        for (Import imp : imports) {
-            jdbcTemplate.update("INSERT INTO Import (nom, prenom) VALUES (?, ?)",
-                    imp.getNom(), imp.getPrenom());
-            // Set other fields in User object and add corresponding placeholders in the SQL query
-        }
+    //chargement des fournisseurs dans la base à partir de excel
+    @PostMapping(value = "/chargement/stockproduit")
+    public ResponseEntity<?> uploadStockProduit(@RequestParam MultipartFile file){
+        this.chargementProduitStockService.saveProduitStockToDatabase(file);
+        return ResponseEntity.ok(Map
+                .of("Message", "Produits chargés en stock"));
     }
 
 }

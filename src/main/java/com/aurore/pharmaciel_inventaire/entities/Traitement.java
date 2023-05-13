@@ -50,4 +50,11 @@ public class Traitement implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dateComptage = new Date();
 
+    //=========== ajout des champs pour la creation d'une nouvelle ligne
+    @Column
+    private String codeCip;
+
+    @Column
+    private String libelleProduit;
+
 }

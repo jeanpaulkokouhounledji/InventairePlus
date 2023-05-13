@@ -2,6 +2,7 @@ package com.aurore.pharmaciel_inventaire.services;
 
 
 import com.aurore.pharmaciel_inventaire.entities.Produit;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

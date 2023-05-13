@@ -19,11 +19,11 @@ import java.util.Date;
 public class StockProduit implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column
-    private double idDepot;
+    private long idDepot;
     @Column
     private String codeUnique;
     @Column
@@ -38,9 +38,10 @@ public class StockProduit implements Serializable {
     private String lot;
     @Column
     private boolean etat;
-    @ManyToOne
+
+    /*@ManyToOne
     @JoinColumn(name = "id_inventaire")
-    Inventaire inventaire;
+    Inventaire inventaire;*/
     @ManyToOne
     @JoinColumn(name = "id_produit")
     Produit produit;

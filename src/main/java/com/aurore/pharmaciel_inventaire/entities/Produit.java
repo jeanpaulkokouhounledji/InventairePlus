@@ -1,7 +1,5 @@
 package com.aurore.pharmaciel_inventaire.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Table
 @Entity
@@ -19,7 +16,7 @@ import java.util.Date;
 public class Produit implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false, length = 50)
@@ -29,11 +26,10 @@ public class Produit implements Serializable {
     @Column(nullable = false, length = 200)
     private String dci="";
     @Column
-    private double idForme = .0;
+    private long idForme = 0;
     @Column
-    private double idFamille = .0;
-    @ManyToOne
-    @JoinColumn(name = "id_localisation")
-    Localisation localisation;
+    private long idFamille = 0;
+    @Column
+    private long idLocalisation = 0;
 
 }
