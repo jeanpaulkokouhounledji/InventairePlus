@@ -27,7 +27,7 @@ public class AppUser {
 
     private String nomPrenom;
 
-    @Column(unique = true)
+    @Column
     private String username;
     @JsonProperty(access = JsonProperty.Access.AUTO)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
     @Column(nullable = true)

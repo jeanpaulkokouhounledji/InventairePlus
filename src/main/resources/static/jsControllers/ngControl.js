@@ -84,7 +84,7 @@ app.service('fileUpload', ['$http', function ($http) {
                     new PNotify({
                         title: "Notification Pharmaxiel_web",
                         type: "success",
-                        text: "Fichier(s) envoyé(s) avec succès",
+                        text: "Données chargées avec succès",
                         nonblock: {
                             nonblock: true
                         },
@@ -96,10 +96,18 @@ app.service('fileUpload', ['$http', function ($http) {
 
                     //$scope.notification("message envoyé avec succès","success");
                     //alert("Fichier importé");
-                }
-                ,function errorCallback(response) {
-
+                },function errorCallback(response) {
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Désolé, une erreur est survenue lors du chargement",
+                    type: "error",
+                    styling: "bootstrap3",
+                    delay: 3000,
+                    history: false,
+                    sticker: true,
                 });
+
+            });
     }
 }]);
 
@@ -659,6 +667,40 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     }
 
+    //sauvegarde d'une toute nouvelle ligne de traitement d'un produit inexistant en stock
+    $scope.saveNewTraitement = function (){
+        $http.post("/pharmaxiel/api/v1/traitement/save", $scope.traitement)
+            .then(function (response){
+                $scope.traitement = response.data;
+
+                $scope.listTraitement();
+                $scope.traitement = {};
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Traitement enrégistré avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                },
+                function errorCallback() {
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Echec d'enrégistrement du produit",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 2500,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+
+    }
+
 
     //sauvegarde reelle du traitement
     $scope.saveRealTraitement = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
@@ -717,24 +759,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.fournisseurList();
 
-    //ligne de produit à compter
-    /*$scope.aCompter = function (codeUnique) {
-        $http.get("/pharmaxiel/api/v1/stockproduit/recherche/"+codeUnique)
-            .then(function (response) {
-                $scope.stockProduit = response.data;
-                if($scope.stockProduit==''){
-                    new PNotify({
-                        title: "Inventaire+ | Notification",
-                        text: "Aucune ligne de produit en stock correspondante",
-                        type: "warning",
-                        styling: "bootstrap3",
-                        delay: 5000,
-                        history: false,
-                        sticker: true,
-                    });
-                }
-            })
-    };*/
 
     //recharge de la liste des traitement
     $scope.listTraitement = function () {
@@ -743,8 +767,8 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.traitementData = response.data;
                 $scope.traitementsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
-                    /*page: 1,
-                    count: 5*/
+                    page: 1,
+                    count: 5
                 }, {
                     total: $scope.traitementData.length,
                     getData: function (params) {
@@ -1101,42 +1125,44 @@ function profilController($scope , $http , $filter , fileUpload , NgTableParams)
     }
 
 
-    //Ajout d'un nouvel utilisateur
-    $scope.saveUser = function () {
-        $http.post("/pharmaxiel/api/v1/saveUser", $scope.user)
+    //création d'un utilisateur
+    $scope.createUser = function (){
+        $http.post("/pharmaxiel/api/v1/saveUser", $scope.appUser)
             .then(function (response) {
                     $scope.appUser = response.data;
-                    $scope.resetUserData();
+                    $scope.schowEditForm=false;
+
                     new PNotify({
-                        title: "INAM | Conventionnement",
-                        text: "Votre mot de passe a été changé avec succès",
+                        title: "Inventaire+ | Notification",
+                        text: "Mot de passe mise à jour avec succès",
                         type: "success",
                         styling: "bootstrap3",
-                        delay: 2000,
+                        delay: 5000,
                         history: false,
                         sticker: true,
                     });
 
                 },
-                function errorCallback() {
+                function errorCallback(response) {
                     new PNotify({
-                        title: "INAM | Conventionnement",
-                        text: "Échec! vérifiez les données et réessayez",
+                        title: "Inventaire+ | Notification",
+                        text: "Erreur de mise à jour du mot de passe",
                         type: "error",
                         styling: "bootstrap3",
-                        delay: 2500,
+                        delay: 3000,
                         history: false,
                         sticker: true,
                     });
 
-                });
-    }
+                })
+    };
+
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
             .then(function (response) {
-                $scope.user = response.data;
+                $scope.appUser = response.data;
             })
     }
     $scope.getUserDetails();

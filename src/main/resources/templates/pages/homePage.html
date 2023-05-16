@@ -8,10 +8,11 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-light" data-toggle="dropdown" href="#"><i class="fa fa-bars"></i> Rubriques</a>
             <div class="dropdown-menu">
-                <a ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="inventaire">Comptage</a>
-                <a ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="ecarts">Gestion des écarts</a>
-                <a ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="stocks">Mise à jour du stock</a>
-                <a ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="historique">Historiques</a>
+                <a ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="comptage"><i class="fa fa-hand-o-right"></i> Comptage</a>
+                <a ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="inventaire"><i class="fa fa-hand-o-right"></i> Inventaire</a>
+                <a ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="ecarts"><i class="fa fa-hand-o-right"></i> Ecarts</a>
+                <a ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="stocks"><i class="fa fa-hand-o-right"></i> Mise à jour</a>
+                <a ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'" class="dropdown-item" href="historique"><i class="fa fa-hand-o-right"></i> Historique</a>
             </div>
         </li>
         <li class="nav-item">

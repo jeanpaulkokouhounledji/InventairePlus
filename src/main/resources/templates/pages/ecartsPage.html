@@ -107,10 +107,10 @@
                                             <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
                                             <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
                                         </td>
-                                        <td data-title="'Produit(s)'">{{t.stockProduit.produit.libelle}}</td>
-                                        <td data-title="'Fournisseur'">{{t.stockProduit.fournisseur.raisonSociale}}</td>
+                                        <td data-title="'Produit(s)'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
+                                        <td data-title="'Fournisseur'">{{t.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
-                                        <td data-title="'Quantité Base (a)'" class="font-weight-bold">{{t.stockProduit.quantite}}</td>
+                                        <td data-title="'Quantité Base (a)'" class="font-weight-bold">{{t.stockProduit.quantite==null?t.qteDisponible:t.stockProduit.quantite}}</td>
                                         <td data-title="'Quantité Inventoriée (b)'" class="font-weight-bold">{{t.qteCompte}}</td>
                                         <td data-title="'Ecart (a-b)'" class="font-weight-bold bg-dark text-warning">{{t.ecart}}</td>
                                         <td data-title="'Motif'" class="font-weight-bold"><input type="text" class="form-control form-control-sm" ng-model="t.motif"/></td>

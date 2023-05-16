@@ -34,6 +34,9 @@ public class Traitement implements Serializable {
     @Column
     private double qteCompte = .0;
 
+    @Column
+    private double qteDisponible = .0;
+
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date datePeremption;
 
@@ -46,6 +49,9 @@ public class Traitement implements Serializable {
 
     @Column
     private double statut = .0;
+
+    @Column
+    private double prixVente = .0;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dateComptage = new Date();

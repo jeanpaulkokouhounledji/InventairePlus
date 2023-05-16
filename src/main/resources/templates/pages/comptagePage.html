@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-sm-5 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Localisation</label>
-                                <select class="form-control form-control-sm" name="chosedParticiper" ng-model="chosedParticiper" required="required">
+                                <select class="form-control form-control-sm" ng-model="chosedParticiper"  required>
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerByUser" value="{{opt.id}}">
                                         {{opt.localisation.libelle}}
@@ -78,7 +78,7 @@
                                 <label class="text-danger" ng-show="participerByUser==null">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-if="userInventaire.numero!=null" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="userInventaire.numero==null" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -107,11 +107,11 @@
 <!--                                        <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
-                                        <td data-title="'Produit(s)'">{{t.stockProduit.produit.libelle}}</td>
+                                        <td data-title="'Produit(s)'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
                                         <td data-title="'Fournisseur'">{{t.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
                                         <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.stockProduit.produit.libelle}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -131,26 +131,6 @@
                                 <div class="row">
                                     <div class="col-sm-4">Recherchez un produit</div>
                                     <div class="col-sm-4"><i data-toggle="modal" data-target="#param" class="fa fa-plus-circle fa-3x text-success"></i></div>
-
-                                   <!-- <div class="text-center m-2">
-                                        <input type="search" class="form-control" placeholder="Nom du produit" list="plist" ng-model="search.produit.libelle"/>
-                                    </div>
-                                    <datalist id="plist">
-                                        <option ng-repeat="opt in listStockProduit | filter:search" value="{{opt.codeUnique}}">
-                                            {{opt.produit.libelle}} ==> {{opt.codeUnique}}
-                                        </option>
-                                    </datalist>-->
-                                    <!--<div class="col-sm-5">
-                                        <select class="form-control form-control-sm"  ng-model="codeUnique" ng-change="aCompter(codeUnique);" required="required">
-                                            <optgroup label="Sélectionnez un produit"></optgroup>
-                                            <option ng-repeat="opt in listStockProduit" value="{{opt.codeUnique}}">
-                                                {{opt.produit.libelle}} ==> {{opt.codeUnique}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3 text-right">
-                                        <button class="btn btn-pill btn-sm btn-outline-dark" ng-click="reset();codeUnique=null"><i class="fa fa-times"></i> <b>Annuler</b></button>
-                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -173,7 +153,7 @@
                                             <td style="width: 15%" data-title="'Fournisseur'">
                                                 <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
 <!--                                                    <optgroup label="Sélectionnez un autre fournisseur"></optgroup>-->
-                                                    <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}" >
+                                                    <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}">
                                                         {{four.raisonSociale}}
                                                     </option>
                                                 </select>
@@ -186,41 +166,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!--<div class="table-responsive">
-                            <table class="display table table-striped" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Code Cip</th>
-                                        <th>Libellé</th>
-                                        <th>Prix Vente</th>
-                                        <th>Fournisseur</th>
-                                        <th>Date Péremption</th>
-                                        <th>Qté Comptée</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{stockProduit.produit.codeProduit}}</td>
-                                        <td>{{stockProduit.produit.libelle}}</td>
-                                        <form name="cForm">
-                                            <td style="width: 10%"><input ng-model="prixVente" type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 15%">
-                                                <select class="form-control form-control-sm" ng-model="codeFournisseur" required="required">
-                                                    <optgroup label="Sélectionnez un autre fournisseur"></optgroup>
-                                                    <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
-                                                        {{four.raisonSociale}}
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <td style="width: 10%"><input ng-model="datePeremption"  type="date" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><input ng-model="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%"><button type="submit" class="btn btn-pill btn-sm btn-outline-dark"  ng-click="saveRealTraitement(codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
-                                        </form>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -249,12 +194,12 @@
                                         <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index + 1}}</td>
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
-                                        <td data-title="'Produit(s)'">{{tr.stockProduit.produit.libelle}}</td>
-                                        <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.stockProduit.prixVente | number}}</td>
+                                        <td data-title="'Produit(s)'">{{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}}</td>
+                                        <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.prixVente | number}}</td>
                                         <td data-title="'Fournisseur'">{{tr.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{tr.datePeremption}}</td>
                                         <td data-title="'Quantité Comptée'" class="font-weight-bold">{{tr.qteCompte}}</td>
-                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.stockProduit.produit.libelle}} >> ?" confirmed-click="deleteTraitement(tr.id);"><i class="text-warning fa fa-trash"></i></button></td>
+                                        <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}} >> ?" confirmed-click="deleteTraitement(tr.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -288,78 +233,48 @@
                                 <div class="card-body">
                                     <form name="paramForm">
                                         <div class="row justify-content-center">
-
-                                            <div class="col-sm form-group-sm mb-2">
-                                                <label>Code Cip</label>
-                                                <input ng-model="codeCip" name="codeCip" type="number" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-
-                                            <div class="col-sm form-group-sm mb-2">
+                                            <div class="col-sm-4 form-group-sm mb-2">
                                                 <label>Libelle du produit</label>
-                                                <input ng-model="libelleProduit" name="libelleProduit" type="number" class="form-control form-control-sm text-center" required="required">
+                                                <input ng-model="traitement.libelleProduit" type="traitement" class="form-control form-control-sm text-center" required="required">
                                             </div>
-
-                                            <div class="col-sm form-group-sm mb-2">
+                                            <div class="col-sm-4 form-group-sm mb-2">
+                                                <label>Code CIP</label>
+                                                <input ng-model="traitement.codeCip" type="text" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm-4 form-group-sm mb-2">
+                                                <label>Quantité comptée</label>
+                                                <input ng-model="traitement.qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm-4 form-group-sm mb-2">
+                                                <label>Quantité Disponible</label>
+                                                <input ng-model="traitement.qteDisponible" type="number" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm-4 form-group-sm mb-2">
+                                                <label>Date de péremption</label>
+                                                <input ng-model="traitement.datePeremption" type="date" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm-4 form-group-sm mb-2">
+                                                <label>Prix de vente</label>
+                                                <input ng-model="traitement.prixVente" type="number" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm-4 form-group-sm mb-2">
                                                 <label>Fournisseur</label>
-                                                <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
+                                                <select class="form-control form-control-sm" ng-model="traitement.fournisseur.id" required="required">
                                                     <!--                                                    <optgroup label="Sélectionnez un autre fournisseur"></optgroup>-->
-                                                    <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}" >
+                                                    <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}">
                                                         {{four.raisonSociale}}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="col-sm form-group-sm mb-2">
-                                                <label>Prix de vente</label>
-                                                <input ng-model="prixVente" name="prixVente" type="number" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-                                            <div class="col-sm form-group-sm mb-2">
-                                                <label>Date de péremption</label>
-                                                <input ng-model="datePeremption" name="datePeremption" type="date" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-                                            <div class="col-sm form-group-sm mb-2">
-                                                <label>Quantité comptée</label>
-                                                <input ng-model="qteCompte" name="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-
                                         </div>
                                         <div class="text-center row justify-content-center mt-4">
-                                            <div class="col-sm">
-                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click=""><i class="fa fa-check fa-2x"> Valider</i></button>
+                                            <div class="col-sm-4">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();traitement.participer.id=chosedParticiper"><i class="fa fa-check fa-2x"> Valider</i></button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="card card-shadow mb-4">
-                            <div class="card-header border-0">
-                                <div class="custom-title-wrap bar-primary">
-                                    <div class="custom-title">Affectations</div>
-                                </div>
-                            </div>
-                            <div class="pt-2">
-                                <div class="table-responsive">
-                                    <table ng-table="participationsTable" class="display table table-striped" cellspacing="0">
-                                        <tbody>
-                                        <tr ng-repeat="p in dat">
-                                            <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>
-                                            <td sortable="'p.appUser.nomPrenom'" data-title="'Utilisateur(s)'" filter="{ 'p.appUser.nomPrenom' : 'text'}">{{p.appUser.nomPrenom}}</td>
-                                            <td sortable="'p.inventaire.numero'" data-title="'Inventaire(s)'" filter="{ 'p.inventaire.numero' : 'text'}">{{p.inventaire.numero}}</td>
-                                            <td style="width: 10%;text-align: center;" sortable="'p.localisation.code'" data-title="'Localisation(s)'" filter="{ 'p.localisation.code' : 'text'}">{{p.localisation.code}}</td>
-                                            <td style="width: 5%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous supprimer l'affectation de << {{ p.appUser.nomPrenom }} >> à la localisation << {{p.localisation.libelle}} >> ?" confirmed-click="deleteParticiper(p.id)" ><i class="fa fa-times"></i></button></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <div class="text-center">
-                            <!--            validation-->
-                            <a class="btn btn-sm btn-pill mb-2 text-light btn-dark" data-dismiss="modal"><i class="fa fa-times fa-2x"></i> Fermer cette fenetre</a>
                         </div>
                     </div>
                 </div>

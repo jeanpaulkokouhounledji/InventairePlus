@@ -60,8 +60,8 @@
                         <div class="table-responsive">
                             <table class="display table table-striped" cellspacing="0">
                                 <thead>
-                                    <tr class="justify-content-center">
-                                        <div class="form-group">
+                                    <tr>
+                                        <div class="form-group text-center">
                                             <label>Chargement des données &nbsp;&nbsp;&nbsp;</label>
                                             <select class="col-sm-5 form-control-sm" ng-model="charge">
                                                 <optgroup label="Type de données à charger"></optgroup>
@@ -70,6 +70,8 @@
                                                 <option ng-value="2"> Liste des fournisseurs</option>
                                                 <option ng-value="3"> Liste des localisations</option>
                                             </select>
+                                            <label class="text-danger" ng-show="charge==null" ng-if="charge==null">Champ requis</label>
+                                            <input type="reset" ng-show="charge!=null" ng-click="charge=null" class="btn btn-sm form-control-sm btn-outline-dark">
                                         </div>
                                     </tr>
                                 </thead>

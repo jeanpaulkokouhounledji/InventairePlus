@@ -79,15 +79,6 @@
                                 <label>Mot de passe</label>
                                 <input type="password" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
                             </div>
-                            <div class="col-sm-4 form-group-sm mb-2" ng-show="!appUser.id">
-                                <label>Attribuer le role</label>
-                                <select class="form-control form-control-sm" ng-model="roleName" required="required">
-                                    <optgroup label="Choisissez un role"></optgroup>
-                                    <option ng-repeat="opt in listRoles" value="{{opt.definition}}">
-                                        {{opt.definition}}
-                                    </option>
-                                </select>
-                            </div>
 
                         </div>
                         <div class="text-center row justify-content-center mt-4">

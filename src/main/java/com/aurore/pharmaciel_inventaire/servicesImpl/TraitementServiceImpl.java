@@ -39,6 +39,10 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public Traitement saveTraitement(Traitement traitement) {
+        this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
+        traitement.setEcart(ecart);
+        //flag de comptage
+        traitement.setStatut(1);
         return traitementRepository.save(traitement);
     }
 
@@ -50,8 +54,9 @@ public class TraitementServiceImpl implements TraitementService {
         Optional<Fournisseur> fournisseur = Optional.of(fournisseurRepository.findById(id_fournisseur));
         //produit correspondant
         traitement.setStockProduit(stockProduit.get());
+        traitement.setPrixVente(prixVente);
         //prix de vente du produit
-        stockProduit.get().setPrixVente(prixVente);
+        //stockProduit.get().setPrixVente(prixVente);
         //participer correspondant
         traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
