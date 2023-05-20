@@ -22,6 +22,11 @@ public class Routs {
         return "pages/usersPage";
     }
 
+    @RequestMapping(value = "pop")
+    public String testPopManager(){
+        return "pages/testPop";
+    }
+
     @RequestMapping(value = "comptage")
     public String comptage(){
         return "pages/comptagePage";

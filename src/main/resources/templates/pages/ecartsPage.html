@@ -100,6 +100,27 @@
                     </div>
                     <div class="pt-2">
                         <div class="table-responsive">
+                            <table ng-table="traitementsTable" class="text-center display table table-striped" cellspacing="0">
+                                <tbody>
+                                    <tr ng-repeat="t in data" ng-if="t.participer.localisation.code==chosedLocalisationCode">
+                                        <td data-title="'Etat'">
+                                            <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
+                                            <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
+                                        </td>
+                                        <td data-title="'Code CIP'">{{t.codeCip==null?t.stockProduit.produit.codeProduit:t.codeCip}}</td>
+                                        <td data-title="'Produit'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
+                                        <td data-title="'Corriger'">
+                                            <i ng-if="t.motif==''" class="text-danger w-25">Non</i>
+                                            <i ng-if="t.motif!=''" class="text-success w-25">Oui</i>
+                                        </td>
+                                        <td data-title="'Action(s)'" >
+                                            <button data-toggle="modal" data-target="#param" class="btn btn-sm btn-pill btn-dark" ng-click="editTraitement(t.id);" ><i class="text-warning fa fa-pencil"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--<div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.localisation.code==chosedLocalisationCode">
@@ -120,12 +141,153 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="param">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title text-dark text-center"> Gestion des carts de << {{traitement.libelleProduit==null?traitement.stockProduit.produit.libelle:traitement.libelleProduit}} >> </h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="mt-2">
+
+                            <div class="card card-shadow mb-4">
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-primary">
+                                        <div class="custom-title">Produit</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h3>{{traitement.libelleProduit==null?traitement.stockProduit.produit.libelle:traitement.libelleProduit}} <sup class="text-danger btn btn-pill btn-light" ng-if="traitement.libelleProduit!=null">Nouveau<i class="fa fa-star"></i></sup></h3>
+                                    <h4>Code Cip: {{traitement.codeCip==null?traitement.stockProduit.produit.codeProduit:traitement.codeCip}}</h4>
+                                </div>
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-primary">
+                                        <div class="custom-title">Détail</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <form name="checkEcart">
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2" ng-if="traitement.libelleProduit!=null">
+                                                <label>Libelle du produit</label>
+                                                <input ng-model="traitement.libelleProduit" type="traitement" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2" ng-if="traitement.codeCip!=null">
+                                                <label>Code CIP</label>
+                                                <input ng-model="traitement.codeCip" type="text" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Quantités</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Quantité inventoriée</label>
+                                                <input ng-model="traitement.qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Quantité en Stock</label>
+                                                <input ng-model="traitement.qteDisponible" type="number" class="form-control form-control-sm text-center" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Prix</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Prix de vente inventorié</label>
+                                                <input ng-model="traitement.prixVente" type="number" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Prix de vente Stock</label>
+                                                <input ng-model="traitement.stockProduit.prixVente" type="number" class="form-control form-control-sm text-center" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Date de péremption</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2">
+<!--                                                <label>Date de péremption saisie <span class="text-danger">{{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }}</span></label>-->
+                                                <label>Date de péremption saisie <span ng-if="traitement.datePeremption!='' || traitement.datePeremption.toString().length!=10" class="text-danger">{{ '<< '+ traitement.datePeremption + ' >>'}}</span></label>
+                                                <input ng-model="traitement.datePeremption" ng-bind="formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy'" type="date" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Date de péremption Stock</label>
+                                                <input ng-model="traitement.stockProduit.datePeremption" type="text" class="form-control form-control-sm text-center" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Fournisseur</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Fournisseur inventorié <span ng-if="traitement.fournisseur.raisonSociale!=''" class="text-danger">{{ '<< '+ traitement.fournisseur.raisonSociale + ' >>'}}</span></label>
+                                                <select class="form-control form-control-sm" ng-model="traitement.fournisseur.id" required="required">
+                                                    <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
+                                                        {{four.raisonSociale}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Fournisseur en Stock</label>
+                                                <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Localisation</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Localisation inventoriée</label>
+                                                <input ng-model="traitement.participer.localisation.libelle" type="text" class="form-control form-control-sm text-center" required="required">
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Localisation en Stock</label>
+                                                <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label><span class="text-danger">*</span> Un motif est requis </label>
+                                            <textarea ng-model="traitement.motif" cols="150" rows="5" class="form-control" placeholder="Vous pouvez écrire ici." required="required"></textarea>
+                                        </div>
+                                        <div class="text-center row justify-content-center mt-4">
+                                            <div class="col-sm-4">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-disabled="checkEcart.$invalid" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveTraitement();"><i class="fa fa-check fa-2x"> Valider</i></button>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Annuler la saisie ?" confirmed-click="resetTraitement();traitement.fournisseur.raisonSociale=''"><i class="fa fa-check fa-2x"> Annuler</i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
-
-
 </section>

@@ -46,9 +46,12 @@
     <!--    contenu de la page-->
     <div layout:fragment="custum-content">
 
-        <div class="row" ng-if="showForm==true">
-            <div class="col-xl-4 col-sm-4">
+        <div class="row justify-content-between" ng-if="showForm==true">
+            <div class="">
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm();listTraitement()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
+            </div>
+            <div class="">
+                <button class="btn btn-dark btn-pill mb-2" data-toggle="modal" data-target="#param"><i class="fa fa-plus fa-2x"></i> Ajouter un nouveau produit</button>
             </div>
         </div>
 
@@ -130,7 +133,7 @@
                             <div class="custom-title">
                                 <div class="row">
                                     <div class="col-sm-4">Recherchez un produit</div>
-                                    <div class="col-sm-4"><i data-toggle="modal" data-target="#param" class="fa fa-plus-circle fa-3x text-success"></i></div>
+<!--                                    <div class="col-sm-4"><i data-toggle="modal" data-target="#param" class="fa fa-plus-circle fa-3x text-success"></i></div>-->
                                 </div>
                             </div>
                         </div>
@@ -191,7 +194,7 @@
                             <table ng-table="traitementsTable" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">
-                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index + 1}}</td>
+                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index = 0 + 1}}</td>
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}}</td>

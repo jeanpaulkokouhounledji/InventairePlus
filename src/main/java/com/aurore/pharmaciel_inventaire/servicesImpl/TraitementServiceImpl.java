@@ -42,7 +42,7 @@ public class TraitementServiceImpl implements TraitementService {
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
         //flag de comptage
-        traitement.setStatut(1);
+        //traitement.setStatut(1);
         return traitementRepository.save(traitement);
     }
 

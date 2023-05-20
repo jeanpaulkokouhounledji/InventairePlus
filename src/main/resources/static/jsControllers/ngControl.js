@@ -19,19 +19,19 @@ app.directive('convertToNumber', function() {
 
 //confirmation de l'action
 app.directive('ngConfirmClick', [
-    function(){
-        return {
-            link: function (scope, element, attr) {
-                var msg = attr.ngConfirmClick || "Confirmez vous cette action?";
-                var clickAction = attr.confirmedClick;
-                element.bind('click',function (event) {
-                    if ( window.confirm(msg) ) {
-                        scope.$eval(clickAction)
-                    }
-                });
-            }
-        };
-    }]);
+function(){
+    return {
+        link: function (scope, element, attr) {
+            var msg = attr.ngConfirmClick || "Confirmez vous cette action?";
+            var clickAction = attr.confirmedClick;
+            element.bind('click',function (event) {
+                if ( window.confirm(msg) ) {
+                    scope.$eval(clickAction)
+                }
+            });
+        }
+    };
+}]);
 
 app.directive('format', ['$filter', function ($filter) {
     return {
@@ -674,6 +674,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.traitement = response.data;
 
                 $scope.listTraitement();
+
                 $scope.traitement = {};
                     new PNotify({
                         title: "INAM | Conventionnement",
@@ -741,14 +742,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
     };
 
-    //liste des produit
-   /* $scope.stockProduitList = function (){
-        $http.get("/pharmaxiel/api/v1/stockproduit/list")
-            .then(function (response) {
-                $scope.listStockProduit = response.data;
-            })
-    }
-    $scope.stockProduitList();*/
 
     //liste des fournisseurs
     $scope.fournisseurList = function (){
@@ -823,11 +816,46 @@ app.controller('ecartsController',ecartsController);
 function ecartsController($scope , $http , $filter , fileUpload , NgTableParams ){
     $scope.ecartData = {data:[]};
     $scope.ecart = {};
+    $scope.traitement = {};
     $scope.showForm = false;
+    $scope.ligne = 0;
+
+    // @Function
+    // Description  : Triggered while displaying expiry date
+    $scope.formatDate = function(date){
+        var dateOut = new Date(date);
+        return dateOut;
+    };
+
+    // gestion du modal
+    $scope.showModal = false;
+    $scope.buttonClicked = "";
+    $scope.toggleModal = function(btnClicked){
+        $scope.buttonClicked = btnClicked;
+        $scope.showModal = !$scope.showModal;
+    };
 
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
     };
+
+    $scope.resetTraitement = function () {
+        // $scope.traitement.libelleProduit = '';
+        // $scope.traitement.codeCip = '';
+        $scope.traitement.qteCompte = '';
+        $scope.traitement.prixVente = '';
+        $scope.traitement.datePeremption = '';
+        $scope.traitement.participer.localisation.libelle= '';
+    };
+
+    //liste des fournisseurs
+    $scope.fournisseurList = function (){
+        $http.get("/pharmaxiel/api/v1/fournisseur/list")
+            .then(function (response) {
+                $scope.listFournisseurs = response.data;
+            })
+    }
+    $scope.fournisseurList();
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
@@ -837,6 +865,14 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
             })
     };
     $scope.getUserDetails();
+
+    //reccuperation d'une ligne de traitement
+    $scope.editTraitement = function(id){
+        $http.get("/pharmaxiel/api/v1/traitement/edit/"+id)
+            .then(function (response) {
+                $scope.traitement = response.data;
+            })
+    };
 
     //Listes des participations
     $scope.participerList = function (){
@@ -873,7 +909,41 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
             })
     };
 
-    //sauvegarde d'un motif
+    //sauvegarde d'une toute nouvelle ligne de traitement d'un produit inexistant en stock
+    $scope.saveTraitement = function (){
+        $http.post("/pharmaxiel/api/v1/ecartTraitement/save",$scope.traitement)
+            .then(function (response){
+                    $scope.traitData = response.data;
+
+                    $scope.listTraitement();
+
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Traitement enrégistré avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                },
+                function errorCallback() {
+                    new PNotify({
+                        title: "INAM | Conventionnement",
+                        text: "Echec d'enrégistrement du produit",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 2500,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+
+    }
+
+ //sauvegarde d'un motif
     $scope.saveMotif = function (id,motif){
         $http.put("/pharmaxiel/api/v1/traitement/saveMotif/"+id+"/"+motif)
             .then(function (response) {
