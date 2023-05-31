@@ -85,8 +85,17 @@
             </div>
         </div>
 
+        <div class="row mt-xl-3 justify-content-center">
+            <div class="col-sm-6">
+                <div class="alert alert-dark alert-dismissible fade show text-center" ng-if="chosedLocalisationCode!=null&&traitementData==''">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>INVENTAIRE<sup>+</sup></strong> Aucun écart constaté sur le rayon << {{chosedLocalisationCode}} >> de l'inventaire.
+                </div>
+            </div>
+        </div>
+
         <!--        tableau de gestion -->
-        <div class="row mt-xl-3" ng-if="chosedLocalisationCode">
+        <div class="row mt-xl-3" ng-if="chosedLocalisationCode!=null&&traitementData!=''">
             <div class="col-sm-12">
                 <div class="card card-shadow mb-4">
                     <div class="card-header border-0">
@@ -103,16 +112,16 @@
                             <table ng-table="traitementsTable" class="text-center display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="t in data" ng-if="t.participer.localisation.code==chosedLocalisationCode">
-                                        <td data-title="'Etat'">
+                                        <!--<td data-title="'Etat'">
                                             <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
                                             <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
-                                        </td>
+                                        </td>-->
                                         <td data-title="'Code CIP'">{{t.codeCip==null?t.stockProduit.produit.codeProduit:t.codeCip}}</td>
                                         <td data-title="'Produit'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
-                                        <td data-title="'Corriger'">
+                                        <!--<td data-title="'Corriger'">
                                             <i ng-if="t.motif==''" class="text-danger w-25">Non</i>
                                             <i ng-if="t.motif!=''" class="text-success w-25">Oui</i>
-                                        </td>
+                                        </td>-->
                                         <td data-title="'Action(s)'" >
                                             <button data-toggle="modal" data-target="#param" class="btn btn-sm btn-pill btn-dark" ng-click="editTraitement(t.id);" ><i class="text-warning fa fa-pencil"></i></button>
                                         </td>
@@ -120,28 +129,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!--<div class="table-responsive">
-                            <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
-                                <tbody>
-                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.localisation.code==chosedLocalisationCode">
-                                        <td data-title="'Etat'">
-                                            <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
-                                            <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
-                                        </td>
-                                        <td data-title="'Produit(s)'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
-                                        <td data-title="'Fournisseur'">{{t.fournisseur.raisonSociale}}</td>
-                                        <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
-                                        <td data-title="'Quantité Base (a)'" class="font-weight-bold">{{t.stockProduit.quantite==null?t.qteDisponible:t.stockProduit.quantite}}</td>
-                                        <td data-title="'Quantité Inventoriée (b)'" class="font-weight-bold">{{t.qteCompte}}</td>
-                                        <td data-title="'Ecart (a-b)'" class="font-weight-bold bg-dark text-warning">{{t.ecart}}</td>
-                                        <td data-title="'Motif'" class="font-weight-bold"><input type="text" class="form-control form-control-sm" ng-model="t.motif"/></td>
-                                        <td data-title="'Action(s)'" >
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="t.motif==''" ng-confirm-click="Enregister le motif pour << {{t.stockProduit.produit.libelle}} >> ?" confirmed-click="saveMotif(t.id,t.motif);"><i class="text-warning fa fa-upload"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -153,7 +140,7 @@
 
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h4 class="modal-title text-dark text-center"> Gestion des carts de << {{traitement.libelleProduit==null?traitement.stockProduit.produit.libelle:traitement.libelleProduit}} >> </h4>
+                        <h4 class="modal-title text-dark text-center"> Gestion des écarts de << {{traitement.libelleProduit==null?traitement.stockProduit.produit.libelle:traitement.libelleProduit}} >> </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -171,6 +158,16 @@
                                     <h3>{{traitement.libelleProduit==null?traitement.stockProduit.produit.libelle:traitement.libelleProduit}} <sup class="text-danger btn btn-pill btn-light" ng-if="traitement.libelleProduit!=null">Nouveau<i class="fa fa-star"></i></sup></h3>
                                     <h4>Code Cip: {{traitement.codeCip==null?traitement.stockProduit.produit.codeProduit:traitement.codeCip}}</h4>
                                 </div>
+
+                                <div class="card-header border-0">
+                                    <div class="custom-title-wrap bar-primary">
+                                        <div class="custom-title">Ecarts</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul><i></i></ul>
+                                </div>
+
                                 <div class="card-header border-0">
                                     <div class="custom-title-wrap bar-primary">
                                         <div class="custom-title">Détail</div>
@@ -226,12 +223,12 @@
                                         <div class="row">
                                             <div class="col-sm form-group-sm mb-2">
 <!--                                                <label>Date de péremption saisie <span class="text-danger">{{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }}</span></label>-->
-                                                <label>Date de péremption saisie <span ng-if="traitement.datePeremption!='' || traitement.datePeremption.toString().length!=10" class="text-danger">{{ '<< '+ traitement.datePeremption + ' >>'}}</span></label>
-                                                <input ng-model="traitement.datePeremption" ng-bind="formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy'" type="date" class="form-control form-control-sm text-center" required="required">
+                                                <label>Date de péremption saisie <span class="text-danger"><< {{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }} >></span></label>
+                                                <input ng-model="traitement.datePeremption" type="date" class="form-control form-control-sm text-center" required="required">
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
                                                 <label>Date de péremption Stock</label>
-                                                <input ng-model="traitement.stockProduit.datePeremption" type="text" class="form-control form-control-sm text-center" disabled>
+                                                <input ng-model="formatDate(traitement.stockProduit.datePeremption) |  date:'dd/MM/yyyy'" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
                                         </div>
                                         <div class="card-header border-0">
@@ -244,12 +241,12 @@
                                                 <label>Fournisseur inventorié <span ng-if="traitement.fournisseur.raisonSociale!=''" class="text-danger">{{ '<< '+ traitement.fournisseur.raisonSociale + ' >>'}}</span></label>
                                                 <select class="form-control form-control-sm" ng-model="traitement.fournisseur.id" required="required">
                                                     <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
-                                                        {{four.raisonSociale}}
+                                                        {{four.raisonSociale}} => {{four.codeFournisseur}}
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
-                                                <label>Fournisseur en Stock</label>
+                                                <label>Fournisseur en stock <span class="text-danger"><< {{traitement.stockProduit.fournisseur.codeFournisseur}} >></span></label>
                                                 <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
                                         </div>
@@ -260,12 +257,18 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm form-group-sm mb-2">
-                                                <label>Localisation inventoriée</label>
-                                                <input ng-model="traitement.participer.localisation.libelle" type="text" class="form-control form-control-sm text-center" required="required">
+                                                <label>Localisation en Stock <span class="text-danger"><< {{traitement.stockProduit.produit.localisation.libelle}} >></span></label>
+                                                <div class="col-sm form-group-sm mb-2">
+                                                    <select class="form-control form-control-sm" ng-model="traitement.stockProduit.produit.localisation.id" required="required">
+                                                        <option ng-repeat="l in participerLocalisations" value="{{l.id}}" ng-if="l.id==traitement.participer.localisation.id">
+                                                            {{l.libelle}} => {{l.id}}
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
-                                                <label>Localisation en Stock</label>
-                                                <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
+                                                <label>Localisation inventoriée</label>
+                                                <input ng-model="traitement.participer.localisation.libelle" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
                                         </div>
                                         <div class="row">

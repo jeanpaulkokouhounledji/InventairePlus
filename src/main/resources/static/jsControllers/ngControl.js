@@ -678,7 +678,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.traitement = {};
                     new PNotify({
                         title: "INAM | Conventionnement",
-                        text: "Traitement enrégistré avec succès",
+                        text: "Nouveau produit enrégistré avec succès",
                         type: "success",
                         styling: "bootstrap3",
                         delay: 2000,
@@ -857,6 +857,15 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
     }
     $scope.fournisseurList();
 
+    //liste des localisations
+    $scope.listLocalisations = function (){
+        $http.get("/pharmaxiel/api/v1/traitement/localisations")
+            .then(function (response) {
+                $scope.localisations = response.data;
+            })
+    }
+    $scope.listLocalisations();
+
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
@@ -914,9 +923,7 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
         $http.post("/pharmaxiel/api/v1/ecartTraitement/save",$scope.traitement)
             .then(function (response){
                     $scope.traitData = response.data;
-
                     $scope.listTraitement();
-
                     new PNotify({
                         title: "INAM | Conventionnement",
                         text: "Traitement enrégistré avec succès",
@@ -977,7 +984,7 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
 
     //recharge de la liste des traitement
     $scope.listTraitement = function () {
-        $http.get("/pharmaxiel/api/v1/traitement/list")
+        $http.get("/pharmaxiel/api/v1/ecartTraitement/ecarts/list")
             .then(function (response) {
                 $scope.traitementData = response.data;
                 $scope.traitementsTable = new NgTableParams({
@@ -1146,6 +1153,66 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
             })
     };
 
+    //génération d'un etat d'inventaire
+    $scope.generateInventaireEtat = function(codeInventaire,codeRayon){
+        $http.get("/pharmaxiel/api/v1/traitement/generate/etatInventaire/" + codeInventaire + "/" + codeRayon)
+            .then(function (response) {
+                //$scope.participerLocalisations = response.data;
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Etat générer avec succès",
+                    type: "success",
+                    styling: "bootstrap3",
+                    delay: 2000,
+                    history: false,
+                    sticker: true,
+                });
+            },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Cet état a déjà été généré",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+
+    //Export de l'etat en excel
+    $scope.exportToExcel = function(codeInventaire,codeRayon){
+        $http.get("/pharmaxiel/api/v1/etat/inventaire/" + codeInventaire + "/" + codeRayon)
+            .then(function (response) {
+                //$scope.participerLocalisations = response.data;
+                //$scope.listTraitement();
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Données exportées avec succès, Téléchargement...",
+                    type: "success",
+                    styling: "bootstrap3",
+                    delay: 2000,
+                    history: false,
+                    sticker: true,
+                });
+            },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Erreur de l\'export du fichier",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+
+
     //Listes des participations
     $scope.participerList = function (){
         $http.get("/pharmaxiel/api/v1/participer/list")
@@ -1156,6 +1223,9 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
     $scope.participerList();
 
 }
+
+
+
 
 
 //controller de chargement des données dans la base

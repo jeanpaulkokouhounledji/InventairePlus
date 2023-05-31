@@ -92,10 +92,10 @@
                             <tr ng-repeat="t in participerLocalisations" class="justify-content-around">
                                 <td data-title="'Localisation'">{{t.libelle}}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Générer le fichier d'import pour << {{t.libelle}} >> ?" confirmed-click=""><i class="text-warning fa fa-cogs"></i> Générer l'état</button>
+                                    <button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Générer l'état d'import pour << {{t.libelle}} >> ?" confirmed-click="generateInventaireEtat(chosedInventaireNumero,t.code);"><i class="text-warning fa fa-cogs"></i> Générer l'état</button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-click=""><i class="text-warning fa fa-download"></i> Télécharger le fichier Excel</button>
+                                    <button class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-click="exportToExcel(chosedInventaireNumero,t.code)"><i class="text-warning fa fa-download"></i> Télécharger le fichier Excel</button>
                                 </td>
                             </tr>
                             </tbody>

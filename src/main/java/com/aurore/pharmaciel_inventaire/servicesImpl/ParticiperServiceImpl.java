@@ -4,6 +4,8 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.ParticiperService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ParticiperServiceImpl implements ParticiperService {
+
+    //donnees de l'utilisateur connecté
+    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
     private final ParticiperRepository participerRepository;
 
@@ -52,6 +57,13 @@ public class ParticiperServiceImpl implements ParticiperService {
         participer.setInventaire(inventaire.get());
         participer.setLocalisation(localisation.get());
         participerRepository.save(participer);
+
+        //enrégistrement des logs
+        Logs log = new Logs();
+        log.setDescription("Paramétrage de l'inventaire" + " " + inventaire.get().getNumero() + " " + "pour" + appUser.get().getNomPrenom() + " " + "Sur le rayon" + " " + localisation.get().getLibelle() );
+        log.setUser(auth.getName());
+        logsRepository.save(log);
+
         return participer;
     }
 
@@ -65,13 +77,20 @@ public class ParticiperServiceImpl implements ParticiperService {
     @Override
     public void deleteParticiper(Long id) {
         Logs log = new Logs();
-        log.setDescription("Ligne de parametrage "+ id +" supprimée");
-        logsRepository.save(log);
+
+        //reccuperation du nom de l'agent
+        String nomAgent = participerRepository.findById(id).get().getAppUser().getNomPrenom().toString();
+
         try {
             //traitementRepository.deleteTraitementByParticiperId(id);
+            log.setDescription("Suppression de la ligne de parametrage N°" + " " + id + " " + nomAgent);
+            log.setUser(auth.getName());
+            logsRepository.save(log);
             participerRepository.deleteById(id);
         }catch (Exception e){
-            e.getMessage();
+            log.setDescription("Echec de suppression du paramétrage N°" + " " + id + " " + nomAgent);
+            log.setUser(auth.getName());
+            logsRepository.save(log);
         }
 
     }

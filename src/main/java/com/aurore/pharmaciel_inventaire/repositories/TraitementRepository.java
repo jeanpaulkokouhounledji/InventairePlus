@@ -9,6 +9,22 @@ import java.util.List;
 
 public interface TraitementRepository extends JpaRepository<Traitement,Long>{
 
+  /*  @Query("select t from Traitement t where t.qteCompte<>t.qteDisponible" +
+            " or t.prixVente<>t.stockProduit.prixVente " +
+            "or t.datePeremption<>t.stockProduit.datePeremption " +
+            "or t.fournisseur.codeFournisseur<>t.stockProduit.fournisseur.codeFournisseur " +
+            "or t.participer.localisation.id<>t.stockProduit.produit.idLocalisation") */
+    @Query("select t from Traitement t where t.qteCompte<>t.qteDisponible " +
+            "or t.prixVente<>t.stockProduit.prixVente " +
+            "or t.datePeremption<>t.stockProduit.datePeremption " +
+            "or t.fournisseur.codeFournisseur<>t.stockProduit.fournisseur.codeFournisseur " +
+            "or t.participer.localisation.id<>t.stockProduit.produit.localisation.id")
+    List<Traitement> listTraitementsAvecEcarts();
+
+    //selection des lignes de traitements d'une localisation d'un inventaire
+    @Query("select t from Traitement t where t.participer.inventaire.numero=:codeInventaire and t.participer.localisation.code=:codeRayon")
+    List<Traitement> listByRayonOfInventaire(@Param("codeInventaire") String codeInventaire, @Param("codeRayon") String codeRayon);
+
     //liste des donnees de traitements
     @Query("select t from Traitement t order by t.id desc")
     List<Traitement> listeDesTraitements();

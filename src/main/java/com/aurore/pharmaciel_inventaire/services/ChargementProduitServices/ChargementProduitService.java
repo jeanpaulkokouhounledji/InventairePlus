@@ -1,6 +1,8 @@
 package com.aurore.pharmaciel_inventaire.services.ChargementProduitServices;
 
+import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.entities.Produit;
+import com.aurore.pharmaciel_inventaire.repositories.LocalisationRepository;
 import com.aurore.pharmaciel_inventaire.repositories.ProduitRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,12 @@ import java.util.List;
 public class ChargementProduitService {
 
     private ProduitRepository produitRepository;
+    private LocalisationRepository localisationRepository;
 
     public void saveProduitsToDatabase(MultipartFile file){
         if(ProduitExcelUpload.isValidExcelFile(file)){
             try {
-                List<Produit> produits = ProduitExcelUpload.getCustomersDataFromExcel(file.getInputStream());
+                List<Produit> produits = ProduitExcelUpload.getCustomersDataFromExcel(file.getInputStream(),produitRepository,localisationRepository);
                 produitRepository.saveAll(produits);
                 //this.customerRepository.saveAll(produits);
             } catch (IOException e) {

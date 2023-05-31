@@ -37,7 +37,8 @@ public class Traitement implements Serializable {
     @Column
     private double qteDisponible = .0;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @Temporal(TemporalType.DATE)
+    //@JsonFormat(pattern="dd-MM-yyyy")
     private Date datePeremption;
 
 

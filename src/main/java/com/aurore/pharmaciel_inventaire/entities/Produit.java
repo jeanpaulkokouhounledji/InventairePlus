@@ -29,7 +29,11 @@ public class Produit implements Serializable {
     private long idForme = 0;
     @Column
     private long idFamille = 0;
-    @Column
-    private long idLocalisation = 0;
+    @ManyToOne
+    @JoinColumn(name = "id_localisation")
+    private Localisation localisation;
+
+ /*   @Column
+    private long idLocalisation = 0;*/
 
 }

@@ -8,6 +8,8 @@ import com.aurore.pharmaciel_inventaire.repositories.AppRoleRepository;
 import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
 import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import java.util.Optional;
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
+    //donnees de l'utilisateur connecté
+    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     private final AppUserRepository appUserRepository;
     private final AppRoleRepository appRoleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,6 +41,7 @@ public class AccountServiceImpl implements AccountService {
         String pw = appUser.getPassword();
         Logs log = new Logs();
         log.setDescription("Création de l'utilisateur "+appUser.getNomPrenom());
+        log.setUser(auth.getName());
         logsRepository.save(log);
         appUser.setPassword(passwordEncoder.encode(pw));
         return appUserRepository.save(appUser);
@@ -44,6 +49,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AppRole addNewRole(AppRole appRole) {
+        Logs log = new Logs();
+        log.setDescription("Création du role "+ appRole.getDefinition());
+        log.setUser(auth.getName());
+        logsRepository.save(log);
         return appRoleRepository.save(appRole);
     }
 
@@ -51,6 +60,10 @@ public class AccountServiceImpl implements AccountService {
     public void addRoleToUser(String username, String roleName) {
         AppUser appUser = appUserRepository.findByUsername(username);
         AppRole appRole = appRoleRepository.findByRoleName(roleName);
+        Logs log = new Logs();
+        log.setDescription("Attribution du rôle"+ " " + roleName + "à" + " " + username );
+        log.setUser(auth.getName());
+        logsRepository.save(log);
         appUser.getAppRoles().add(appRole);
     }
 
@@ -61,10 +74,12 @@ public class AccountServiceImpl implements AccountService {
         if(user.get().isEtat()){
             user.get().setEtat(false);
             log.setDescription("Désactivation du compte de "+user.get().getNomPrenom());
+            log.setUser(auth.getName());
             logsRepository.save(log);
         }else {
             user.get().setEtat(true);
             log.setDescription("Activation du compte de "+user.get().getNomPrenom());
+            log.setUser(auth.getName());
             logsRepository.save(log);
         }
         return appUserRepository.save(user.get());

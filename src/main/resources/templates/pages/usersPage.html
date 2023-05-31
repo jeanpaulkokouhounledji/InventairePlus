@@ -52,7 +52,7 @@
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm()"><i class="fa fa-edit fa-2x"></i> Cliquez pour créer un nouvel utilisateur</button>
             </div>
             <div class="">
-                <button data-toggle="modal" data-target="#param" ng-disabled="i.statut==false" class="btn btn-dark btn-pill mb-2 ml-2"><i class="fa fa-cog fa-2x"></i> Cliquer pour assigner les rôles.</button>
+                <button data-toggle="modal" data-target="#param" ng-disabled="i.statut==false" class="btn btn-dark btn-pill mb-2 ml-2"><i class="fa fa-cog fa-2x"></i> Cliquez pour assigner les rôles.</button>
             </div>
         </div>
 
@@ -111,7 +111,7 @@
                                         <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
                                         <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
-                                        <td  data-title="'Etat'">
+                                        <td  data-title="'Etat'" class="text-center">
                                             <button ng-show="u.etat==false" ng-confirm-click="Voulez-vous vraiment activer le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
                                             <button ng-show="u.etat==true" ng-confirm-click="Voulez-vous vraiment désactiver le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
                                         </td>

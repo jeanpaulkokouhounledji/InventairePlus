@@ -1,21 +1,23 @@
 package com.aurore.pharmaciel_inventaire.servicesImpl;
 
-import com.aurore.pharmaciel_inventaire.entities.Fournisseur;
-import com.aurore.pharmaciel_inventaire.entities.Participer;
-import com.aurore.pharmaciel_inventaire.entities.StockProduit;
-import com.aurore.pharmaciel_inventaire.entities.Traitement;
+import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
 public class TraitementServiceImpl implements TraitementService {
+
+    //récupération des données d'authentification
+    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    private  final LogsRepository logsRepository;
 
     private final TraitementRepository traitementRepository;
 
@@ -27,22 +29,68 @@ public class TraitementServiceImpl implements TraitementService {
 
     private final FournisseurRepository fournisseurRepository;
 
-    public TraitementServiceImpl(TraitementRepository traitementRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, ParticiperRepository participerRepository, FournisseurRepository fournisseurRepository) {
+    private final EtatInventaireRepository etatInventaireRepository;
+
+    public TraitementServiceImpl(LogsRepository logsRepository, TraitementRepository traitementRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, ParticiperRepository participerRepository, FournisseurRepository fournisseurRepository, EtatInventaireRepository etatInventaireRepository) {
+        this.logsRepository = logsRepository;
         this.traitementRepository = traitementRepository;
         this.produitRepository = produitRepository;
         this.stockProduitRepository = stockProduitRepository;
         this.participerRepository = participerRepository;
         this.fournisseurRepository = fournisseurRepository;
+        this.etatInventaireRepository = etatInventaireRepository;
     }
 
     private double ecart = .0;
 
+    //generation d'etat d'un rayon d'inventaire traité
+    @Override
+    public void generateEtatInventaire(String codeInventaire, String codeRayon) {
+        //reccuperation de la liste des traitements concernés
+        List<Traitement> traitements = traitementRepository.listByRayonOfInventaire(codeInventaire, codeRayon);
+
+
+
+        for (Traitement t : traitements){
+            String codeCip = t.getStockProduit()==null?t.getCodeCip():t.getStockProduit().getProduit().getCodeProduit();
+            String nomProduit = t.getStockProduit()==null?t.getLibelleProduit():t.getStockProduit().getProduit().getLibelle();
+            //création d'une nouvelle ligne à chaque itération
+            EtatInventaire etatInventaire = new EtatInventaire();
+            //enrégistrement des attributs
+            etatInventaire.setLocalisation(t.getParticiper().getLocalisation().getLibelle());
+            etatInventaire.setFournisseur(t.getFournisseur().getRaisonSociale().toString());
+            etatInventaire.setCodeCip(codeCip);
+            etatInventaire.setLibelle(nomProduit);
+            etatInventaire.setPrixAchat(t.getStockProduit()==null?t.getPrixVente():t.getStockProduit().getPrixAchat());
+            etatInventaire.setPrixVente(t.getPrixVente());
+            etatInventaire.setDatePeremption(t.getDatePeremption().toString());
+            etatInventaire.setQte(t.getQteCompte());
+            etatInventaire.setQteTotale(t.getQteCompte());
+            etatInventaire.setQteDepot(t.getQteDisponible()==0?t.getStockProduit().getQuantite():t.getQteDisponible());
+            etatInventaire.setCodeUtilisateur(t.getParticiper().getAppUser().getId().toString());
+            etatInventaire.setIdProduit(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getProduit().getId().toString());
+            etatInventaire.setIdLigne(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getId().toString());
+            etatInventaire.setIdFournisseur(t.getFournisseur().getId().toString());
+            etatInventaire.setCodeInventaire(t.getParticiper().getInventaire().getNumero());
+            etatInventaire.setCodeLocalisation(t.getParticiper().getLocalisation().getCode());
+            //sauvegarde de la ligne
+            etatInventaireRepository.save(etatInventaire);
+        }
+
+    }
+
     @Override
     public Traitement saveTraitement(Traitement traitement) {
+        //calcul de l'écart
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
+        //changement du rayon
         //flag de comptage
-        //traitement.setStatut(1);
+        traitement.setStatut(1);
+        Logs log = new Logs();
+        //log.setUser((String) auth.getCredentials());
+        log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());
+        logsRepository.save(log);
         return traitementRepository.save(traitement);
     }
 
@@ -68,6 +116,11 @@ public class TraitementServiceImpl implements TraitementService {
         //flag de comptage
         traitement.setStatut(1);
         //sauvegarde
+        Logs log = new Logs();
+        //log.setUser(auth.getName());
+        log.setDescription("Comptage du produit " + traitement.getLibelleProduit());
+        logsRepository.save(log);
+
         return traitementRepository.save(traitement);
     }
 
@@ -79,6 +132,13 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public void deleteTraitement(long id) {
+
+        Optional<Traitement> traitement = traitementRepository.findById(id);
+
+        Logs log = new Logs();
+        //log.setUser(auth.getName());
+        log.setDescription("Comptage du produit " + traitement.get().getLibelleProduit()==null || traitement.get().getLibelleProduit()==""?traitement.get().getStockProduit().getProduit().getLibelle():traitement.get().getLibelleProduit());
+        logsRepository.save(log);
         traitementRepository.deleteById(id);
     }
 
@@ -107,6 +167,10 @@ public class TraitementServiceImpl implements TraitementService {
         Optional<Traitement> traitement = Optional.of(traitementRepository.findById(id).get());
         traitement.get().setMotif(motif.toString());
         traitementRepository.save(traitement.get());
+        Logs log = new Logs();
+        //log.setUser(auth.getName());
+        log.setDescription("Sauvegarde du motif pour " + traitement.get().getLibelleProduit()==null || traitement.get().getLibelleProduit()==""?traitement.get().getStockProduit().getProduit().getLibelle():traitement.get().getLibelleProduit());
+        logsRepository.save(log);
         return traitement.get();
     }
 

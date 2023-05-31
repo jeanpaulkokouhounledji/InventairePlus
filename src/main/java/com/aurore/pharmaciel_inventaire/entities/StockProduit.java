@@ -32,8 +32,9 @@ public class StockProduit implements Serializable {
     private double prixAchat;
     @Column
     private double quantite;
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private String datePeremption;
+    @Temporal(TemporalType.DATE)
+    //@JsonFormat(pattern="dd-MM-yyyy")
+    private Date datePeremption;
     @Column
     private String lot;
     @Column
@@ -50,4 +51,6 @@ public class StockProduit implements Serializable {
     @JoinColumn(name = "id_fournisseur")
     Fournisseur fournisseur;
 
+    public void setDatePeremption(String s) {
+    }
 }

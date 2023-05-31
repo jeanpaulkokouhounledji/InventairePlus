@@ -1,6 +1,9 @@
 package com.aurore.pharmaciel_inventaire.services.ChargementProduitServices;
 
+import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.entities.Produit;
+import com.aurore.pharmaciel_inventaire.repositories.LocalisationRepository;
+import com.aurore.pharmaciel_inventaire.repositories.ProduitRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -14,10 +17,12 @@ import java.io.InputStream;
 import java.util.*;
 
 public interface ProduitExcelUpload {
+
+
     public static boolean isValidExcelFile(MultipartFile file){
         return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" );
     }
-    public static List<Produit> getCustomersDataFromExcel(InputStream inputStream){
+    public static List<Produit> getCustomersDataFromExcel(InputStream inputStream, ProduitRepository produitRepository, LocalisationRepository localisationRepository){
         List<Produit> produits = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
@@ -40,7 +45,11 @@ public interface ProduitExcelUpload {
                         case 3 -> produit.setIdFamille((long) cell.getNumericCellValue());
                         case 4 -> produit.setIdForme((long) cell.getNumericCellValue());
                         case 5 -> produit.setLibelle(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 6 -> produit.setIdLocalisation((long) cell.getNumericCellValue());
+                        case 6 -> {
+                            assert false;
+                            produit.setLocalisation(localisationRepository.findById((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()))));
+                        }
+                        //case 6 -> produit.setIdLocalisation((long) cell.getNumericCellValue());
                         default -> {
                         }
                     }
