@@ -51,9 +51,9 @@ public class ExcelExportUtils {
         font.setBold(true);
         font.setFontHeight(20.0);
         style.setFont(font);
-        style.setAlignment(HorizontalAlignment.JUSTIFY);
+        style.setAlignment(HorizontalAlignment.CENTER);
         createCell(row,0,"Etat Inventaire",style);
-        sheet.addMergedRegion(new CellRangeAddress(0,0,0,15));
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,14));
         font.setFontHeightInPoints((short) 10);
         row = sheet.createRow(1);
         font.setBold(true);
@@ -73,7 +73,6 @@ public class ExcelExportUtils {
         createCell(row,11,"codeUtilisateur",style);
         createCell(row,12,"idProduit",style);
         createCell(row,13,"idLigne",style);
-        createCell(row,14,"idFournisseur",style);
     }
 
     private void writeEtatInvaireData(){
@@ -100,7 +99,6 @@ public class ExcelExportUtils {
             createCell(row,columnCount++,etatInventaire.getCodeUtilisateur(), style);
             createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
             createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
-            createCell(row,columnCount++,etatInventaire.getIdFournisseur(), style);
         }
     }
 
