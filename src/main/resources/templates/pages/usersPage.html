@@ -12,10 +12,10 @@
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
+            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
@@ -24,13 +24,12 @@
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Fichier de mise à jour</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
-
-      </span>
+    </span>
 
     <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -61,7 +60,8 @@
             <div class="card card-shadow mb-4">
                 <div class="card-header border-0">
                     <div class="custom-title-wrap bar-primary">
-                        <div class="custom-title">Création d'un utilisateur</div>
+                        <div class="custom-title" ng-if="!appUser.id">Création d'un utilisateur</div>
+                        <div class="custom-title" ng-if="appUser.id">Edition d’un utilisateur</div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -75,7 +75,7 @@
                                 <label>Identifiant</label>
                                 <input type="text" name="identifiant" ng-model="appUser.username" placeholder="Identifiant" class="form-control form-control-sm" required="required">
                             </div>
-                            <div class="col-sm-4 form-group-sm mb-2" ng-if="!appUser.id">
+                            <div class="col-sm-4 form-group-sm mb-2">
                                 <label>Mot de passe</label>
                                 <input type="password" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
                             </div>
@@ -83,10 +83,10 @@
                         </div>
                         <div class="text-center row justify-content-center mt-4">
                             <div class="col-sm-2">
-                                <button class="btn  btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check font-weight-bold">Créer l'utilisateur</i></button>
+                                <button class="btn  btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check fa-2x"></i> <b>Créer l'utilisateur</b></button>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn  btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-times font-weight-bold">Annuler/ Fermer</i></button>
+                                <button class="btn  btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-check fa-2x"></i> <b>Annuler/ Fermer</b></button>
                             </div>
                         </div>
                     </form>
@@ -111,7 +111,7 @@
                                         <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
                                         <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
-                                        <td  data-title="'Etat'" class="text-center">
+                                        <td sortable="'etat'" data-title="'Etat (t=ACTIF, f=INACTIF)'" class="text-center" filter="{ 'etat' : 'text'}">
                                             <button ng-show="u.etat==false" ng-confirm-click="Voulez-vous vraiment activer le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
                                             <button ng-show="u.etat==true" ng-confirm-click="Voulez-vous vraiment désactiver le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
                                         </td>
@@ -196,8 +196,8 @@
                                         <tbody>
                                             <tr ng-repeat="p in data" ng-show="p.appRoles[0].definition!=null">
                                                 <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>
-                                                <td data-title="'Utilisateur(s)'" filter="{ 'username' : 'text'}">{{p.nomPrenom}}</td>
-                                                <td data-title="'Rôle(s)'">{{p.appRoles[0].definition}}</td>
+                                                <td data-title="'Utilisateur(s)'" sortable="'nomPrenom'" filter="{ 'nomPrenom' : 'text'}">{{p.nomPrenom}}</td>
+                                                <td data-title="'Rôle(s)'" sortable="'appRoles[0].definition'"  filter="{ 'appRoles[0].definition' : 'text'}">{{p.appRoles[0].definition}}</td>
                                            </tr>
                                         </tbody>
                                     </table>

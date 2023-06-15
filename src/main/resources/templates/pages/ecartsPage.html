@@ -2,7 +2,7 @@
 
 <section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="ecartsController">
 
-  <!--    menu de la page-->
+    <!--    menu de la page-->
     <span layout:fragment="custum-menu">
          <!--            menu de l'inventaire-->
         <li class="nav-item" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
@@ -12,10 +12,10 @@
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
+            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
@@ -24,13 +24,12 @@
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Fichier de mise à jour</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
-
-      </span>
+    </span>
 
       <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -51,7 +50,7 @@
             <div class="card card-shadow mb-4">
                 <div class="card-header border-0">
                     <div class="custom-title-wrap bar-primary">
-                        <div class="custom-title">Paramètre D'affichage</div>
+                        <div class="custom-title">Gestion des écarts</div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -102,7 +101,7 @@
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
                                 <div class="row">
-                                    <div class="col-sm">Suivi des écarts de l'inventaire N° <span class="font-weight-bold">{{chosedInventaireNumero}}</span> du rayon <span class="font-weight-bold">{{chosedLocalisationCode}}</span></div>
+                                    <div class="col-sm">Suivi des écarts de l'inventaire N° <span class="font-weight-bold">{{chosedInventaireNumero}}</span> de la localisation  <span class="font-weight-bold">{{chosedLocalisationCode}}</span></div>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +163,7 @@
                                         <div class="custom-title">Ecarts</div>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <!--<div class="card-body">
                                     <ul><i></i></ul>
                                 </div>
 
@@ -172,7 +171,7 @@
                                     <div class="custom-title-wrap bar-primary">
                                         <div class="custom-title">Détail</div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="card-body">
                                     <form name="checkEcart">
                                         <div class="row">
@@ -250,7 +249,7 @@
                                                 <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
                                         </div>
-                                        <div class="card-header border-0">
+                                        <!--<div class="card-header border-0">
                                             <div class="custom-title-wrap bar-primary">
                                                 <div class="custom-title">Localisation</div>
                                             </div>
@@ -270,10 +269,26 @@
                                                 <label>Localisation inventoriée</label>
                                                 <input ng-model="traitement.participer.localisation.libelle" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
+                                        </div>-->
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Motif/ Commentaire</div>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                            <label><span class="text-danger">*</span> Un motif est requis </label>
-                                            <textarea ng-model="traitement.motif" cols="150" rows="5" class="form-control" placeholder="Vous pouvez écrire ici." required="required"></textarea>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label>Sélectionnez un motif</label>
+                                                <select class="form-control form-control-sm" ng-model="traitement.leMotif" required="required">
+                                                    <option ng-repeat="m in listMotifs" value="{{m.libelle}}">
+                                                        {{m.libelle}}
+                                                    </option>
+                                                </select>
+                                                <span class="text-danger" ng-show="!traitement.leMotif">Champ requis</span>
+                                            </div>
+                                            <div class="col-sm form-group-sm mb-2">
+                                                <label><span class="text-danger">*</span>Ajoutez un commentaire ici</label>
+                                                <textarea ng-model="traitement.motif" cols="148" rows="5" class="form-control" placeholder="Ecrivez ici..."></textarea>
+                                            </div>
                                         </div>
                                         <div class="text-center row justify-content-center mt-4">
                                             <div class="col-sm-4">

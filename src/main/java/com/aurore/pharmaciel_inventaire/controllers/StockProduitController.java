@@ -54,6 +54,12 @@ public class StockProduitController {
             map.put("produit",pr.getProduit().getLibelle());
             map.put("prixVente",pr.getPrixVente());
             map.put("prixAchat",pr.getPrixAchat());
+            //donnees en stock
+            map.put("prixVenteStock",pr.getPrixVente());
+            map.put("fournisseurStock",pr.getFournisseur().getRaisonSociale());
+            map.put("peremptionStock",pr.getDatePeremption());
+            map.put("qteStock",pr.getQuantite());
+            map.put("qteCompteStock",pr.getQuantite());
             collection.add(map);
          }
 

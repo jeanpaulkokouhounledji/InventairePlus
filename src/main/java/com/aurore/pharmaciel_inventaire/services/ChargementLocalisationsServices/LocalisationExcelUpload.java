@@ -25,7 +25,7 @@ public interface LocalisationExcelUpload {
         List<Localisation> localisations = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheet("localisation");
+            XSSFSheet sheet = workbook.getSheet("LOCALISATION");
             int rowIndex =0;
             for (Row row : sheet){
                 if (rowIndex ==0){

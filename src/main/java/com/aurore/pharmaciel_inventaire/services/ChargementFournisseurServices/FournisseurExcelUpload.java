@@ -24,7 +24,7 @@ public interface FournisseurExcelUpload {
         List<Fournisseur> fournisseurs = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheet("fournisseur");
+            XSSFSheet sheet = workbook.getSheet("FOURNISSEUR");
             int rowIndex =0;
             for (Row row : sheet){
                 if (rowIndex ==0){

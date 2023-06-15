@@ -857,6 +857,15 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
     }
     $scope.fournisseurList();
 
+    //liste des motifs
+    $scope.motifList = function (){
+        $http.get("/pharmaxiel/api/v1/motif/list")
+            .then(function (response) {
+                $scope.listMotifs = response.data;
+            })
+    }
+    $scope.motifList();
+
     //liste des localisations
     $scope.listLocalisations = function (){
         $http.get("/pharmaxiel/api/v1/traitement/localisations")

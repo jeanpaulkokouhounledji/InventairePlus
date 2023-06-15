@@ -26,7 +26,7 @@ public interface ProduitExcelUpload {
         List<Produit> produits = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheet("produit");
+            XSSFSheet sheet = workbook.getSheet("PRODUITS");
             int rowIndex =0;
             for (Row row : sheet){
                 if (rowIndex ==0){
@@ -41,14 +41,14 @@ public interface ProduitExcelUpload {
                     switch (cellIndex){
                         case 0 -> produit.setId((long) cell.getNumericCellValue());
                         case 1 -> produit.setCodeProduit(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 2 -> produit.setDci(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 3 -> produit.setIdFamille((long) cell.getNumericCellValue());
-                        case 4 -> produit.setIdForme((long) cell.getNumericCellValue());
-                        case 5 -> produit.setLibelle(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 6 -> {
+                        case 2 -> produit.setLibelle(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
+                        case 3 -> produit.setDci(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
+                        case 4 -> {
                             assert false;
                             produit.setLocalisation(localisationRepository.findById((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()))));
                         }
+                        case 5 -> produit.setIdForme(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
+                        case 6 -> produit.setIdFamille(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
                         //case 6 -> produit.setIdLocalisation((long) cell.getNumericCellValue());
                         default -> {
                         }

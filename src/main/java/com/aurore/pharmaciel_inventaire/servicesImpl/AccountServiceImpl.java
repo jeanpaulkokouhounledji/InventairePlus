@@ -9,11 +9,14 @@ import com.aurore.pharmaciel_inventaire.repositories.AppUserRepository;
 import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,19 +32,25 @@ public class AccountServiceImpl implements AccountService {
 
     private final LogsRepository logsRepository;
 
-    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, LogsRepository logsRepository) {
+    private final HttpServletRequest httpServletRequest;
+
+    public AccountServiceImpl(AppUserRepository appUserRepository, AppRoleRepository appRoleRepository, PasswordEncoder passwordEncoder, LogsRepository logsRepository, HttpServletRequest httpServletRequest) {
         this.appUserRepository = appUserRepository;
         this.appRoleRepository = appRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.logsRepository = logsRepository;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @Override
     public AppUser addNewUser(AppUser appUser) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         String pw = appUser.getPassword();
         Logs log = new Logs();
         log.setDescription("Création de l'utilisateur "+appUser.getNomPrenom());
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
         appUser.setPassword(passwordEncoder.encode(pw));
         return appUserRepository.save(appUser);
@@ -49,37 +58,45 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AppRole addNewRole(AppRole appRole) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Logs log = new Logs();
         log.setDescription("Création du role "+ appRole.getDefinition());
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
         return appRoleRepository.save(appRole);
     }
 
     @Override
     public void addRoleToUser(String username, String roleName) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
         AppUser appUser = appUserRepository.findByUsername(username);
         AppRole appRole = appRoleRepository.findByRoleName(roleName);
         Logs log = new Logs();
         log.setDescription("Attribution du rôle"+ " " + roleName + "à" + " " + username );
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
         appUser.getAppRoles().add(appRole);
     }
 
     @Override
     public AppUser changeStatus(Long id) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Optional<AppUser> user = appUserRepository.findById(id);
         Logs log = new Logs();
         if(user.get().isEtat()){
             user.get().setEtat(false);
             log.setDescription("Désactivation du compte de "+user.get().getNomPrenom());
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }else {
             user.get().setEtat(true);
             log.setDescription("Activation du compte de "+user.get().getNomPrenom());
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }
         return appUserRepository.save(user.get());

@@ -3,19 +3,19 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Service
 @Transactional
 public class TraitementServiceImpl implements TraitementService {
 
-    //récupération des données d'authentification
-    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    private final HttpServletRequest httpServletRequest;
 
     private  final LogsRepository logsRepository;
 
@@ -31,7 +31,8 @@ public class TraitementServiceImpl implements TraitementService {
 
     private final EtatInventaireRepository etatInventaireRepository;
 
-    public TraitementServiceImpl(LogsRepository logsRepository, TraitementRepository traitementRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, ParticiperRepository participerRepository, FournisseurRepository fournisseurRepository, EtatInventaireRepository etatInventaireRepository) {
+    public TraitementServiceImpl(HttpServletRequest httpServletRequest, LogsRepository logsRepository, TraitementRepository traitementRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, ParticiperRepository participerRepository, FournisseurRepository fournisseurRepository, EtatInventaireRepository etatInventaireRepository) {
+        this.httpServletRequest = httpServletRequest;
         this.logsRepository = logsRepository;
         this.traitementRepository = traitementRepository;
         this.produitRepository = produitRepository;
@@ -48,8 +49,6 @@ public class TraitementServiceImpl implements TraitementService {
     public void generateEtatInventaire(String codeInventaire, String codeRayon) {
         //reccuperation de la liste des traitements concernés
         List<Traitement> traitements = traitementRepository.listByRayonOfInventaire(codeInventaire, codeRayon);
-
-
 
         for (Traitement t : traitements){
             String codeCip = t.getStockProduit()==null?t.getCodeCip():t.getStockProduit().getProduit().getCodeProduit();
@@ -81,6 +80,8 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public Traitement saveTraitement(Traitement traitement) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
         //calcul de l'écart
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
@@ -88,7 +89,7 @@ public class TraitementServiceImpl implements TraitementService {
         //flag de comptage
         traitement.setStatut(1);
         Logs log = new Logs();
-        //log.setUser((String) auth.getCredentials());
+        log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());
         logsRepository.save(log);
         return traitementRepository.save(traitement);
@@ -96,6 +97,9 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Traitement traitement = new Traitement();
         Optional<StockProduit> stockProduit = Optional.ofNullable(stockProduitRepository.findStockProduitByCodeUnique(id_stockproduit));
         Optional<Participer> participer = Optional.of(participerRepository.findById(id_participer));
@@ -117,7 +121,7 @@ public class TraitementServiceImpl implements TraitementService {
         traitement.setStatut(1);
         //sauvegarde
         Logs log = new Logs();
-        //log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du produit " + traitement.getLibelleProduit());
         logsRepository.save(log);
 
@@ -132,11 +136,13 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public void deleteTraitement(long id) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
         Optional<Traitement> traitement = traitementRepository.findById(id);
 
         Logs log = new Logs();
-        //log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du produit " + traitement.get().getLibelleProduit()==null || traitement.get().getLibelleProduit()==""?traitement.get().getStockProduit().getProduit().getLibelle():traitement.get().getLibelleProduit());
         logsRepository.save(log);
         traitementRepository.deleteById(id);
@@ -164,11 +170,14 @@ public class TraitementServiceImpl implements TraitementService {
 
     @Override
     public Traitement saveTraitementMotif(long id, String motif) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Optional<Traitement> traitement = Optional.of(traitementRepository.findById(id).get());
         traitement.get().setMotif(motif.toString());
         traitementRepository.save(traitement.get());
         Logs log = new Logs();
-        //log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Sauvegarde du motif pour " + traitement.get().getLibelleProduit()==null || traitement.get().getLibelleProduit()==""?traitement.get().getStockProduit().getProduit().getLibelle():traitement.get().getLibelleProduit());
         logsRepository.save(log);
         return traitement.get();

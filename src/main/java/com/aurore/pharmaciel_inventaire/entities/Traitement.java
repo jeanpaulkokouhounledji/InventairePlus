@@ -45,6 +45,7 @@ public class Traitement implements Serializable {
     @Column
     private double ecart = .0;
 
+    //le commentaire rédigé
     @Column
     private String motif = "";
 
@@ -63,5 +64,9 @@ public class Traitement implements Serializable {
 
     @Column
     private String libelleProduit;
+
+    //le motif selectionné
+    @Column
+    private String leMotif;
 
 }

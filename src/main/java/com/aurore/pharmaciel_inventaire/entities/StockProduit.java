@@ -23,7 +23,7 @@ public class StockProduit implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column
-    private long idDepot;
+    private String idDepot;
     @Column
     private String codeUnique;
     @Column
@@ -32,9 +32,10 @@ public class StockProduit implements Serializable {
     private double prixAchat;
     @Column
     private double quantite;
-    @Temporal(TemporalType.DATE)
-    //@JsonFormat(pattern="dd-MM-yyyy")
-    private Date datePeremption;
+    //@Temporal(TemporalType.DATE)
+    @JsonFormat(pattern="dd-MM-yyyy")
+    private String datePeremption;
+    //private Date datePeremption;
     @Column
     private String lot;
     @Column

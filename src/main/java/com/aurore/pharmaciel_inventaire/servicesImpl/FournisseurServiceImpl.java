@@ -18,6 +18,14 @@ public class FournisseurServiceImpl implements FournisseurService {
         this.fournisseurRepository = fournisseurRepository;
     }
 
+
+/*
+    @Override
+    public Fournisseur getFournisseurForEdit(Long id) {
+        return fournisseurRepository.findById(id);
+    }
+*/
+
     @Override
     public List<Fournisseur> listFournisseur() {
         return fournisseurRepository.getListFOurnisseur();

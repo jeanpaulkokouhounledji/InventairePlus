@@ -1,14 +1,20 @@
 package com.aurore.pharmaciel_inventaire.controllers;
 
 
+import com.aurore.pharmaciel_inventaire.entities.AppUser;
 import com.aurore.pharmaciel_inventaire.entities.Inventaire;
+import com.aurore.pharmaciel_inventaire.repositories.AppRoleRepository;
+import com.aurore.pharmaciel_inventaire.services.AccountService;
 import com.aurore.pharmaciel_inventaire.services.InventaireService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +26,27 @@ public class InventaireController {
 
     private final InventaireService inventaireService;
 
-    public InventaireController(InventaireService inventaireService) {
+    private final AppRoleRepository appRoleRepository;
+
+    private final HttpServletRequest httpServletRequest;
+
+    private final AccountService accountService;
+
+    public InventaireController(InventaireService inventaireService, AppRoleRepository appRoleRepository, HttpServletRequest httpServletRequest, AccountService accountService) {
         this.inventaireService = inventaireService;
+        this.appRoleRepository = appRoleRepository;
+        this.httpServletRequest = httpServletRequest;
+        this.accountService = accountService;
+    }
+
+    //suppression des roles d'un utilisateur
+    @DeleteMapping(value = "/deleteRoles/{username}")
+    public void deleteAppUser_AppRole(@PathVariable("username") String username){
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+        AppUser appUser = accountService.loadUserByUsername(username);
+        appUser.getAppRoles().clear();
+        accountService.addNewUser(appUser);
     }
 
     @PostMapping(path = "/save")

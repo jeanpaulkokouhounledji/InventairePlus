@@ -6,11 +6,12 @@ import com.aurore.pharmaciel_inventaire.entities.Produit;
 import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.repositories.ProduitRepository;
 import com.aurore.pharmaciel_inventaire.services.ProduitService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,13 +19,13 @@ import java.util.Optional;
 @Transactional
 public class ProduitServiceImpl implements ProduitService {
 
-    //donnees de l'utilisateur connecté
-    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    private final HttpServletRequest  httpServletRequest;
     private final ProduitRepository produitRepository;
 
     private final LogsRepository logsRepository;
 
-    public ProduitServiceImpl(ProduitRepository produitRepository, LogsRepository logsRepository) {
+    public ProduitServiceImpl(HttpServletRequest httpServletRequest, ProduitRepository produitRepository, LogsRepository logsRepository) {
+        this.httpServletRequest = httpServletRequest;
         this.produitRepository = produitRepository;
         this.logsRepository = logsRepository;
     }
@@ -32,9 +33,12 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Override
     public Produit createProduit(Produit produit) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Logs log = new Logs();
         log.setDescription("Création du produit " + " " + produit.getLibelle());
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
         return produitRepository.save(produit);
     }
@@ -47,11 +51,14 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public void deleteProduit(Long id) {
 
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Optional<Produit> produit = produitRepository.findById(id);
 
         Logs log = new Logs();
         log.setDescription("Suppression du produit " + " " + produit.get().getLibelle() + " " + "N°" + " " + produit.get().getId());
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
     }
 

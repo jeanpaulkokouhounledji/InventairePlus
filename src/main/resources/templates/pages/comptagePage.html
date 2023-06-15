@@ -12,10 +12,10 @@
             <a class="nav-link text-light" href="auth"><i class="fa fa-key"></i>&nbsp; Authentification</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
+            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light" href="chargement"><i class="fa fa-list-ol"></i>&nbsp; Chargements</a>
+            <a class="nav-link text-light" href="inventaire"><i class="fa fa-list-ol"></i>&nbsp; Inventaires</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
@@ -24,13 +24,12 @@
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
-            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Mise à jour du stock</a>
+            <a class="nav-link text-light"  href="stocks"><i class="fa fa-upload"></i>&nbsp; Fichier de mise à jour</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
-
-      </span>
+    </span>
 
     <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -142,30 +141,23 @@
                         <div class="table-responsive">
                             <table ng-table="produitsTable" style="width: 100%" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
-                                    <!--<div class="text-center m-2">
-                                        <input type="search" class="form-control col-sm-4" placeholder="Nom du produit" ng-model="search"/>
-                                    </div>-->
-<!--                                    <tr ng-repeat="ps in dataP | filter:search track by ps.produit.libelle" style="text-align: center">-->
-                                    <tr ng-repeat="ps in dataP" style="text-align: center">
-                                        <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>
-                                        <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">{{ps.codeCip}}</td>
-                                        <td data-title="'Produit'" style="width: 35%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
-                                        <form name="cForm">
-                                            <td style="width: 10%" data-title="'Prix Vente'"><input ng-model="prixVente" name="prixVente" type="number" class="form-control form-control-sm text-center" required="required"></td>
-<!--                                            <td data-title="'fournisseur'" >{{ps.idFournisseur}}</td>-->
-                                            <td style="width: 15%" data-title="'Fournisseur'">
-                                                <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
-<!--                                                    <optgroup label="Sélectionnez un autre fournisseur"></optgroup>-->
-                                                    <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}">
-                                                        {{four.raisonSociale}}
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" type="date" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%" data-title="'Quantité Comptée'"><input ng-model="qteCompte" name="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
-                                        </form>
-                                    </tr>
+                                <tr ng-repeat="ps in dataP" style="text-align: center">
+                                    <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">{{ps.codeCip}}</td>
+                                    <td data-title="'Produit'" style="width: 35%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
+                                    <form name="cForm">
+                                        <td style="width: 10%" data-title="'Prix Vente'"><input ng-model="prixVente" name="prixVente" value="{{ps.prixVenteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                        <td style="width: 15%" data-title="'Fournisseur'">
+                                            <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
+                                                <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}">
+                                                    {{four.raisonSociale}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td style="width: 10%" data-title="'Date Peremption'"><input  value="{{ps.peremptionStock}}" type="text" ng-model="datePeremption"  name="datePeremption" class="form-control form-control-sm text-center" required="required"></td>
+                                        <td style="width: 10%" data-title="'Qté Comptée'"><input ng-model="qteCompte" name="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                        <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                    </form>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -194,14 +186,14 @@
                             <table ng-table="traitementsTable" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">
-                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index = 0 + 1}}</td>
+<!--                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index = 0 + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}}</td>
                                         <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.prixVente | number}}</td>
                                         <td data-title="'Fournisseur'">{{tr.fournisseur.raisonSociale}}</td>
                                         <td data-title="'Date Péremption'">{{tr.datePeremption}}</td>
-                                        <td data-title="'Quantité Comptée'" class="font-weight-bold">{{tr.qteCompte}}</td>
+                                        <td data-title="'Qté Comptée'" class="font-weight-bold">{{tr.qteCompte}}</td>
                                         <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}} >> ?" confirmed-click="deleteTraitement(tr.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>

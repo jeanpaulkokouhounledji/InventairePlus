@@ -6,12 +6,12 @@ import com.aurore.pharmaciel_inventaire.entities.Logs;
 import com.aurore.pharmaciel_inventaire.repositories.InventaireRepository;
 import com.aurore.pharmaciel_inventaire.repositories.LogsRepository;
 import com.aurore.pharmaciel_inventaire.services.InventaireService;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Year;
@@ -24,20 +24,22 @@ import java.util.Optional;
 @Transactional
 public class InventaireServiceImpl implements InventaireService {
 
-    //donnees de l'utilisateur connecté
-    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    private final HttpServletRequest httpServletRequest;
 
     private final InventaireRepository inventaireRepository;
 
     private final LogsRepository logsRepository;
 
-    public InventaireServiceImpl(InventaireRepository inventaireRepository, LogsRepository logsRepository) {
+    public InventaireServiceImpl(HttpServletRequest httpServletRequest, InventaireRepository inventaireRepository, LogsRepository logsRepository) {
+        this.httpServletRequest = httpServletRequest;
         this.inventaireRepository = inventaireRepository;
         this.logsRepository = logsRepository;
     }
 
     @Override
     public Inventaire createInventaire(Inventaire inventaire) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
         DateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(new Date());
@@ -50,7 +52,7 @@ public class InventaireServiceImpl implements InventaireService {
         //enrégistrement des logs
         Logs log = new Logs();
         log.setDescription("Création de l'inventaire " + num);
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
         return i;
     }
@@ -62,16 +64,19 @@ public class InventaireServiceImpl implements InventaireService {
 
     @Override
     public void deleteInventaire(Long id) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         try{
             Logs log = new Logs();
             log.setDescription("Supression de la ligne d'inventaire à l'id "+ id);
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
             inventaireRepository.deleteById(id);
         }catch (Exception e){
             Logs log = new Logs();
             log.setDescription("Tentative de suppression du traitement "+ id);
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }
 
@@ -80,17 +85,20 @@ public class InventaireServiceImpl implements InventaireService {
     @Override
     public Inventaire changeStatus(Long id) {
         Optional<Inventaire> inventaire = inventaireRepository.findById(id);
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         if(inventaire.get().isStatut()){
             inventaire.get().setStatut(false);
             Logs log = new Logs();
             log.setDescription("Désactivation de l'inventaire "+ inventaire.get().getNumero());
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }else {
             inventaire.get().setStatut(true);
             Logs log = new Logs();
             log.setDescription("Activation de l'inventaire "+ inventaire.get().getNumero());
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }
         return inventaireRepository.save(inventaire.get());

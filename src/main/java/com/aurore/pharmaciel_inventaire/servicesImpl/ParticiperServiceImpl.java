@@ -4,11 +4,12 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.ParticiperService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,7 @@ import java.util.Optional;
 @Transactional
 public class ParticiperServiceImpl implements ParticiperService {
 
-    //donnees de l'utilisateur connecté
-    private Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    private final HttpServletRequest httpServletRequest;
 
     private final ParticiperRepository participerRepository;
 
@@ -31,7 +31,8 @@ public class ParticiperServiceImpl implements ParticiperService {
 
     private final TraitementRepository traitementRepository;
 
-    public ParticiperServiceImpl(ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository, LogsRepository logsRepository, TraitementRepository traitementRepository) {
+    public ParticiperServiceImpl(HttpServletRequest httpServletRequest, ParticiperRepository participerRepository, AppUserRepository appUserRepository, InventaireRepository inventaireRepository, LocalisationRepository localisationRepository, LogsRepository logsRepository, TraitementRepository traitementRepository) {
+        this.httpServletRequest = httpServletRequest;
         this.participerRepository = participerRepository;
         this.appUserRepository = appUserRepository;
         this.inventaireRepository = inventaireRepository;
@@ -43,6 +44,9 @@ public class ParticiperServiceImpl implements ParticiperService {
 
     @Override
     public Participer createParticiper(Long user_id, Long inventaire_id, Long localisation_id) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
         Participer participer = new Participer();
         //reccupération des differentes entités
 
@@ -61,7 +65,7 @@ public class ParticiperServiceImpl implements ParticiperService {
         //enrégistrement des logs
         Logs log = new Logs();
         log.setDescription("Paramétrage de l'inventaire" + " " + inventaire.get().getNumero() + " " + "pour" + appUser.get().getNomPrenom() + " " + "Sur le rayon" + " " + localisation.get().getLibelle() );
-        log.setUser(auth.getName());
+        log.setUser(securityContext.getAuthentication().getName());
         logsRepository.save(log);
 
         return participer;
@@ -77,19 +81,20 @@ public class ParticiperServiceImpl implements ParticiperService {
     @Override
     public void deleteParticiper(Long id) {
         Logs log = new Logs();
-
+        HttpSession httpSession = httpServletRequest.getSession();
+        SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
         //reccuperation du nom de l'agent
         String nomAgent = participerRepository.findById(id).get().getAppUser().getNomPrenom().toString();
 
         try {
             //traitementRepository.deleteTraitementByParticiperId(id);
             log.setDescription("Suppression de la ligne de parametrage N°" + " " + id + " " + nomAgent);
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
             participerRepository.deleteById(id);
         }catch (Exception e){
             log.setDescription("Echec de suppression du paramétrage N°" + " " + id + " " + nomAgent);
-            log.setUser(auth.getName());
+            log.setUser(securityContext.getAuthentication().getName());
             logsRepository.save(log);
         }
 
