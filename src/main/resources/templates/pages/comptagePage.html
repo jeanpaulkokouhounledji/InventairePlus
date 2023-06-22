@@ -111,7 +111,7 @@
                                         <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
                                         <td data-title="'Fournisseur'">{{t.fournisseur.raisonSociale}}</td>
-                                        <td data-title="'Date Péremption'">{{t.datePeremption}}</td>
+                                        <td data-title="'Date Péremption'">{{t.datePeremption | date:'dd/MM/yyyy'}}</td>
                                         <td data-title="'Quantité Inventoriée'" class="font-weight-bold">{{t.qteCompte}}</td>
                                         <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}} >> ?" confirmed-click="deleteTraitement(t.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>
@@ -132,7 +132,6 @@
                             <div class="custom-title">
                                 <div class="row">
                                     <div class="col-sm-4">Recherchez un produit</div>
-<!--                                    <div class="col-sm-4"><i data-toggle="modal" data-target="#param" class="fa fa-plus-circle fa-3x text-success"></i></div>-->
                                 </div>
                             </div>
                         </div>
@@ -141,23 +140,24 @@
                         <div class="table-responsive">
                             <table ng-table="produitsTable" style="width: 100%" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
-                                <tr ng-repeat="ps in dataP" style="text-align: center">
-                                    <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">{{ps.codeCip}}</td>
-                                    <td data-title="'Produit'" style="width: 35%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
-                                    <form name="cForm">
-                                        <td style="width: 10%" data-title="'Prix Vente'"><input ng-model="prixVente" name="prixVente" value="{{ps.prixVenteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                        <td style="width: 15%" data-title="'Fournisseur'">
-                                            <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
-                                                <option ng-selected="four.id==ps.idFournisseur" ng-repeat="four in listFournisseurs" value="{{four.id}}">
-                                                    {{four.raisonSociale}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td style="width: 10%" data-title="'Date Peremption'"><input  value="{{ps.peremptionStock}}" type="text" ng-model="datePeremption"  name="datePeremption" class="form-control form-control-sm text-center" required="required"></td>
-                                        <td style="width: 10%" data-title="'Qté Comptée'"><input ng-model="qteCompte" name="qteCompte"  type="number" class="form-control form-control-sm text-center" required="required"></td>
-                                        <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
-                                    </form>
-                                </tr>
+                                    <tr ng-repeat="ps in dataP" style="text-align: center">
+                                        <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">{{ps.codeCip}}</td>
+                                        <td data-title="'Produit'" style="width: 35%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
+                                        <form name="cForm">
+                                            <td style="width: 10%" data-title="'Prix Vente'"><input ng-model="prixVente" name="prixVente" value="{{ps.prixVenteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 15%" data-title="'Fournisseur'">
+                                                <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
+                                                    <option ng-selected="four.raisonSociale" ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
+                                                        {{four.raisonSociale}}
+                                                    </option>
+                                                </select>
+                                            </td>
+    <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
+                                            <td style="width: 10%" data-title="'Date Peremption'"><input type="date" value="{{ps.peremptionStock}}" ng-model="datePeremption"  name="datePeremption" class="form-control"></td>
+                                            <td style="width: 10%" data-title="'Qté Comptée'"><input ng-model="qteCompte" name="qteCompte" value="{{ps.qteCompteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                        </form>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -192,7 +192,7 @@
                                         <td data-title="'Produit(s)'">{{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}}</td>
                                         <td data-title="'Prix Vente'" class="font-weight-bold">{{tr.prixVente | number}}</td>
                                         <td data-title="'Fournisseur'">{{tr.fournisseur.raisonSociale}}</td>
-                                        <td data-title="'Date Péremption'">{{tr.datePeremption}}</td>
+                                        <td data-title="'Date Péremption'">{{tr.datePeremption | date:'dd/MM/yyyy'}}</td>
                                         <td data-title="'Qté Comptée'" class="font-weight-bold">{{tr.qteCompte}}</td>
                                         <td data-title="'Action(s)'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous vraiment supprimer << {{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}} >> ?" confirmed-click="deleteTraitement(tr.id);"><i class="text-warning fa fa-trash"></i></button></td>
                                     </tr>

@@ -96,7 +96,7 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
+    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, String datePeremption,double prixVente) {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
