@@ -39,18 +39,18 @@ public class StockProduit implements Serializable {
     @Column
     private String lot;
     @Column
-    private boolean etat;
+    private boolean etat = false;
 
     /*@ManyToOne
     @JoinColumn(name = "id_inventaire")
     Inventaire inventaire;*/
     @ManyToOne
     @JoinColumn(name = "id_produit")
-    Produit produit;
+    private Produit produit;
 
     @ManyToOne
     @JoinColumn(name = "id_fournisseur")
-    Fournisseur fournisseur;
+    private Fournisseur fournisseur;
 
     public void setDatePeremption(String s) {
     }

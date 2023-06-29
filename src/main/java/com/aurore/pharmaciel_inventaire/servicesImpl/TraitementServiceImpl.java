@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -67,11 +68,11 @@ public class TraitementServiceImpl implements TraitementService {
             etatInventaire.setQteTotale(t.getQteCompte());
             etatInventaire.setQteDepot(t.getQteDisponible()==0?t.getStockProduit().getQuantite():t.getQteDisponible());
             etatInventaire.setCodeUtilisateur(t.getParticiper().getAppUser().getId().toString());
-            etatInventaire.setIdProduit(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getProduit().getId().toString());
-            etatInventaire.setIdLigne(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getId().toString());
-            etatInventaire.setIdFournisseur(t.getFournisseur().getId().toString());
-            etatInventaire.setCodeInventaire(t.getParticiper().getInventaire().getNumero());
-            etatInventaire.setCodeLocalisation(t.getParticiper().getLocalisation().getCode());
+//            etatInventaire.setIdProduit(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getProduit().getId().toString());
+//            etatInventaire.setIdLigne(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getId().toString());
+//            etatInventaire.setIdFournisseur(t.getFournisseur().getId().toString());
+//            etatInventaire.setCodeInventaire(t.getParticiper().getInventaire().getNumero());
+//            etatInventaire.setCodeLocalisation(t.getParticiper().getLocalisation().getCode());
             //sauvegarde de la ligne
             etatInventaireRepository.save(etatInventaire);
         }
@@ -82,12 +83,18 @@ public class TraitementServiceImpl implements TraitementService {
     public Traitement saveTraitement(Traitement traitement) {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
+        //formatage de la date
+        final String format = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+
         //calcul de l'écart
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
         //changement du rayon
         //flag de comptage
         traitement.setStatut(1);
+        traitement.setDatePeremption(traitement.getDatePeremption());
         Logs log = new Logs();
         log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());
@@ -96,9 +103,13 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, String datePeremption,double prixVente) {
+    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
+
+        //formatage de la date
+        final String format = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
 
         Traitement traitement = new Traitement();
         Optional<StockProduit> stockProduit = Optional.ofNullable(stockProduitRepository.findStockProduitByCodeUnique(id_stockproduit));

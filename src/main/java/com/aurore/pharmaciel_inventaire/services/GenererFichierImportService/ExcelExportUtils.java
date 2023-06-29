@@ -59,20 +59,20 @@ public class ExcelExportUtils {
         font.setBold(true);
         font.setFontHeight(16.0);
         style.setFont(font);
-        createCell(row,0,"Id",style);
-        createCell(row,1,"localisation",style);
-        createCell(row,2,"fournisseur",style);
-        createCell(row,3,"codeCip",style);
-        createCell(row,4,"libelle",style);
-        createCell(row,5,"prixAchat",style);
-        createCell(row,6,"prixVente",style);
-        createCell(row,7,"datePeremption",style);
-        createCell(row,8,"qte",style);
-        createCell(row,9,"qteTotale",style);
-        createCell(row,10,"qteDepot",style);
-        createCell(row,11,"codeUtilisateur",style);
-        createCell(row,12,"idProduit",style);
-        createCell(row,13,"idLigne",style);
+        createCell(row,0,"ID_LIGNE",style);
+        createCell(row,1,"ID_PROUIT",style);
+        createCell(row,2,"CODE_CIP",style);
+        createCell(row,3,"LIBELLE_PRODUIT",style);
+        createCell(row,4,"ID_FORNISSEUR",style);
+        createCell(row,5,"PRIX_ACHAT",style);
+        createCell(row,6,"PRIX_VENTE",style);
+        createCell(row,7,"DATE_PEREMPTION",style);
+        createCell(row,8,"LOT",style);
+        createCell(row,9,"ID_MOTIF",style);
+        createCell(row,10,"LIBELLE_MOTIF",style);
+//        createCell(row,11,"codeUtilisateur",style);
+//        createCell(row,12,"idProduit",style);
+//        createCell(row,13,"idLigne",style);
     }
 
     private void writeEtatInvaireData(){
@@ -96,9 +96,9 @@ public class ExcelExportUtils {
             createCell(row,columnCount++,etatInventaire.getQte(), style);
             createCell(row,columnCount++,etatInventaire.getQteTotale(), style);
             createCell(row,columnCount++,etatInventaire.getQteDepot(), style);
-            createCell(row,columnCount++,etatInventaire.getCodeUtilisateur(), style);
-            createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
-            createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
+//            createCell(row,columnCount++,etatInventaire.getCodeUtilisateur(), style);
+//            createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
+//            createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
         }
     }
 

@@ -141,20 +141,40 @@
                             <table ng-table="produitsTable" style="width: 100%" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="ps in dataP" style="text-align: center">
-                                        <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">{{ps.codeCip}}</td>
+                                        <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">
+                                            {{ps.codeCip}}
+                                        </td>
                                         <td data-title="'Produit'" style="width: 35%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
                                         <form name="cForm">
-                                            <td style="width: 10%" data-title="'Prix Vente'"><input ng-model="prixVente" name="prixVente" value="{{ps.prixVenteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%" data-title="'Prix Vente'">
+                                                <div class="form-group-sm">
+                                                    <small class="text-danger">{{ps.prixVenteStock}}</small>
+                                                    <input ng-model="prixVente" name="prixVente" type="number" class="form-control form-control-sm text-center" required="required">
+                                                </div>
+                                            </td>
                                             <td style="width: 15%" data-title="'Fournisseur'">
-                                                <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
-                                                    <option ng-selected="four.raisonSociale" ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
-                                                        {{four.raisonSociale}}
-                                                    </option>
-                                                </select>
+                                                <div class="form-group">
+                                                    <small class="text-danger">{{ps.fournisseurStock}}</small>
+                                                    <select class="form-control form-control-sm" ng-model="codeFournisseur"  name="codeFournisseur" required="required">
+                                                        <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
+                                                            {{four.raisonSociale}}
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </td>
     <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
-                                            <td style="width: 10%" data-title="'Date Peremption'"><input type="date" value="{{ps.peremptionStock}}" ng-model="datePeremption"  name="datePeremption" class="form-control"></td>
-                                            <td style="width: 10%" data-title="'Qté Comptée'"><input ng-model="qteCompte" name="qteCompte" value="{{ps.qteCompteStock}}" type="number" class="form-control form-control-sm text-center" required="required"></td>
+                                            <td style="width: 10%" data-title="'Date Peremption'">
+                                                <div class="form-group">
+                                                    <small class="text-danger">{{ps.peremptionStock | date:"dd/MM/yyyy"}}</small>
+                                                    <input type="date" ng-model="datePeremption"  name="datePeremption" class="form-control">
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%" data-title="'Qté Comptée'">
+                                                <div class="form-group">
+                                                    <small class="text-danger">{{ps.qteCompteStock}}</small>
+                                                    <input ng-model="qteCompte" name="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
+                                                </div>
+                                            </td>
                                             <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>

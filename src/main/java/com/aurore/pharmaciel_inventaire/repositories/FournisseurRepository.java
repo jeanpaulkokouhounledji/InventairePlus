@@ -16,4 +16,6 @@ public interface FournisseurRepository extends JpaRepository<Fournisseur,Long> {
 
     @Query("select f from Fournisseur f where f.id=:x")
     Fournisseur findById(@Param("x") long x);
+
+
 }

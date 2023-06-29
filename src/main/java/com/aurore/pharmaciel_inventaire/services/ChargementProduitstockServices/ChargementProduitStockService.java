@@ -28,7 +28,8 @@ public class ChargementProduitStockService {
     public void saveProduitStockToDatabase(MultipartFile file){
         if(ProduitExcelUpload.isValidExcelFile(file)){
             try {
-                List<StockProduit> stockProduits = ProduitStockUpload.getProduitStockDataFromExcel(file.getInputStream(),produitRepository,fournisseurRepository);
+                List<StockProduit> stockProduits = ProduitStockUpload.getStockFromExcel(file.getInputStream(),produitRepository,fournisseurRepository);
+
                 stockProduitRepository.saveAll(stockProduits);
                 //this.customerRepository.saveAll(produits);
             } catch (IOException e) {
