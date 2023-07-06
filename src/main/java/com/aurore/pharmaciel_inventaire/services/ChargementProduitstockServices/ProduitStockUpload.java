@@ -57,15 +57,23 @@ public class ProduitStockUpload {
                         case 3 -> stockProduit.setPrixVente(Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
                         case 4 -> stockProduit.setPrixAchat(Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
                         case 5 -> stockProduit.setQuantite(Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
-                        case 6 -> stockProduit.setDatePeremption(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
+                        case 6 -> {
+                            assert false;
+                            try {
+                                stockProduit.setDatePeremption(cell.getCellType()==CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
+                            }catch (Exception e){
+                                e.getMessage();
+                            }
+
+                        }
                         case 7 -> stockProduit.setFournisseur(fournisseurRepository.findById((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()))));
-                        case 8 -> stockProduit.setDatePeremption(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
                         default -> {
                         }
                     }
                     cellIndex++;
                 }
                 stockProduits.add(stockProduit);
+
             }
         } catch (IOException e) {
             e.getStackTrace();
@@ -73,65 +81,5 @@ public class ProduitStockUpload {
         return stockProduits;
     }
 
-   /* static boolean isValidExcelFile(MultipartFile file){
-        return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" );
-    }
-
-    static List<StockProduit> getProduitStockDataFromExcel(InputStream inputStream, ProduitRepository produitRepository, FournisseurRepository fournisseurRepository){
-
-        List<StockProduit> stockProduits = new ArrayList<>();
-
-        try {
-
-            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheet("STOCK_PRODUITS");
-            int rowIndex =0;
-            int id = 1;
-            for (Row row : sheet){
-                if (rowIndex ==0){
-                    rowIndex++;
-                    continue;
-                }
-                Iterator<Cell> cellIterator = row.iterator();
-                int cellIndex = 0;
-                StockProduit stockProduit = new StockProduit();
-
-                //System.out.println(id++);
-                stockProduit.setId((long) id);
-
-                while (cellIterator.hasNext()){
-                    Cell cell = cellIterator.next();
-
-                    switch (cellIndex){
-                        case 0 -> {
-                            assert false;
-                            stockProduit.setProduit(produitRepository.findById((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()))));
-                        }
-                        case 1 -> {
-                            stockProduit.setIdDepot(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        }
-                        case 2 -> stockProduit.setCodeUnique(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 3 -> stockProduit.setPrixVente(Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
-                        case 4 -> stockProduit.setPrixAchat(Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
-                        case 5 -> stockProduit.setQuantite((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue())));
-                        case 6 -> stockProduit.setDatePeremption(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-                        case 7 -> {
-                            assert false;
-                            stockProduit.setFournisseur(fournisseurRepository.findById((long) Double.parseDouble(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()))));
-                        }
-                        case 8 -> stockProduit.setLot(cell.getCellType()== CellType.STRING? cell.getStringCellValue() : String.valueOf(cell.getNumericCellValue()));
-
-                        default -> {
-                        }
-                    }
-                    cellIndex++;
-                }
-                stockProduits.add(stockProduit);
-            }
-        } catch (IOException e) {
-            e.getStackTrace();
-        }
-        return stockProduits;
-    }*/
 
 }

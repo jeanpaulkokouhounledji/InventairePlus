@@ -77,10 +77,10 @@
                                         {{opt.localisation.libelle}}
                                     </option>
                                 </select>
-                                <label class="text-danger" ng-show="participerByUser==null">Champ requis</label>
+                                <label class="text-danger">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-disabled="userInventaire.numero==null" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper>=0" ng-click="toggleForm();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -296,7 +296,4 @@
             </div>
         </div>
     </div>
-
-
-
 </section>

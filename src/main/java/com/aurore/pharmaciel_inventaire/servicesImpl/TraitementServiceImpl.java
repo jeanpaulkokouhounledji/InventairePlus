@@ -133,7 +133,7 @@ public class TraitementServiceImpl implements TraitementService {
         //sauvegarde
         Logs log = new Logs();
         log.setUser(securityContext.getAuthentication().getName());
-        log.setDescription("Comptage du produit " + traitement.getLibelleProduit());
+        log.setDescription("Comptage du produit " + stockProduit.get().getProduit().getLibelle().toString());
         logsRepository.save(log);
 
         return traitementRepository.save(traitement);

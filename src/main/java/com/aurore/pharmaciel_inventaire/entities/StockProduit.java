@@ -52,6 +52,4 @@ public class StockProduit implements Serializable {
     @JoinColumn(name = "id_fournisseur")
     private Fournisseur fournisseur;
 
-    public void setDatePeremption(String s) {
-    }
 }

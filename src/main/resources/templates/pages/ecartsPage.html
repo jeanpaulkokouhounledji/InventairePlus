@@ -59,7 +59,7 @@
 <!--                            liste des inventaires -->
                             <div class="col-sm-4 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Choisissez Un Inventaire</label>
-                                <select class="form-control form-control-sm" name="inv" ng-model="chosedInventaireNumero" ng-change="localisationByInventaire(chosedInventaireNumero);"  required="required">
+                                <select class="form-control form-control-sm" name="inv" ng-model="chosedInventaireNumero" ng-change="localisationByInventaire(chosedInventaireNumero);chosedLocalisationCode=null"  required="required">
                                     <optgroup label="Sélectionnez un inventaire"></optgroup>
                                     <option ng-repeat="opt in allInventaire" value="{{opt.numero}}" >
                                         {{opt.numero}}

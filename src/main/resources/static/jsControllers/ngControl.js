@@ -760,14 +760,14 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.traitementData = response.data;
                 $scope.traitementsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
-                    page: 1,
-                    count: 5
+                    /*page: 1,
+                    count: 5*/
                 }, {
                     total: $scope.traitementData.length,
                     getData: function (params) {
                         $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
                         $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        // $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                         return $scope.data;
                     }
                 });
@@ -998,14 +998,14 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
                 $scope.traitementData = response.data;
                 $scope.traitementsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
-                    /*page: 1,
-                    count: 5*/
+                    page: 1,
+                    count: 5
                 }, {
                     total: $scope.traitementData.length,
                     getData: function (params) {
                         $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
                         $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
                         return $scope.data;
                     }
                 });
@@ -1167,6 +1167,7 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
         $http.get("/pharmaxiel/api/v1/traitement/generate/etatInventaire/" + codeInventaire + "/" + codeRayon)
             .then(function (response) {
                 //$scope.participerLocalisations = response.data;
+                    $scope.exportToExcel(codeInventaire,codeRayon);
                 new PNotify({
                     title: "Inventaire+ | Notification",
                     text: "Etat générer avec succès",

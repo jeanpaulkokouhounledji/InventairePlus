@@ -1,6 +1,7 @@
 package com.aurore.pharmaciel_inventaire.services.GenererFichierImportService;
 
 import com.aurore.pharmaciel_inventaire.entities.EtatInventaire;
+import com.ctc.wstx.util.WordResolver;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -45,6 +46,7 @@ public class ExcelExportUtils {
 
     private void createHeaderRow(){
         sheet = workbook.createSheet("Etat Inventaire");
+
         Row row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();

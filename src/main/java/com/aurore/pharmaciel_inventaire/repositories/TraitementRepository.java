@@ -18,7 +18,7 @@ public interface TraitementRepository extends JpaRepository<Traitement,Long>{
             "or t.prixVente<>t.stockProduit.prixVente " +
             "or t.datePeremption<>t.stockProduit.datePeremption " +
             "or t.fournisseur.codeFournisseur<>t.stockProduit.fournisseur.codeFournisseur " +
-            "or t.participer.localisation.id<>t.stockProduit.produit.localisation.id) and t.leMotif=''")
+            "or t.participer.localisation.id<>t.stockProduit.produit.localisation.id) and t.leMotif=null or t.leMotif=''")
     List<Traitement> listTraitementsAvecEcarts();
 
     //selection des lignes de traitements d'une localisation d'un inventaire
