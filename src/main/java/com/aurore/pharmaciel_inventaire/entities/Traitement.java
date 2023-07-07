@@ -53,7 +53,7 @@ public class Traitement implements Serializable {
     @Column
     private double prixVente = .0;
 
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date dateComptage = new Date();
 
     //=========== ajout des champs pour la creation d'une nouvelle ligne

@@ -117,10 +117,8 @@
                                         </td>-->
                                         <td data-title="'Code CIP'">{{t.codeCip==null?t.stockProduit.produit.codeProduit:t.codeCip}}</td>
                                         <td data-title="'Produit'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
-                                        <!--<td data-title="'Corriger'">
-                                            <i ng-if="t.motif==''" class="text-danger w-25">Non</i>
-                                            <i ng-if="t.motif!=''" class="text-success w-25">Oui</i>
-                                        </td>-->
+                                        <td data-title="'Agent'">{{t.participer.appUser.nomPrenom}}</td>
+                                        <td data-title="'Date et Heure'">{{t.dateComptage}}</td>
                                         <td data-title="'Action(s)'" >
                                             <button data-toggle="modal" data-target="#param" class="btn btn-sm btn-pill btn-dark" ng-click="editTraitement(t.id);" ><i class="text-warning fa fa-pencil"></i></button>
                                         </td>
@@ -240,7 +238,7 @@
                                                 <label>Fournisseur inventorié <span ng-if="traitement.fournisseur.raisonSociale!=''" class="text-danger">{{ '<< '+ traitement.fournisseur.raisonSociale + ' >>'}}</span></label>
                                                 <select class="form-control form-control-sm" ng-model="traitement.fournisseur.id" required="required">
                                                     <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
-                                                        {{four.raisonSociale}} => {{four.codeFournisseur}}
+                                                        {{four.raisonSociale}}
                                                     </option>
                                                 </select>
                                             </div>

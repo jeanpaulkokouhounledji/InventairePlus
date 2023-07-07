@@ -46,21 +46,22 @@ public class StockProduitController {
          Vector collection = new Vector();
 
          for (StockProduit pr : stockProduits) {
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("id",pr.getId());
-            map.put("codeCip",pr.getProduit().getCodeProduit());
-            map.put("idFournisseur",pr.getFournisseur().getId());
-            map.put("codeUnique",pr.getCodeUnique());
-            map.put("produit",pr.getProduit().getLibelle());
-            map.put("prixVente",pr.getPrixVente());
-            map.put("prixAchat",pr.getPrixAchat());
-            //donnees en stock
-            map.put("prixVenteStock",pr.getPrixVente());
-            map.put("fournisseurStock",pr.getFournisseur().getRaisonSociale());
-            map.put("peremptionStock",pr.getDatePeremption());
-            map.put("qteStock",pr.getQuantite());
-            map.put("qteCompteStock",pr.getQuantite());
-            collection.add(map);
+
+                 HashMap<String, Object> map = new HashMap<>();
+                 map.put("id",pr.getId());
+                 map.put("codeCip",pr.getProduit().getCodeProduit());
+                 map.put("idFournisseur",pr.getFournisseur().getId());
+                 map.put("codeUnique",pr.getCodeUnique());
+                 map.put("produit",pr.getProduit().getLibelle());
+                 map.put("prixVente",pr.getPrixVente());
+                 map.put("prixAchat",pr.getPrixAchat());
+                 //donnees en stock
+                 map.put("prixVenteStock",pr.getPrixVente());
+                 map.put("fournisseurStock",pr.getFournisseur().getRaisonSociale());
+                 map.put("peremptionStock",pr.getDatePeremption());
+                 map.put("qteStock",pr.getQuantite());
+                 map.put("qteCompteStock",pr.getQuantite());
+                 collection.add(map);
          }
 
          return collection;

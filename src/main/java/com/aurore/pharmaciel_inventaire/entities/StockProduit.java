@@ -33,7 +33,7 @@ public class StockProduit implements Serializable {
     @Column
     private double quantite;
     //@Temporal(TemporalType.DATE)
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(pattern="dd/MM/yyyy")
     private String datePeremption;
     //private Date datePeremption;
     @Column
