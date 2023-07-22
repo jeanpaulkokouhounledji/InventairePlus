@@ -46,7 +46,7 @@ public class TraitementServiceImpl implements TraitementService {
     private double ecart = .0;
 
     //generation d'etat d'un rayon d'inventaire traité
-    @Override
+   /* @Override
     public void generateEtatInventaire(String codeInventaire, String codeRayon) {
         //reccuperation de la liste des traitements concernés
         List<Traitement> traitements = traitementRepository.listByRayonOfInventaire(codeInventaire, codeRayon);
@@ -68,17 +68,12 @@ public class TraitementServiceImpl implements TraitementService {
             etatInventaire.setQteTotale(t.getQteCompte());
             etatInventaire.setQteDepot(t.getQteDisponible()==0?t.getStockProduit().getQuantite():t.getQteDisponible());
             etatInventaire.setCodeUtilisateur(t.getParticiper().getAppUser().getId().toString());
-//            etatInventaire.setIdProduit(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getProduit().getId().toString());
-//            etatInventaire.setIdLigne(t.getStockProduit()==null?t.getId().toString():t.getStockProduit().getId().toString());
-//            etatInventaire.setIdFournisseur(t.getFournisseur().getId().toString());
-//            etatInventaire.setCodeInventaire(t.getParticiper().getInventaire().getNumero());
-//            etatInventaire.setCodeLocalisation(t.getParticiper().getLocalisation().getCode());
-            //sauvegarde de la ligne
+
             etatInventaireRepository.save(etatInventaire);
         }
 
     }
-
+*/
     @Override
     public Traitement saveTraitement(Traitement traitement) {
         HttpSession httpSession = httpServletRequest.getSession();

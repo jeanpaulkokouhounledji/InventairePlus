@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"participer","stockProduit", "fournisseur" })})
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"participer","stockProduit" })})
 public class Traitement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,7 +24,16 @@ public class EtatInventaireServiceImpl implements EtatInventaireService {
 
     @Override
     public List<EtatInventaire> exportEtatInventaireToExcel(HttpServletResponse response, String codeInventaire, String codeRayon) throws IOException {
+        //exporte tous les produits sans specification du rayon ni de l'inventaire
+        //List<EtatInventaire> etatInventaires = etatInventaireRepository.findAll();
+        //exporte en fonction du rayon et de l'inventaire
         List<EtatInventaire> etatInventaires = etatInventaireRepository.etatPatRayonDinventaire(codeInventaire,codeRayon);
+
+        System.out.println("======================*********************==================");
+        System.out.println(etatInventaires.size());
+        System.out.println("======================*********************==================");
+
+
         ExcelExportUtils excelExportUtils = new ExcelExportUtils(etatInventaires);
         excelExportUtils.exportDataToExcel(response);
         return etatInventaires;

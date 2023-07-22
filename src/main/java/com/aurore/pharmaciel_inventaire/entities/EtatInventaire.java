@@ -1,55 +1,56 @@
 package com.aurore.pharmaciel_inventaire.entities;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Subselect;
+import org.springframework.data.annotation.Immutable;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"libelle","codeInventaire", "codeLocalisation" })})
-@Entity
 @Data
+@Entity
+@Immutable
+@Subselect("select * from etat_inventaire")
 @AllArgsConstructor @NoArgsConstructor @ToString
-public class EtatInventaire implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+public class EtatInventaire implements Serializable{
+  /*  @Id
+    private Long id;*/
+    @Id @Column
+    private String idLigne = "";
     @Column
-    private String localisation = "";
-    @Column
-    private String fournisseur = "";
+    private String idProduit = "";
     @Column
     private String codeCip = "";
     @Column
     private String libelle = "";
     @Column
-    private double prixAchat = .0;
+    private Long idFournisseur;
+    @Column
+    private String prixAchat = "";
     @Column
     private double prixVente = .0;
     @Column
+    private double qte = 0;
+    @Column
     private String datePeremption = "";
     @Column
-    private double qte = .0;
+    private String lot = "";
     @Column
-    private double qteTotale = .0;
+    private String idMotif = "";
     @Column
-    private double qteDepot = .0;
-    @Column
-    private String codeUtilisateur = "";
-    @Column
-    private String idProduit = "";
-    @Column
-    private String idLigne = "";
-    @Column
-    private String idFournisseur = "";
-    @Column
-    private String codeInventaire = "";
+    private String libelleMotif = "";
     @Column
     private String codeLocalisation = "";
-    /*@JoinColumn(name = "participer_id")
-    @ManyToOne
-    Participer participer;*/
+    @Column
+    private String localisation = "";
+    @Column
+    private long codeUtilisateur = 0;
+    @Column
+    private String codeInventaire = "";
+
+
 }

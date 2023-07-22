@@ -30,10 +30,10 @@ public class TraitementController {
     }
 
     //generation d'un etat d'inventaire
-    @GetMapping(value = "/generate/etatInventaire/{codeInventaire}/{codeRayon}")
+   /* @GetMapping(value = "/generate/etatInventaire/{codeInventaire}/{codeRayon}")
     public void generateEtatInventaire(@PathVariable String codeInventaire,@PathVariable String codeRayon){
         traitementService.generateEtatInventaire(codeInventaire,codeRayon);
-    }
+    }*/
 
     @PostMapping(value = "/save")
     public Traitement saveTraitement(@RequestBody Traitement traitement){

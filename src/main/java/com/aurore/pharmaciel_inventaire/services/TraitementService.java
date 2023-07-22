@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface TraitementService {
 
     //generation des etats
-    void generateEtatInventaire(String codeInventaire, String codeRayon);
+    //void generateEtatInventaire(String codeInventaire, String codeRayon);
 
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);

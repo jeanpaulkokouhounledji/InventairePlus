@@ -1,6 +1,7 @@
 package com.aurore.pharmaciel_inventaire.services.GenererFichierImportService;
 
 import com.aurore.pharmaciel_inventaire.entities.EtatInventaire;
+import com.aurore.pharmaciel_inventaire.repositories.EtatInventaireRepository;
 import com.ctc.wstx.util.WordResolver;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -20,6 +21,9 @@ import java.util.Objects;
 public class ExcelExportUtils {
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
+
+    private EtatInventaireRepository etatInventaireRepository;
+
     private List<EtatInventaire> etatInventaireList;
 
     public ExcelExportUtils(List<EtatInventaire> etatInventaireList){
@@ -72,9 +76,7 @@ public class ExcelExportUtils {
         createCell(row,8,"LOT",style);
         createCell(row,9,"ID_MOTIF",style);
         createCell(row,10,"LIBELLE_MOTIF",style);
-//        createCell(row,11,"codeUtilisateur",style);
-//        createCell(row,12,"idProduit",style);
-//        createCell(row,13,"idLigne",style);
+
     }
 
     private void writeEtatInvaireData(){
@@ -87,20 +89,18 @@ public class ExcelExportUtils {
         for (EtatInventaire etatInventaire : etatInventaireList){
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-            createCell(row,columnCount++,etatInventaire.getId(), style);
-            createCell(row,columnCount++,etatInventaire.getLocalisation(), style);
-            createCell(row,columnCount++,etatInventaire.getFournisseur(), style);
+            createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
+            createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
             createCell(row,columnCount++,etatInventaire.getCodeCip(), style);
             createCell(row,columnCount++,etatInventaire.getLibelle(), style);
+            createCell(row,columnCount++,etatInventaire.getIdFournisseur(), style);
             createCell(row,columnCount++,etatInventaire.getPrixAchat(), style);
             createCell(row,columnCount++,etatInventaire.getPrixVente(), style);
             createCell(row,columnCount++,etatInventaire.getDatePeremption(), style);
-            createCell(row,columnCount++,etatInventaire.getQte(), style);
-            createCell(row,columnCount++,etatInventaire.getQteTotale(), style);
-            createCell(row,columnCount++,etatInventaire.getQteDepot(), style);
-//            createCell(row,columnCount++,etatInventaire.getCodeUtilisateur(), style);
-//            createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
-//            createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
+            createCell(row,columnCount++,etatInventaire.getLot(), style);
+            createCell(row,columnCount++,etatInventaire.getIdMotif(), style);
+            createCell(row,columnCount++,etatInventaire.getLibelleMotif(), style);
+
         }
     }
 
