@@ -3,6 +3,26 @@
  */
 var app = angular.module('pharmaxielweb',['ngTable']);
 
+//focus sur un input utilisation : <input type="text" ng-focus="isFocused" ng-focus-lost="loseFocus()">
+app.directive('ngFocus', function($timeout) {
+    return {
+        link: function ( scope, element, attrs ) {
+            scope.$watch( attrs.ngFocus, function ( val ) {
+                if ( angular.isDefined( val ) && val ) {
+                    $timeout( function () { element[0].focus(); } );
+                }
+            }, true);
+            element.bind('blur', function () {
+                if ( angular.isDefined( attrs.ngFocusLost ) ) {
+                    scope.$apply( attrs.ngFocusLost );
+
+                }
+            });
+        }
+    };
+});
+
+
 app.directive('convertToNumber', function() {
     return {
         require: 'ngModel',
@@ -16,6 +36,8 @@ app.directive('convertToNumber', function() {
         }
     };
 });
+
+
 
 //confirmation de l'action
 app.directive('ngConfirmClick', [
@@ -583,13 +605,39 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.chosedParticiper = {};
     //predit du medicament à inventorié
     $scope.codeNomProduit;
+    //variable du model du type de comptage
+    $scope.t_Comptage = {};
+    //critere de recherche par code unique
+    $scope.codeDouchette = "";
+    //code unique produit
+    $scope.codeUniqueProduit = "";
+    //
+    $scope.maDate = "";
 
 
     //reccuperation des deux parties d'une chaine de caractere de part et d'autre d'un virgule
-    $scope.mySplit = function(string, nb) {
+  /*  $scope.mySplit = function(string, nb) {
         var array = string.split(',');
         return array[nb];
     }
+*/
+
+    //liste des types de comptage
+    $scope.getTypeComptage = function (){
+        $http.get("/pharmaxiel/api/v1/typeComptage/list")
+            .then(function (response) {
+                $scope.typeComptage = response.data;
+            })
+    }
+    $scope.getTypeComptage();
+
+    //autofocus function
+    $scope.autofocusExtraField = function() {
+        if ($scope.codeDouchette === 'd') {
+            var extraFieldElement = document.getElementById('extraField');
+            extraFieldElement.focus();
+        }
+    };
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
@@ -603,10 +651,12 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.getUserDetails();
 
+
+
     //recherche dans un select
-    $(function() {
+   /* $(function() {
         $('.selectpicker').selectpicker();
-    });
+    });*/
 
     $scope.reset = function () {
         $scope.stockProduit = {};
@@ -726,7 +776,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     //reinitialisation des données de traitement
                     $scope.traitement = {};
 
-
                 },
                 function errorCallback(response) {
                     new PNotify({
@@ -803,7 +852,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     };
     $scope.listProduits();
-
 
 }
 

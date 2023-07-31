@@ -5,10 +5,8 @@ import com.aurore.pharmaciel_inventaire.entities.StockProduit;
 import com.aurore.pharmaciel_inventaire.services.StockProduitService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.aurore.pharmaciel_inventaire.utils.JavaConstant.API_BASE_URL;
 
@@ -45,7 +43,13 @@ public class StockProduitController {
          List<StockProduit> stockProduits = stockProduitService.stockProduitList();
          Vector collection = new Vector();
 
+         final String format = "yyyy-MM-dd";
+         SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+
          for (StockProduit pr : stockProduits) {
+
+                Date date = new Date(pr.getDatePeremption());
 
                  HashMap<String, Object> map = new HashMap<>();
                  map.put("id",pr.getId());
@@ -58,9 +62,10 @@ public class StockProduitController {
                  //donnees en stock
                  map.put("prixVenteStock",pr.getPrixVente());
                  map.put("fournisseurStock",pr.getFournisseur().getRaisonSociale());
-                 map.put("peremptionStock",pr.getDatePeremption());
+                 map.put("peremptionStock",sdf.format(date));
                  map.put("qteStock",pr.getQuantite());
                  map.put("qteCompteStock",pr.getQuantite());
+                 map.put("codeUnique",pr.getCodeUnique());
                  collection.add(map);
          }
 

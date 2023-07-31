@@ -2,6 +2,7 @@ package com.aurore.pharmaciel_inventaire.services;
 
 import com.aurore.pharmaciel_inventaire.entities.Traitement;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface TraitementService {
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);
 
-    Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente);
+    Traitement saveLeTraitement(String id_stockproduit, long id_participer, String fournisseur,double qteCompte, String datePeremption,double prixVente) throws ParseException;
 
     //Reccuperation du traitement pour modification
     Optional<Traitement> getForEdit(Long id);

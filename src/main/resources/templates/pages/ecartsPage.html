@@ -220,7 +220,7 @@
                                         <div class="row">
                                             <div class="col-sm form-group-sm mb-2">
 <!--                                                <label>Date de péremption saisie <span class="text-danger">{{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }}</span></label>-->
-                                                <label>Date de péremption saisie <span class="text-danger"><< {{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }} >></span></label>
+                                                <label>Date de péremption saisie <span class="text-danger"><< {{traitement.datePeremption}} >></span></label>
                                                 <input ng-model="traitement.datePeremption" type="date" class="form-control form-control-sm text-center" required="required">
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
@@ -235,15 +235,17 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm form-group-sm mb-2">
-                                                <label>Fournisseur inventorié <span ng-if="traitement.fournisseur.raisonSociale!=''" class="text-danger">{{ '<< '+ traitement.fournisseur.raisonSociale + ' >>'}}</span></label>
-                                                <select class="form-control form-control-sm" ng-model="traitement.fournisseur.id" required="required">
-                                                    <option ng-repeat="four in listFournisseurs" value="{{four.id}}">
+<!--                                                <label>Fournisseur inventorié <span ng-if="traitement.fournisseur.raisonSociale!=''" class="text-danger">{{ '<< '+ traitement.fournisseur.raisonSociale + ' >>'}}</span></label>-->
+                                                <label>Fournisseur inventorié </label>
+                                                <select class="form-control form-control-sm" ng-model="traitement.fournisseur.raisonSociale" required="required">
+                                                    <option ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
                                                         {{four.raisonSociale}}
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
-                                                <label>Fournisseur en stock <span class="text-danger"><< {{traitement.stockProduit.fournisseur.codeFournisseur}} >></span></label>
+                                                <label>Fournisseur en stock</label>
+<!--                                                <label>Fournisseur en stock <span class="text-danger"><< {{traitement.stockProduit.fournisseur.codeFournisseur}} >></span></label>-->
                                                 <input ng-model="traitement.stockProduit.fournisseur.raisonSociale" type="text" class="form-control form-control-sm text-center" disabled>
                                             </div>
                                         </div>

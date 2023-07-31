@@ -35,7 +35,6 @@ public class StockProduit implements Serializable {
     //@Temporal(TemporalType.DATE)
     @JsonFormat(pattern="dd/MM/yyyy")
     private String datePeremption;
-    //private Date datePeremption;
     @Column
     private String lot;
     @Column

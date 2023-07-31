@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -98,18 +99,19 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     @Override
-    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, long id_fournisseur,double qteCompte, Date datePeremption,double prixVente) {
+    public Traitement saveLeTraitement(String id_stockproduit, long id_participer, String fournisseur,double qteCompte, String datePeremption,double prixVente) throws ParseException {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
         //formatage de la date
-        final String format = "yyyy-MM-dd";
+        final String format = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date date = new Date(datePeremption);
 
         Traitement traitement = new Traitement();
         Optional<StockProduit> stockProduit = Optional.ofNullable(stockProduitRepository.findStockProduitByCodeUnique(id_stockproduit));
         Optional<Participer> participer = Optional.of(participerRepository.findById(id_participer));
-        Optional<Fournisseur> fournisseur = Optional.of(fournisseurRepository.findById(id_fournisseur));
+        Optional<Fournisseur> fourn = Optional.ofNullable(fournisseurRepository.findFournisseurByRaisonSociale(fournisseur));
         //produit correspondant
         traitement.setStockProduit(stockProduit.get());
         traitement.setPrixVente(prixVente);
@@ -118,8 +120,8 @@ public class TraitementServiceImpl implements TraitementService {
         //participer correspondant
         traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
-        traitement.setDatePeremption(datePeremption);
-        traitement.setFournisseur(fournisseur.get());
+        traitement.setDatePeremption(sdf.format(date).toString());
+        traitement.setFournisseur(fourn.get());
         //calcul de l'ecart entre qté compté et qté disponible
         this.ecart = stockProduit.get().getQuantite() - qteCompte;
         traitement.setEcart(ecart);

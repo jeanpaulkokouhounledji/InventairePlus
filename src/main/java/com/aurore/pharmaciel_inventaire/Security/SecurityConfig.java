@@ -2,7 +2,6 @@ package com.aurore.pharmaciel_inventaire.Security;
 
 import com.aurore.pharmaciel_inventaire.entities.AppUser;
 import com.aurore.pharmaciel_inventaire.services.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,8 +23,12 @@ import java.util.Collection;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AccountService accountService;
+
+    private final AccountService accountService;
+
+    public SecurityConfig(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
