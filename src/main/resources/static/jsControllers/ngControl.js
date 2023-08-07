@@ -4,7 +4,7 @@
 var app = angular.module('pharmaxielweb',['ngTable']);
 
 //focus sur un input utilisation : <input type="text" ng-focus="isFocused" ng-focus-lost="loseFocus()">
-app.directive('ngFocus', function($timeout) {
+/*app.directive('ngFocus', function($timeout) {
     return {
         link: function ( scope, element, attrs ) {
             scope.$watch( attrs.ngFocus, function ( val ) {
@@ -20,8 +20,7 @@ app.directive('ngFocus', function($timeout) {
             });
         }
     };
-});
-
+});*/
 
 app.directive('convertToNumber', function() {
     return {
@@ -37,11 +36,8 @@ app.directive('convertToNumber', function() {
     };
 });
 
-
-
 //confirmation de l'action
-app.directive('ngConfirmClick', [
-function(){
+app.directive('ngConfirmClick', [ function(){
     return {
         link: function (scope, element, attr) {
             var msg = attr.ngConfirmClick || "Confirmez vous cette action?";
@@ -136,8 +132,6 @@ app.service('fileUpload', ['$http', function ($http) {
 //======================================================
 //==========  user Controller  ======================
 //======================================================
-
-
 app.controller('userController',userController);
 function userController($scope , $http , $filter , fileUpload , NgTableParams ){
     $scope.userData = {data:[]};
@@ -322,16 +316,9 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
 
 
 }
-
-
-
-
-
 //======================================================
 //==========  inventaire Controller  ======================
 //======================================================
-
-
 app.controller('inventaireController',inventaireController);
 function inventaireController($scope , $http , $filter , fileUpload , NgTableParams ){
     $scope.inventaireData = {data:[]};
@@ -584,12 +571,9 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.participationsList();
 
 }
-
 //======================================================
 //==========  comptage Controller  ======================
 //======================================================
-
-
 app.controller('traitementController',traitementController);
 function traitementController($scope , $http , $filter , fileUpload , NgTableParams){
     $scope.comptageData = {data:[]};
@@ -611,16 +595,22 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.codeDouchette = "";
     //code unique produit
     $scope.codeUniqueProduit = "";
-    //
+    //localisation choisi
+    $scope.localisationActive = 0;
+
+    $scope.splitArray = [];
+
+    $scope.idLoca = parseInt($scope.splitArray[0]);
+    $scope.idPart = parseInt($scope.splitArray[1]);
+
+    //$scope.splitArray = $scope.chosedParticiper.split('-');
+
+
     $scope.maDate = "";
+    $scope.maDateD = "";
+    $scope.searchTag = "";
 
-
-    //reccuperation des deux parties d'une chaine de caractere de part et d'autre d'un virgule
-  /*  $scope.mySplit = function(string, nb) {
-        var array = string.split(',');
-        return array[nb];
-    }
-*/
+    $scope.splitHundler
 
     //liste des types de comptage
     $scope.getTypeComptage = function (){
@@ -634,7 +624,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     //autofocus function
     $scope.autofocusExtraField = function() {
         if ($scope.codeDouchette === 'd') {
-            var extraFieldElement = document.getElementById('extraField');
+            var extraFieldElement = document.getElementById('codeU');
             extraFieldElement.focus();
         }
     };
@@ -652,12 +642,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.getUserDetails();
 
 
-
-    //recherche dans un select
-   /* $(function() {
-        $('.selectpicker').selectpicker();
-    });*/
-
     $scope.reset = function () {
         $scope.stockProduit = {};
     };
@@ -666,7 +650,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
     };
-
     //liste des rayons d'un utilisateur
     $scope.localisationUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/localisationByUser/"+username)
@@ -684,7 +667,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 //alert("===============");
             })
     };
-
     //supression d'un comptage
     $scope.deleteTraitement = function (id){
         $http.delete("/pharmaxiel/api/v1/traitement/delete/"+id)
@@ -716,9 +698,9 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
 
     }
-
     //sauvegarde d'une toute nouvelle ligne de traitement d'un produit inexistant en stock
     $scope.saveNewTraitement = function (){
+        alert($scope.traitement.datePeremption);
         $http.post("/pharmaxiel/api/v1/traitement/save", $scope.traitement)
             .then(function (response){
                 $scope.traitement = response.data;
@@ -751,15 +733,59 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
 
     }
-
-
     //sauvegarde reelle du traitement
     $scope.saveRealTraitement = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
+        id_participer = parseInt(id_participer);
         $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ id_stockproduit + "/" + id_participer + "/"+ id_fournisseur + "/" + qteCompte +"/"+ datePeremption+"/"+prixVente)
             .then(function (response) {
                     $scope.savedTraitement = response.data;
                     //recharge de la liste
+
                     $scope.listTraitement();
+                    $scope.listProduits($scope.splitArray[0],$scope.splitArray[1]);
+
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "<< "+ $scope.savedTraitement.stockProduit.produit.libelle +" >> inventorié avec succès",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 2000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                    //reinitialisation du produit
+                    //$scope.stockProduit = {};
+
+                    //reinitialisation des données de traitement
+                    $scope.traitement = {};
+
+                },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Désolé << "+ $scope.savedTraitement.stockProduit.produit.libelle +" >> déjà inventorié, supprimez pour modifier",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+    //sauvegarde reelle du traitement pour doucette
+    $scope.saveRealTraitementDouchette = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
+        id_participer = parseInt(id_participer);
+        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ id_stockproduit + "/" + id_participer + "/"+ id_fournisseur + "/" + qteCompte +"/"+ datePeremption + "/" +prixVente)
+            .then(function (response) {
+                    $scope.savedTraitement = response.data;
+
+                    var code = document.getElementById('codeU');
+                    code.value = "";
+                    code.focus();
+                    $scope.listTraitement();
+
                     new PNotify({
                         title: "Inventaire+ | Notification",
                         text: "<< "+ $scope.savedTraitement.stockProduit.produit.libelle +" >> inventorié avec succès",
@@ -800,8 +826,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.fournisseurList();
-
-
     //recharge de la liste des traitement
     $scope.listTraitement = function () {
         $http.get("/pharmaxiel/api/v1/traitement/list")
@@ -827,16 +851,17 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     };
     $scope.listTraitement();
 
-
     //Tableau des produits
-    $scope.listProduits = function () {
-        $http.get("/pharmaxiel/api/v1/stockproduit/list")
+    $scope.listProduits = function (idLocalisation,idParticiper) {
+        idLocalisation = parseInt(idLocalisation);
+        idParticiper = parseInt(idParticiper);
+        $http.get("/pharmaxiel/api/v1/stockproduit/list/" + idLocalisation + "/" + idParticiper)
             .then(function (response) {
                 $scope.produitData = response.data;
                 $scope.produitsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
                     page: 1,
-                    count: 2
+                    count: 500
                 }, {
                     total: $scope.produitData.length,
                     getData: function (params) {
@@ -846,20 +871,48 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                         return $scope.dataP;
                     }
                 });
-                // $scope.traitement = null;
                 $scope.produitData.data = null;
             });
 
     };
-    $scope.listProduits();
+
+    /* $scope.listProduits = function () {
+         $http.get("/pharmaxiel/api/v1/stockproduit/list")
+             .then(function (response) {
+                 $scope.produitData = response.data;
+                 $scope.produitsTable = new NgTableParams({
+                     //nombre de lignes a afficher par defaut
+                     page: 1,
+                     count: 500
+                 }, {
+                     total: $scope.produitData.length,
+                     getData: function (params) {
+                         $scope.dataP = params.sorting() ? $filter('orderBy')($scope.produitData, params.orderBy()) : $scope.produitData;
+                         $scope.dataP = params.filter() ? $filter('filter')($scope.dataP, params.filter()) : $scope.dataP;
+                         $scope.dataP = $scope.dataP.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                         return $scope.dataP;
+                     }
+                 });
+                 // $scope.traitement = null;
+                 $scope.produitData.data = null;
+             });
+
+     };
+     $scope.listProduits();*/
+
+    //reccuperation d'un produit pour le comptage
+    $scope.produitDouchette = function (codeUnique) {
+        $http.get("/pharmaxiel/api/v1/stockproduit/produit/douchette/" + codeUnique)
+            .then(function (response) {
+                $scope.produitDataDouchette = response.data;
+            })
+    };
+
 
 }
-
 //======================================================
 //==========  écarts Controller  ======================
 //======================================================
-
-
 app.controller('ecartsController',ecartsController);
 function ecartsController($scope , $http , $filter , fileUpload , NgTableParams ){
     $scope.ecartData = {data:[]};
@@ -1096,86 +1149,48 @@ function chargementController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.getUserDetails();
 
-    //chargement des produits
-    $scope.chargerProduits = function(){
+    //chargement de tous les éléments en un
+    $scope.chargerDonneesProduits = function(){
         var file = $scope.importProduit;
-        console.log('file is');
-        console.dir(file);
-        if (file!=undefined){
-            var uploadUrl = "/chargement/chargement/produit";
+        $scope.ext = $scope.extractExtension(file.name);
 
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+        if($scope.ext==="xlsx"){
+            console.log('file is');
+            console.dir(file);
+            if (file!=undefined){
+                var uploadUrl = "/chargement/chargement_all";
 
-            $("#importProduit").val(null);
+                fileUpload.uploadFileToUrl(file, uploadUrl);
+
+                $("#importProduit").val(null);
+            }
+        }else {
+            new PNotify({
+                title: "Notification Pharmaxiel_web",
+                type: "warning",
+                text: "Le fichier choisi n'est pas un fichier Excel valide. Veuillez choisir un fichier au format .xlsx",
+                nonblock: {
+                    nonblock: false
+                },
+                addclass: "error",
+                styling: 'bootstrap3',
+                hide: true,
+
+            });
         }
     };
 
+    //extraire l'extension d'un fichier
+    $scope.extractExtension = function (nomFichier) {
+        var re = /(?:\.([^.]+))?$/;
+        var ext = re.exec(nomFichier)[1];
+        return ext;
+    }
 
-    //chargement des localisations
-    $scope.chargerLocalisations = function(){
-        var file = $scope.importLocalisation;
-        console.log('file is');
-        console.dir(file);
-        if (file!=undefined){
-            var uploadUrl = "/chargement/chargement/localisation";
-
-            fileUpload.uploadFileToUrl(file, uploadUrl);
-
-            $("#importLocalisation").val(null);
-        }
-    };
-
-    //chargement des fournisseurs
-    $scope.chargerFournisseurs = function(){
-        var file = $scope.importFournisseur;
-        console.log('file is');
-        console.dir(file);
-        if (file!=undefined){
-            var uploadUrl = "/chargement/chargement/fournisseur";
-
-            fileUpload.uploadFileToUrl(file, uploadUrl);
-
-            $("#importFournisseur").val(null);
-        }
-    };
-
-    //chargement des produits en stock
-    $scope.chargerProduitStock = function(){
-        var file = $scope.importStockProduit;
-        console.log('file is');
-        console.dir(file);
-        if (file!=undefined){
-            var uploadUrl = "/chargement/chargement/stockproduit";
-
-            fileUpload.uploadFileToUrl(file, uploadUrl);
-
-            $("#importStockProduit").val(null);
-        }
-    };
-
-
-   /* $scope.chargerImport = function() {
-        var file = $scope.importFile; // Get the file from the file input field
-        var formData = new FormData(); // Create FormData object
-
-        formData.append('file', file); // Append the file to FormData
-
-        // Make POST request to the server to upload the file
-        $http.post('/chargement/import', formData, {
-            transformRequest: angular.identity,
-            headers: { 'Content-Type': undefined }
-        }).then(function(response) {
-            // Handle success response
-            console.log(response.data); // Display success message
-        }, function(error) {
-            // Handle error response
-            console.error('Error uploading file:', error);
-        });
-    };*/
 
 }
 
-//controller de chargement des données dans la base
+//controller des produits en stock
 app.controller('updateStockController',updateStockController);
 function updateStockController($scope , $http , $filter , fileUpload , NgTableParams){
     $scope.showForm = false;
@@ -1282,11 +1297,7 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
 
 }
 
-
-
-
-
-//controller de chargement des données dans la base
+//controller de la age historique
 app.controller('historiqueController',historiqueController);
 function historiqueController($scope , $http , $filter , fileUpload , NgTableParams){
     //parametres utilisateur
@@ -1299,6 +1310,7 @@ function historiqueController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.getUserDetails();
 }
 
+//controleur du profil utilisateur
 app.controller('profilController',profilController);
 function profilController($scope , $http , $filter , fileUpload , NgTableParams){
 

@@ -36,9 +36,7 @@ public class Traitement implements Serializable {
 
     @Column
     private double qteDisponible = .0;
-    //@JsonFormat(pattern="dd-MM-yyyy")
-    //@Temporal(TemporalType.DATE)
-    @JsonFormat(pattern="dd/MM/yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private String datePeremption;
 
     @Column
@@ -68,4 +66,11 @@ public class Traitement implements Serializable {
     @Column
     private String leMotif;
 
+    public String getDatePeremption() {
+        return datePeremption;
+    }
+
+    public void setDatePeremption(String datePeremption) {
+        this.datePeremption = datePeremption;
+    }
 }

@@ -81,16 +81,15 @@ public class TraitementServiceImpl implements TraitementService {
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
         //formatage de la date
-        final String format = "yyyy-MM-dd";
+        final String format = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-
+        String dateToFormat = traitement.getDatePeremption().toString();
+        Date date = new Date(dateToFormat);
         //calcul de l'écart
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
-        //changement du rayon
-        //flag de comptage
         traitement.setStatut(1);
-        traitement.setDatePeremption(traitement.getDatePeremption());
+        traitement.setDatePeremption(sdf.format(date));
         Logs log = new Logs();
         log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());
@@ -102,7 +101,6 @@ public class TraitementServiceImpl implements TraitementService {
     public Traitement saveLeTraitement(String id_stockproduit, long id_participer, String fournisseur,double qteCompte, String datePeremption,double prixVente) throws ParseException {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
-
         //formatage de la date
         final String format = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -115,9 +113,6 @@ public class TraitementServiceImpl implements TraitementService {
         //produit correspondant
         traitement.setStockProduit(stockProduit.get());
         traitement.setPrixVente(prixVente);
-        //prix de vente du produit
-        //stockProduit.get().setPrixVente(prixVente);
-        //participer correspondant
         traitement.setParticiper(participer.get());
         traitement.setQteCompte(qteCompte);
         traitement.setDatePeremption(sdf.format(date).toString());

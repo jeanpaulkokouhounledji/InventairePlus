@@ -34,7 +34,7 @@
     <div layout:fragment="custum-permalien" >
         <div class="row">
             <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
-                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > COMPTAGE</h4>
+                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > COMPTAGE <span>{{codeDouchette=="m"?"MANUEL":codeDouchette=="d"?"PAR DOUCHETTE":""}}</span></h4>
                 <div layout:fragment="username">
                     <h4 class="text-center text-danger">{{user.nomPrenom}}</h4>
                 </div>
@@ -49,7 +49,7 @@
             <div class="">
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm();listTraitement()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
             </div>
-            <div class="">
+            <div class="" ng-if="codeDouchette==='m'">
                 <button class="btn btn-dark btn-pill mb-2" data-toggle="modal" data-target="#param"><i class="fa fa-plus fa-2x"></i> Ajouter un nouveau produit</button>
             </div>
         </div>
@@ -69,6 +69,8 @@
                                 <h1>{{userInventaire.numero}}</h1>
                                 <h4 class="text-danger" ng-if="userInventaire.numero==null">Désolé, vous n'avez aucun inventaire actif !</h4>
                             </div>
+                            {{splitArray = chosedParticiper.split('-')}}
+                            {{splitArray[0]}}
                             <div class="col-sm-3 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Type Comptage</label>
                                 <select class="form-control form-control-sm" ng-model="codeDouchette"  required>
@@ -84,14 +86,14 @@
                                 <label><span class="text-danger">*</span> Localisation</label>
                                 <select class="form-control form-control-sm" ng-model="chosedParticiper"  required>
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
-                                    <option ng-repeat="opt in participerByUser" value="{{opt.id}}">
+                                    <option ng-repeat="opt in participerByUser" value="{{opt.localisation.id + '-' + opt.id}}">
                                         {{opt.localisation.libelle}}
                                     </option>
                                 </select>
                                 <label class="text-danger">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper>=0" ng-click="toggleForm();autofocusExtraField();countedList(chosedParticiper);"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();countedList(parseInt(splitArray[1]));"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -116,7 +118,7 @@
                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==chosedParticiper">
+                                    <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==idPart">
 <!--                                        <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
@@ -144,12 +146,12 @@
                                 <div class="row">
                                     <div class="col-sm-4">Recherchez un produit</div>
                                     <!-- Champs de recherche pour douchette -->
-                                    <div ng-show="codeDouchette==='d'">
+                                    <div class="col-sm-6" ng-show="codeDouchette==='d'">
                                         <form class="search-form">
                                             <label>
                                                 Recherche par code unique
-                                                <input type="search"  ng-focus="autofocusExtraField()" ng-model="codeUniqueProduit" class="search-field form-control form-control-sm" id="extraField"/>
                                             </label>
+                                            <input type="text"  ng-model="codeUniqueProduit" ng-change="produitDouchette(codeUniqueProduit);" class="search-field form-control form-control-sm" id="codeU"/>
                                         </form>
                                     </div>
                                 </div>
@@ -157,12 +159,12 @@
                         </div>
                     </div>
 <!--                    quand le comptage est manuel-->
-                    <div class="pt-2" ng-if="showForm && codeDouchette==='m'">
+                    <div class="pt-2" ng-if="showForm&&codeDouchette==='m'">
                         <div class="table-responsive">
                             <table ng-table="produitsTable" style="width: 100%" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="ps in dataP" style="text-align: center">
-
+<!--                                ng-show="chosedParticiper==ps.idLocalisation"-->
+                                    <tr ng-repeat="ps in dataP" style="text-align: center" >
                                         <form name="cForm">
                                             <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">
                                                 {{ps.codeCip}}
@@ -197,7 +199,7 @@
                                                     <input ng-model="ps.qteCompteStock" name="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
                                                 </div>
                                             </td>
-                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,ps.fournisseurStock,ps.qteCompteStock,maDate,ps.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,splitArray[1],ps.fournisseurStock,ps.qteCompteStock,maDate,ps.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
 <!--                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>-->
                                         </form>
                                     </tr>
@@ -207,52 +209,54 @@
                     </div>
                     <!--                    quand le comptage est avec douchette-->
                     <div class="pt-2" ng-if="showForm && codeDouchette==='d'">
-                        <div class="table-responsive">
-                            <table ng-table="produitsTable" style="width: 100%" class="display table table-striped" cellspacing="0">
+                        <div class="table-responsive" ng-show="produitDataDouchette!=null">
+                            <table ng-table="produitsTableDouchette" style="width: 100%" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                <tr ng-repeat="ps in dataP" style="text-align: center" ng-show="codeUniqueProduit==ps.codeUnique">
+                                    <tr style="text-align: center">
 
-                                    <form name="cForm">
-                                        <td data-title="'Code Cip'" style="width: 5%" filter="{ 'codeCip' : 'text'}">
-                                            {{ps.codeCip}}
-                                        </td>
-                                        <td data-title="'Code Unique'"  style="width: 20%" filter="{ 'codeUnique' : 'text'}">
-                                            {{ps.codeUnique}}
-                                        </td>
-                                        <td data-title="'Produit'" style="width: 20%" filter="{ 'produit' : 'text'}">{{ps.produit}}</td>
-                                        <td style="width: 10%" data-title="'Prix Vente'">
-                                            <div class="form-group-sm">
-                                                <!--                                                    <small class="text-danger">{{ps.prixVenteStock}}</small>-->
-                                                <input ng-model="ps.prixVenteStock" name="prixVente" type="number" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-                                        </td>
-                                        <td style="width: 15%" data-title="'Fournisseur'">
-                                            <div class="form-group">
-                                                <!--                                                    <small class="text-danger">{{ps.fournisseurStock}}</small>-->
-                                                <select class="form-control form-control-sm" ng-model="ps.fournisseurStock"  name="codeFournisseur" required="required">
-                                                    <option ng-repeat="four in listFournisseurs" value="{{four.raisonSociale}}">
-                                                        {{four.raisonSociale}}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
-                                        <td style="width: 10%" data-title="'Date Peremption'">
-                                            <div class="form-group">
-                                                <!--                                                    <small class="text-danger">{{ps.dateTemp}}</small>-->
-                                                <input ng-model="maDate" value="{{ps.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">
-                                            </div>
-                                        </td>
-                                        <td style="width: 10%" data-title="'Qté Comptée'">
-                                            <div class="form-group">
-                                                <!--                                                    <small class="text-danger">{{ps.qteCompteStock}}</small>-->
-                                                <input ng-model="ps.qteCompteStock" name="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
-                                            </div>
-                                        </td>
-                                        <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,ps.fournisseurStock,ps.qteCompteStock,maDate,ps.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
-                                        <!--                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>-->
-                                    </form>
-                                </tr>
+                                        <form name="dForm">
+                                            <td data-title="'Code Cip'" style="width: 5%">
+                                                {{produitDataDouchette.codeCip}}
+                                            </td>
+                                          <!--  <td data-title="'Code Unique'"  style="width: 20%">
+                                                {{produitDataDouchette.codeUnique}}
+                                            </td>-->
+                                            <td data-title="'Produit'" style="width: 20%">
+                                                {{produitDataDouchette.produit}}
+                                            </td>
+                                            <td style="width: 10%" data-title="'Prix Vente'">
+                                                <div class="form-group-sm">
+                                                    <!--                                                    <small class="text-danger">{{ps.prixVenteStock}}</small>-->
+                                                    <input ng-model="produitDataDouchette.prixVenteStock" type="number" class="form-control form-control-sm text-center" required="required">
+                                                </div>
+                                            </td>
+                                            <td style="width: 15%" data-title="'Fournisseur'">
+                                                <div class="form-group">
+                                                    <!--                                                    <small class="text-danger">{{ps.fournisseurStock}}</small>-->
+                                                    <select class="form-control form-control-sm" ng-model="produitDataDouchette.fournisseurStock"  required="required">
+                                                        <option ng-repeat="f in listFournisseurs" value="{{f.raisonSociale}}">
+                                                            {{f.raisonSociale}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
+                                            <td style="width: 10%" data-title="'Date Peremption'">
+                                                <div class="form-group">
+<!--                                                    <small class="text-danger">{{produitDataDouchette.peremptionStock}}</small>-->
+                                                    <input ng-model="maDateD" value="{{produitDataDouchette.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">
+<!--                                                    <input ng-model="produitDataDouchette.peremptionStock" value="{{produitDataDouchette.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">-->
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%" data-title="'Qté Comptée'">
+                                                <div class="form-group">
+                                                    <!--                                                    <small class="text-danger">{{ps.qteCompteStock}}</small>-->
+                                                    <input ng-model="produitDataDouchette.qteCompteStock" type="number" class="form-control form-control-sm text-center" required="required">
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark" ng-click="saveRealTraitementDouchette(produitDataDouchette.codeUnique,splitArray[1],produitDataDouchette.fournisseurStock,produitDataDouchette.qteCompteStock,maDateD,produitDataDouchette.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                        </form>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -282,7 +286,7 @@
                             <table ng-table="traitementsTable" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
 <!--                                    <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">-->
-                                    <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">
+                                    <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==idPart&&tr.statut==1">
 <!--                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index = 0 + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
@@ -361,7 +365,7 @@
                                         </div>
                                         <div class="text-center row justify-content-center mt-4">
                                             <div class="col-sm-4">
-                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();traitement.participer.id=chosedParticiper"><i class="fa fa-check fa-2x"> Valider</i></button>
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();traitement.participer.id=parseInt(splitArray[1])"><i class="fa fa-check fa-2x"> Valider</i></button>
                                             </div>
                                         </div>
                                     </form>

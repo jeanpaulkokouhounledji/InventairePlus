@@ -51,6 +51,11 @@ public class StockProduitServiceImpl implements StockProduitService {
     }
 
     @Override
+    public StockProduit findStockProduitByCodeUnique(String codeUnique) {
+        return stockProduitRepository.findStockProduitByCodeUnique(codeUnique);
+    }
+
+    @Override
     public void deleteStockProduit(Long id) {
 
         HttpSession httpSession = httpServletRequest.getSession();

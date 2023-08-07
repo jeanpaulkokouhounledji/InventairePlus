@@ -10,6 +10,8 @@ public interface StockProduitService {
 
     StockProduit editStockProduit(Long id);
 
+    StockProduit findStockProduitByCodeUnique(String codeUnique);
+
     void deleteStockProduit(Long id);
 
     void changeProduitStockState(Long id);

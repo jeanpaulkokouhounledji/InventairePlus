@@ -34,6 +34,7 @@ public class StockProduit implements Serializable {
     private double quantite;
     //@Temporal(TemporalType.DATE)
     @JsonFormat(pattern="dd/MM/yyyy")
+    @Column
     private String datePeremption;
     @Column
     private String lot;
@@ -50,5 +51,7 @@ public class StockProduit implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_fournisseur")
     private Fournisseur fournisseur;
+
+
 
 }

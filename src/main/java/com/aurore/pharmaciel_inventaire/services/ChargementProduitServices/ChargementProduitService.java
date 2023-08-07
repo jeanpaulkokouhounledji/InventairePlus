@@ -21,7 +21,7 @@ public class ChargementProduitService {
     public void saveProduitsToDatabase(MultipartFile file){
         if(ProduitExcelUpload.isValidExcelFile(file)){
             try {
-                List<Produit> produits = ProduitExcelUpload.getCustomersDataFromExcel(file.getInputStream(),produitRepository,localisationRepository);
+                List<Produit> produits = ProduitExcelUpload.getProduitDataFromExcel(file.getInputStream(),produitRepository,localisationRepository);
                 produitRepository.saveAll(produits);
                 //this.customerRepository.saveAll(produits);
             } catch (IOException e) {
@@ -30,7 +30,7 @@ public class ChargementProduitService {
         }
     }
 
-    public List<Produit> getCustomers(){
+    public List<Produit> getProduits(){
         return produitRepository.findAll();
     }
 

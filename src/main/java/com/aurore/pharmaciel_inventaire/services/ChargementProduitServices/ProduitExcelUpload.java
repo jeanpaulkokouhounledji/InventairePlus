@@ -22,7 +22,7 @@ public interface ProduitExcelUpload {
     public static boolean isValidExcelFile(MultipartFile file){
         return Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" );
     }
-    public static List<Produit> getCustomersDataFromExcel(InputStream inputStream, ProduitRepository produitRepository, LocalisationRepository localisationRepository){
+    public static List<Produit> getProduitDataFromExcel(InputStream inputStream, ProduitRepository produitRepository, LocalisationRepository localisationRepository){
         List<Produit> produits = new ArrayList<>();
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);

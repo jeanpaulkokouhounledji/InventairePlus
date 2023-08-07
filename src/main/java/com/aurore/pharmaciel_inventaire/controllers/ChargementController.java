@@ -2,6 +2,7 @@ package com.aurore.pharmaciel_inventaire.controllers;
 
 import com.aurore.pharmaciel_inventaire.services.ChargementFournisseurServices.ChargementFournisseurService;
 import com.aurore.pharmaciel_inventaire.services.ChargementLocalisationsServices.ChargementLocalisationService;
+import com.aurore.pharmaciel_inventaire.services.ChargementMotifService.ChargementMotifService;
 import com.aurore.pharmaciel_inventaire.services.ChargementProduitServices.ChargementProduitService;
 import com.aurore.pharmaciel_inventaire.services.ChargementProduitstockServices.ChargementProduitStockService;
 import com.aurore.pharmaciel_inventaire.services.ProduitService;
@@ -40,7 +41,9 @@ public class ChargementController {
 
     private final ChargementProduitStockService chargementProduitStockService;
 
-    public ChargementController(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory, ProduitService produitService, ChargementProduitService chargementProduitService, ChargementLocalisationService chargementLocalisationService, ChargementFournisseurService chargementFournisseurService, ChargementProduitStockService chargementProduitStockService) {
+    private final ChargementMotifService chargementMotifService;
+
+    public ChargementController(JdbcTemplate jdbcTemplate, SessionFactory sessionFactory, ProduitService produitService, ChargementProduitService chargementProduitService, ChargementLocalisationService chargementLocalisationService, ChargementFournisseurService chargementFournisseurService, ChargementProduitStockService chargementProduitStockService, ChargementMotifService chargementMotifService) {
         this.jdbcTemplate = jdbcTemplate;
         this.sessionFactory = sessionFactory;
         this.produitService = produitService;
@@ -48,6 +51,7 @@ public class ChargementController {
         this.chargementLocalisationService = chargementLocalisationService;
         this.chargementFournisseurService = chargementFournisseurService;
         this.chargementProduitStockService = chargementProduitStockService;
+        this.chargementMotifService = chargementMotifService;
     }
 
     //téléchargement du model de produits
@@ -131,6 +135,14 @@ public class ChargementController {
             out.flush();
         }
 
+        @PostMapping(value = "chargement_all")
+        public void chargementBatchBack(@RequestParam MultipartFile file){
+            this.chargementLocalisationService.saveLocalisationsToDatabase(file);
+            this.chargementFournisseurService.saveFournisseursToDatabase(file);
+            this.chargementProduitService.saveProduitsToDatabase(file);
+            this.chargementProduitStockService.saveProduitStockToDatabase(file);
+            this.chargementMotifService.saveMotifsToDatabase(file);
+        }
 
 
     //chargement des produits dans la base à partir de excel
@@ -157,10 +169,18 @@ public class ChargementController {
                 .of("Message", "Fournisseurs chargés"));
     }
 
-    //chargement des fournisseurs dans la base à partir de excel
+    //chargement des produits en stock dans la base à partir de excel
     @PostMapping(value = "/chargement/stockproduit")
     public ResponseEntity<?> uploadStockProduit(@RequestParam MultipartFile file){
         this.chargementProduitStockService.saveProduitStockToDatabase(file);
+        return ResponseEntity.ok(Map
+                .of("Message", "Produits chargés en stock"));
+    }
+
+    //chargement des motifs dans la base à partir de excel
+    @PostMapping(value = "/chargement/motif")
+    public ResponseEntity<?> uploadMotif(@RequestParam MultipartFile file){
+        this.chargementMotifService.saveMotifsToDatabase(file);
         return ResponseEntity.ok(Map
                 .of("Message", "Produits chargés en stock"));
     }

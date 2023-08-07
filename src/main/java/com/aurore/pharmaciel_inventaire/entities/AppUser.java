@@ -24,10 +24,9 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-
+    @Column(nullable = false)
     private String nomPrenom;
-
-    @Column
+    @Column(nullable = false)
     private String username;
     @JsonProperty(access = JsonProperty.Access.AUTO)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
     @Column(nullable = true)
