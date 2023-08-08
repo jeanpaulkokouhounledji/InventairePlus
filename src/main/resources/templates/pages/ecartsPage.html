@@ -111,10 +111,6 @@
                             <table ng-table="traitementsTable" class="text-center display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="t in data" ng-if="t.participer.localisation.code==chosedLocalisationCode">
-                                        <!--<td data-title="'Etat'">
-                                            <i ng-if="t.motif==''" class="fa fa-dot-circle-o text-danger"></i>
-                                            <i ng-if="t.motif!=''" class="fa fa-dot-circle-o text-success"></i>
-                                        </td>-->
                                         <td data-title="'Code CIP'">{{t.codeCip==null?t.stockProduit.produit.codeProduit:t.codeCip}}</td>
                                         <td data-title="'Produit'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
                                         <td data-title="'Agent'">{{t.participer.appUser.nomPrenom}}</td>
@@ -220,8 +216,8 @@
                                         <div class="row">
                                             <div class="col-sm form-group-sm mb-2">
 <!--                                                <label>Date de péremption saisie <span class="text-danger">{{ formatDate(traitement.datePeremption) |  date:'dd/MM/yyyy' }}</span></label>-->
-                                                <label>Date de péremption saisie <span class="text-danger"><< {{traitement.datePeremption}} >></span></label>
-                                                <input ng-model="traitement.datePeremption" type="date" class="form-control form-control-sm text-center" required="required">
+                                                <label>Date de péremption saisie </label>
+                                                <input ng-model="traitement.datePeremption" value="{{traitement.datePeremption}}" type="date" class="form-control form-control-sm text-center" required="required">
                                             </div>
                                             <div class="col-sm form-group-sm mb-2">
                                                 <label>Date de péremption Stock</label>

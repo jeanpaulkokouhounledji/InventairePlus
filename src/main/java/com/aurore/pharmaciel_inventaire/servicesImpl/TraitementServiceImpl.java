@@ -81,15 +81,19 @@ public class TraitementServiceImpl implements TraitementService {
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
 
         //formatage de la date
-        final String format = "dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        String dateToFormat = traitement.getDatePeremption().toString();
-        Date date = new Date(dateToFormat);
+        final String format = "dd/MM/yyyy HH:mm Z";
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern(format);
+        //String dateToFormat = traitement.getDatePeremption().toString();
+        //Date date = new Date(traitement.getDatePeremption());
         //calcul de l'écart
         this.ecart = traitement.getQteDisponible() - traitement.getQteCompte();
         traitement.setEcart(ecart);
         traitement.setStatut(1);
-        traitement.setDatePeremption(sdf.format(date));
+        traitement.setDatePeremption(traitement.getDatePeremption());
+        System.out.println("===================================================");
+        System.out.println(traitement.getDatePeremption());
+        System.out.println("===================================================");
         Logs log = new Logs();
         log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());
@@ -102,7 +106,7 @@ public class TraitementServiceImpl implements TraitementService {
         HttpSession httpSession = httpServletRequest.getSession();
         SecurityContext securityContext = (SecurityContext) httpSession.getAttribute("SPRING_SECURITY_CONTEXT");
         //formatage de la date
-        final String format = "dd/MM/yyyy";
+        final String format = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         Date date = new Date(datePeremption);
 

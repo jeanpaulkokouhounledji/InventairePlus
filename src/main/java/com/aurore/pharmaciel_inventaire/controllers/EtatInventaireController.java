@@ -22,12 +22,22 @@ public class EtatInventaireController {
         this.etatInventaireService = etatInventaireService;
     }
 
-    @GetMapping(value = "/inventaire/{codeInventaire}/{codeRayon}")
+    //reccuperation des etats par inventaire et localisation
+    @GetMapping(value = "/traitement/generate/etatInventaire/{codeInventaire}/{codeRayon}")
     public void exportToExcel(HttpServletResponse response, @PathVariable String codeInventaire, @PathVariable String codeRayon) throws IOException {
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=Customers_Information.xlsx";
         response.setHeader(headerKey, headerValue);
         etatInventaireService.exportEtatInventaireToExcel(response,codeInventaire,codeRayon);
+    }
+
+    @GetMapping(value = "/traitement/generate/etatInventaire/all")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=Customers_Information.xlsx";
+        response.setHeader(headerKey, headerValue);
+        etatInventaireService.exportAllEtatInventaireToExcel(response);
     }
 }

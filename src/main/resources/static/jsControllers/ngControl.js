@@ -4,7 +4,7 @@
 var app = angular.module('pharmaxielweb',['ngTable']);
 
 //focus sur un input utilisation : <input type="text" ng-focus="isFocused" ng-focus-lost="loseFocus()">
-/*app.directive('ngFocus', function($timeout) {
+app.directive('ngFocus', function($timeout) {
     return {
         link: function ( scope, element, attrs ) {
             scope.$watch( attrs.ngFocus, function ( val ) {
@@ -20,7 +20,7 @@ var app = angular.module('pharmaxielweb',['ngTable']);
             });
         }
     };
-});*/
+});
 
 app.directive('convertToNumber', function() {
     return {
@@ -140,6 +140,9 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
 
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
+        if($scope.showForm==true){
+            $scope.handleAutofocus();
+        }
     }
 
     //réinitialisation de l'objet
@@ -192,6 +195,15 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
             })
     }
     $scope.listRoles();
+
+    //list des types utilisateurs
+    $scope.listUserType = function () {
+        $http.get("/pharmaxiel/api/v1/typeUtilisateur/list")
+            .then(function (response) {
+                $scope.userTypes = response.data;
+            })
+    }
+    $scope.listUserType();
 
     //Activation desactivation d'un compte utilisateur
     $scope.activeOrDesactivate = function (id){
@@ -600,9 +612,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     $scope.splitArray = [];
 
-    $scope.idLoca = parseInt($scope.splitArray[0]);
-    $scope.idPart = parseInt($scope.splitArray[1]);
-
     //$scope.splitArray = $scope.chosedParticiper.split('-');
 
 
@@ -610,7 +619,9 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.maDateD = "";
     $scope.searchTag = "";
 
-    $scope.splitHundler
+    $scope.splitHandler = function (){
+        return  $scope.splitArray = $scope.chosedParticiper.split('-');
+    }
 
     //liste des types de comptage
     $scope.getTypeComptage = function (){
@@ -640,12 +651,9 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.getUserDetails();
-
-
     $scope.reset = function () {
         $scope.stockProduit = {};
     };
-
     //ouvrir la fenetre de comptage
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
@@ -658,7 +666,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
             })
     };
-
     //Inventaire actif d'un utilisateur
     $scope.inventaireUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
@@ -672,7 +679,8 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
         $http.delete("/pharmaxiel/api/v1/traitement/delete/"+id)
             .then(function (){
                 $scope.listTraitement();
-
+                $scope.handleAutofocus();
+                $scope.listProduits(parseInt($scope.splitArray[0]),parseInt($scope.splitArray[1]));
                     new PNotify({
                         title: "INAM | Conventionnement",
                         text: "Suppression Effectuée",
@@ -698,6 +706,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
 
     }
+
     //sauvegarde d'une toute nouvelle ligne de traitement d'un produit inexistant en stock
     $scope.saveNewTraitement = function (){
         alert($scope.traitement.datePeremption);
@@ -733,6 +742,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
 
     }
+
     //sauvegarde reelle du traitement
     $scope.saveRealTraitement = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
         id_participer = parseInt(id_participer);
@@ -742,7 +752,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                     //recharge de la liste
 
                     $scope.listTraitement();
-                    $scope.listProduits($scope.splitArray[0],$scope.splitArray[1]);
+                    $scope.listProduits(parseInt($scope.splitArray[0]),parseInt($scope.splitArray[1]));
 
                     new PNotify({
                         title: "Inventaire+ | Notification",
@@ -774,6 +784,13 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
                 })
     };
+
+    $scope.handleAutofocus = function (){
+        var code = document.getElementById('codeU');
+        code.value = "";
+        code.focus();
+    }
+
     //sauvegarde reelle du traitement pour doucette
     $scope.saveRealTraitementDouchette = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
         id_participer = parseInt(id_participer);
@@ -781,9 +798,8 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             .then(function (response) {
                     $scope.savedTraitement = response.data;
 
-                    var code = document.getElementById('codeU');
-                    code.value = "";
-                    code.focus();
+                    $scope.handleAutofocus();
+
                     $scope.listTraitement();
 
                     new PNotify({
@@ -817,6 +833,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 })
     };
 
+    $scope.idPart = 0;
 
     //liste des fournisseurs
     $scope.fournisseurList = function (){
@@ -826,42 +843,22 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.fournisseurList();
-    //recharge de la liste des traitement
-    $scope.listTraitement = function () {
-        $http.get("/pharmaxiel/api/v1/traitement/list")
-            .then(function (response) {
-                $scope.traitementData = response.data;
-                $scope.traitementsTable = new NgTableParams({
-                    //nombre de lignes a afficher par defaut
-                    /*page: 1,
-                    count: 5*/
-                }, {
-                    total: $scope.traitementData.length,
-                    getData: function (params) {
-                        $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
-                        $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
-                        //$scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                        return $scope.data;
-                    }
-                });
-                // $scope.traitement = null;
-                $scope.traitementData.data = null;
-            });
-
-    };
-    $scope.listTraitement();
 
     //Tableau des produits
     $scope.listProduits = function (idLocalisation,idParticiper) {
+
         idLocalisation = parseInt(idLocalisation);
         idParticiper = parseInt(idParticiper);
+
+        $scope.idPart = parseInt(idParticiper);
+
         $http.get("/pharmaxiel/api/v1/stockproduit/list/" + idLocalisation + "/" + idParticiper)
             .then(function (response) {
                 $scope.produitData = response.data;
                 $scope.produitsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
                     page: 1,
-                    count: 500
+                    count: 10
                 }, {
                     total: $scope.produitData.length,
                     getData: function (params) {
@@ -875,6 +872,31 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             });
 
     };
+
+    //recharge de la liste des traitement
+    $scope.listTraitement = function () {
+        $http.get("/pharmaxiel/api/v1/traitement/list")
+            .then(function (response) {
+                $scope.traitementData = response.data;
+                $scope.traitementsTable = new NgTableParams({
+                    //nombre de lignes a afficher par defaut
+                    page: 1,
+                    count: 5
+                }, {
+                    total: $scope.traitementData.length,
+                    getData: function (params) {
+                        $scope.data = params.sorting() ? $filter('orderBy')($scope.traitementData, params.orderBy()) : $scope.traitementData;
+                        $scope.data = params.filter() ? $filter('filter')($scope.data, params.filter()) : $scope.data;
+                        $scope.data = $scope.data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        return $scope.data;
+                    }
+                });
+                // $scope.traitement = null;
+                $scope.traitementData.data = null;
+            });
+
+    };
+    $scope.listTraitement();
 
     /* $scope.listProduits = function () {
          $http.get("/pharmaxiel/api/v1/stockproduit/list")
@@ -1227,13 +1249,13 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
 
     //génération d'un etat d'inventaire
     $scope.generateInventaireEtat = function(codeInventaire,codeRayon){
-        $http.get("/pharmaxiel/api/v1/traitement/generate/etatInventaire/" + codeInventaire + "/" + codeRayon)
+        $http.get("/pharmaxiel/api/v1/etat/traitement/generate/etatInventaire/" + codeInventaire + "/" + codeRayon)
             .then(function (response) {
                 //$scope.participerLocalisations = response.data;
-                    $scope.exportToExcel(codeInventaire,codeRayon);
+                    //$scope.exportToExcel(codeInventaire,codeRayon);
                 new PNotify({
                     title: "Inventaire+ | Notification",
-                    text: "Etat générer avec succès",
+                    text: "Téléchargement, parientez...",
                     type: "success",
                     styling: "bootstrap3",
                     delay: 2000,
@@ -1244,7 +1266,7 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
                 function errorCallback(response) {
                     new PNotify({
                         title: "Inventaire+ | Notification",
-                        text: "Cet état a déjà été généré",
+                        text: "Erreur lors du téléchargement",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,

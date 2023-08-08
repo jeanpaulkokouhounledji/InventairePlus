@@ -79,14 +79,22 @@
                                 <label>Mot de passe</label>
                                 <input type="password" name="mdp" ng-model="appUser.password" class="form-control form-control-sm">
                             </div>
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Type d'utilisateur</label>
+                                <select class="form-control form-control-sm" ng-model="appUser.typeUtilisateur" required="required">
+                                    <option ng-repeat="ut in userTypes" value="{{ut.libelle}}">
+                                        {{ut.libelle}}
+                                    </option>
+                                </select>
+                            </div>
 
                         </div>
                         <div class="text-center row justify-content-center mt-4">
                             <div class="col-sm-2">
-                                <button class="btn  btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check fa-2x"></i> <b>Créer l'utilisateur</b></button>
+                                <button class="btn  btn-sm btn-dark btn-pill" ng-click="createUser();"><i class="fa fa-check fa-2x"></i><b>{{!appUser.id?"Créer l\'utilisateur":"Appliquer les modifications"}}</b></button>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn  btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-check fa-2x"></i> <b>Annuler/ Fermer</b></button>
+                                <button class="btn  btn-sm btn-outline-dark btn-pill" ng-click="resetUser();toggleForm();"><i class="fa fa-check fa-2x"></i><a>{{!appUser.id?"Fermer":"Annuler"}}</a></button>
                             </div>
                         </div>
                     </form>
@@ -94,20 +102,50 @@
             </div>
         </div>
 
-        <!--        tableau de gestion -->
+        <!--        tableau des utilisateurs internes-->
         <div class="row mt-xl-3">
             <div class="col-sm-12">
                 <div class="card card-shadow mb-4">
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-primary">
-                            <div class="custom-title">Liste Des Utilisateurs</div>
+                            <div class="custom-title">Liste Des Utilisateurs intèrnes</div>
                         </div>
                     </div>
                     <div class="pt-2">
                         <div class="table-responsive">
                             <table ng-table="usersTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="u in data">
+                                    <tr ng-repeat="u in data" ng-if="u.typeUtilisateur=='INTERNE'">
+                                        <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
+                                        <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
+                                        <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>
+                                        <td sortable="'etat'" data-title="'Etat (t=ACTIF, f=INACTIF)'" class="text-center" filter="{ 'etat' : 'text'}">
+                                            <button ng-show="u.etat==false" ng-confirm-click="Voulez-vous vraiment activer le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-danger"><b>Inactif</b></button>
+                                            <button ng-show="u.etat==true" ng-confirm-click="Voulez-vous vraiment désactiver le compte de << {{u.nomPrenom}} >> ?" confirmed-click="activeOrDesactivate(u.id);" class="btn btn-light text-success"><b>Actif</b></button>
+                                        </td>
+                                        <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-pill btn-dark" ng-disabled="u.etat==false" ng-click="editUser(u.id);"><i class="fa fa-edit"></i> Editer</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--        tableau des utilisateurs externes-->
+        <div class="row mt-xl-3">
+            <div class="col-sm-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-primary">
+                            <div class="custom-title">Liste des Utilisateurs extèrnes</div>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="table-responsive">
+                            <table ng-table="usersTable" class="display table table-striped" cellspacing="0">
+                                <tbody>
+                                    <tr ng-repeat="u in data" ng-if="u.typeUtilisateur=='EXTERNE'">
                                         <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'nomPrenom'" data-title="'Nom & Prénom(s)'" filter="{ 'nomPrenom' : 'text'}">{{u.nomPrenom}}</td>
                                         <td sortable="'username'" data-title="'Nom d\'utilisateur'" filter="{ 'username' : 'text'}">{{u.username}}</td>

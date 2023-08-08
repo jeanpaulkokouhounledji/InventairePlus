@@ -11,6 +11,7 @@ public interface EtatInventaireService {
 
     //Genereation du fichier excel
     List<EtatInventaire> exportEtatInventaireToExcel(HttpServletResponse response,String codeInventaire, String codeRayon) throws IOException;
+    List<EtatInventaire> exportAllEtatInventaireToExcel(HttpServletResponse response) throws IOException;
     //sauvegarde d'une ligne d'etat
     EtatInventaire createEtatInventaire(EtatInventaire etatInventaire);
     //selection d'une ligne d'etat d'inventaire

@@ -26,21 +26,17 @@ public class AppUser {
     private Long id;
     @Column(nullable = false)
     private String nomPrenom;
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String username;
-    @JsonProperty(access = JsonProperty.Access.AUTO)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
-    @Column(nullable = true)
+
+    @Column(nullable = false)
+    private String typeUtilisateur = "";
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//parse la donnee en ecriture seul. la ligne est absente dans la reponse json
     private String password;
     private boolean etat = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> appRoles = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }

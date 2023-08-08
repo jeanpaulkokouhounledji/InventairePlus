@@ -80,7 +80,7 @@
                     <div class="custom-title-wrap bar-primary">
                         <div class="custom-title">
                             <div class="row">
-                                <div class="col-sm">Téléchargement du fichier </span></div>
+                                <div class="col-sm">Téléchargements par localisation </span></div>
                             </div>
                         </div>
                     </div>
@@ -89,15 +89,43 @@
                     <div class="table-responsive">
                         <table class="display table table-striped" cellspacing="0">
                             <tbody>
-                                <tr ng-repeat="t in participerLocalisations" class="justify-content-around">
-                                    <td data-title="'Localisation'">{{t.libelle}}</td>
+                                <tr ng-repeat="t in participerLocalisations" class="text-center">
+<!--                                    <td data-title="'Localisation'">{{t.libelle}}</td>-->
                                   <!--  <td>
                                         <button class="btn btn-sm btn-pill btn-dark" ng-click="generateInventaireEtat(chosedInventaireNumero,t.code);"><i class="text-warning fa fa-cogs"></i> Générer l'état</button>
                                     </td>-->
                                     <td>
-                                        <a class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-href="/pharmaxiel/api/v1/etat/inventaire/{{chosedInventaireNumero}}/{{t.code}}"><i class="text-warning fa fa-download"></i> Télécharger le fichier Excel</a>
+                                        <a class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-href="/pharmaxiel/api/v1/etat/traitement/generate/etatInventaire/{{chosedInventaireNumero}}/{{t.code}}"><i class="text-warning fa fa-download"></i> {{t.libelle}} </a>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2 justify-content-around">
+
+            <div class="col-sm-6 col-lg-6 card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-primary">
+                        <div class="custom-title">
+                            <div class="row">
+                                <div class="col-sm">Téléchargement du fichier unique </span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <div class="table-responsive">
+                        <table class="display table table-striped" cellspacing="0">
+                            <tbody>
+                            <tr class="text-center">
+                                <td>
+                                    <a class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-href="/pharmaxiel/api/v1/etat/traitement/generate/etatInventaire/all"><i class="text-warning fa fa-download"></i> Télécharger </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -69,8 +69,6 @@
                                 <h1>{{userInventaire.numero}}</h1>
                                 <h4 class="text-danger" ng-if="userInventaire.numero==null">Désolé, vous n'avez aucun inventaire actif !</h4>
                             </div>
-                            {{splitArray = chosedParticiper.split('-')}}
-                            {{splitArray[0]}}
                             <div class="col-sm-3 form-group-sm mb-2">
                                 <label><span class="text-danger">*</span> Type Comptage</label>
                                 <select class="form-control form-control-sm" ng-model="codeDouchette"  required>
@@ -84,7 +82,7 @@
 
                             <div class="col-sm-3 form-group-sm mb-2" ng-show="codeDouchette!=''">
                                 <label><span class="text-danger">*</span> Localisation</label>
-                                <select class="form-control form-control-sm" ng-model="chosedParticiper"  required>
+                                <select class="form-control form-control-sm" ng-model="chosedParticiper" ng-change="splitHandler();" required>
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerByUser" value="{{opt.localisation.id + '-' + opt.id}}">
                                         {{opt.localisation.libelle}}
@@ -93,7 +91,7 @@
                                 <label class="text-danger">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();countedList(parseInt(splitArray[1]));"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();autofocusExtraField();"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -115,11 +113,10 @@
                         </div>
                     </div>
                     <div class="pt-2">
-                        <div class="table-responsive">
+                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
                                     <tr ng-repeat="t in data" style="text-align: center" ng-if="t.participer.id==idPart">
-<!--                                        <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{t.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{t.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{t.libelleProduit==null?t.stockProduit.produit.libelle:t.libelleProduit}}</td>
@@ -144,14 +141,16 @@
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
                                 <div class="row">
-                                    <div class="col-sm-4">Recherchez un produit</div>
+                                    <div class="col-sm-3">Recherchez un produit</div>
+                                    <div class="col-sm-3 text-right">
+                                        <label>
+                                            Recherche par code unique
+                                        </label>
+                                    </div>
                                     <!-- Champs de recherche pour douchette -->
                                     <div class="col-sm-6" ng-show="codeDouchette==='d'">
                                         <form class="search-form">
-                                            <label>
-                                                Recherche par code unique
-                                            </label>
-                                            <input type="text"  ng-model="codeUniqueProduit" ng-change="produitDouchette(codeUniqueProduit);" class="search-field form-control form-control-sm" id="codeU"/>
+                                            <input type="text" ng-focus="codeU"  ng-model="codeUniqueProduit" ng-change="produitDouchette(codeUniqueProduit);" class="search-field form-control form-control-sm" id="codeU"/>
                                         </form>
                                     </div>
                                 </div>
@@ -285,9 +284,7 @@
                         <div class="table-responsive">
                             <table ng-table="traitementsTable" class="display table table-striped justify-content-center" cellspacing="0">
                                 <tbody>
-<!--                                    <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==chosedParticiper&&tr.statut==1">-->
                                     <tr ng-repeat="tr in data" style="text-align: center" ng-if="tr.participer.id==idPart&&tr.statut==1">
-<!--                                        <td style="width: 10%;text-align: center;" sortable="'index'" data-title="'N°'">{{$index = 0 + 1}}</td>-->
                                         <td data-title="'N° Inventaire'">{{tr.participer.inventaire.numero}}</td>
                                         <td data-title="'Localisation Concernée'">{{tr.participer.localisation.code}}</td>
                                         <td data-title="'Produit(s)'">{{tr.libelleProduit==null?tr.stockProduit.produit.libelle:tr.libelleProduit}}</td>
@@ -365,7 +362,8 @@
                                         </div>
                                         <div class="text-center row justify-content-center mt-4">
                                             <div class="col-sm-4">
-                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();traitement.participer.id=parseInt(splitArray[1])"><i class="fa fa-check fa-2x"> Valider</i></button>
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();"><i class="fa fa-check fa-2x"> Valider</i></button>
+<!--                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Enrégistrer ce produit ?" confirmed-click="saveNewTraitement();traitement.participer.id=parseInt(splitArray[1])"><i class="fa fa-check fa-2x"> Valider</i></button>-->
                                             </div>
                                         </div>
                                     </form>

@@ -55,6 +55,7 @@ public class TraitementController {
 
     @GetMapping(value = "/edit/{id}")
     public Optional<Traitement> editTraitement(@PathVariable Long id){
+
         return traitementService.getForEdit(id);
     }
 
