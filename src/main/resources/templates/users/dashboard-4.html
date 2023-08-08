@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<!-- Mirrored from thevectorlab.net/codelab/dashboard-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 30 Dec 2018 19:29:30 GMT -->
+<head>
+   <title>Dashboard</title>
+    <span layout:fragment="permalink"> ADMINISTRATION DE LA PLATEFORME</span>
+</head>
+
+<body class="left-sidebar-fixed" ng-app="conventionApp" ng-controller="dgStateController">
+
+    <section layout:fragment="costum-content">
+
+        <!--main content wrapper-->
+
+            <div class="container-fluid">
+                <h4 class="alert alert-warning text-center text-uppercase mt-4 mb-4 mb-xl-5">Nombres de demandes de conventionnement par région</h4>
+                <div class="row">
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center ">
+                                    <div class="mr-4 rounded-circle bg-warning sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbMaritime}}</h1>
+                                        <span class="text-muted">Maritime</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbPlateaux}}</h1>
+                                        <span class="text-muted">Plateaux</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-turquoise sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbCentrale}}</h1>
+                                        <span class="text-muted">Centrale</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-danger sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbKara}}</h1>
+                                        <span class="text-muted">Kara</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-primary sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbSavanes}}</h1>
+                                        <span class="text-muted">Savanes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-3">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-pink sr-icon-box ">
+                                        <i class="vl_list"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h1 class="text-uppercase mb-0 weight500">{{nbLomeCommune}}</h1>
+                                        <span class="text-muted">Lome Commune</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="alert alert-warning text-center text-uppercase mt-4 mb-4 mb-xl-5">Situation globale</h4>
+                <div class="row">
+                    <div class="col-xl-4 col-md-4">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-success">
+                                    <div class="custom-title">Total des demandes</div>
+<!--                                    <div class="custom-post-title">Outstanding pie chart example is given bellow</div>-->
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <h1>{{nbAllDemandes}}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-turquoise">
+                                    <div class="custom-title">Conventionnements acceptés</div>
+                                    <!--<div class="custom-post-title">Awesome bar chart example is given bellow</div>-->
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <h1>{{nbConventionnees}}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-4">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-danger">
+                                    <div class="custom-title">Conventionnements rejetés</div>
+                                    <!--<div class="custom-post-title">Excellent bubble chart example is given bellow</div>-->
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <h1>{{nbRejetees}}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        <!--/main content wrapper-->
+
+    </section>
+<!--basic scripts-->
+<script src="assets/vendor/jquery/jquery.min.js"></script>
+<script src="assets/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="assets/vendor/popper.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/vendor/jquery.dcjqaccordion.2.7.js"></script>
+<script src="assets/vendor/icheck/skins/icheck.min.js"></script>
+
+<!--sparkline-->
+<script src="assets/vendor/sparkline/jquery.sparkline.js"></script>
+<!--sparkline initialization-->
+<script src="assets/vendor/js-init/sparkline/init-sparkline.js"></script>
+
+<!--c3chart-->
+<script src="assets/vendor/c3chart/d3.min.js"></script>
+<script src="assets/vendor/c3chart/c3.min.js"></script>
+<!--c3chart initialization-->
+<script src="assets/vendor/js-init/c3chart/init-c3chart.js"></script>
+
+<!--chartjs-->
+<script src="assets/vendor/chartjs/Chart.bundle.min.js"></script>
+<!--chartjs initialization-->
+<script src="assets/vendor/js-init/chartjs/init-bubble-chart.js"></script>
+<script src="assets/vendor/js-init/chartjs/init-mixed-chart.js"></script>
+
+<!--vectormap-->
+<script src="assets/vendor/vector-map/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="assets/vendor/vector-map/jquery-jvectormap-world-mill-en.js"></script>
+<script src="assets/vendor/vector-map/jquery-jvectormap-us-aea.js"></script>
+<!--vectormap initialization-->
+<script src="assets/vendor/js-init/vmap/init-vmap-world.js"></script>
+<script src="assets/vendor/js-init/vmap/init-vmap-usa.js"></script>
+
+<!--to do list-->
+<script src="assets/vendor/icheck/skins/icheck.min.js"></script>
+<!--to do list initialization-->
+<script src="assets/vendor/js-init/init-todo-list.js"></script>
+
+<!--[if lt IE 9]>
+<script src="assets/vendor/modernizr.js"></script>
+<![endif]-->
+
+<!--basic scripts initialization-->
+<script src="assets/js/scripts.js"></script>
+
+</body>
+
+<!-- Mirrored from thevectorlab.net/codelab/dashboard-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 30 Dec 2018 19:29:38 GMT -->
+</html>
+

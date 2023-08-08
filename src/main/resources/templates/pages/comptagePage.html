@@ -49,6 +49,10 @@
             <div class="">
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm();listTraitement()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
             </div>
+<!--            Afficher le reyon en cours d'inventaire-->
+            <div class="">
+                 <h2>{{}}</h2>
+            </div>
             <div class="" ng-if="codeDouchette==='m'">
                 <button class="btn btn-dark btn-pill mb-2" data-toggle="modal" data-target="#param"><i class="fa fa-plus fa-2x"></i> Ajouter un nouveau produit</button>
             </div>
@@ -91,7 +95,7 @@
                                 <label class="text-danger">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();autofocusExtraField();"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>
@@ -142,15 +146,15 @@
                             <div class="custom-title">
                                 <div class="row">
                                     <div class="col-sm-3">Recherchez un produit</div>
-                                    <div class="col-sm-3 text-right">
+                                    <div class="col-sm-3 text-right" ng-show="codeDouchette==='d'">
                                         <label>
                                             Recherche par code unique
                                         </label>
                                     </div>
                                     <!-- Champs de recherche pour douchette -->
-                                    <div class="col-sm-6" ng-show="codeDouchette==='d'">
+                                    <div class="col-sm-6" ng-show="codeDouchette==='d'" ng-init="handleAutofocus();">
                                         <form class="search-form">
-                                            <input type="text" ng-focus="codeU"  ng-model="codeUniqueProduit" ng-change="produitDouchette(codeUniqueProduit);" class="search-field form-control form-control-sm" id="codeU"/>
+                                            <input type="text"  ng-model="codeUniqueProduit" ng-change="produitDouchette(codeUniqueProduit);" class="search-field form-control form-control-sm" id="codeU"/>
                                         </form>
                                     </div>
                                 </div>

@@ -75,7 +75,8 @@ public class ExcelExportUtils {
         createCell(row,7,"DATE_PEREMPTION",style);
         createCell(row,8,"LOT",style);
         createCell(row,9,"ID_MOTIF",style);
-        createCell(row,10,"LIBELLE_MOTIF",style);
+        createCell(row,10,"QUANTE",style);
+        createCell(row,11,"LIBELLE_MOTIF",style);
 
     }
 
@@ -99,6 +100,7 @@ public class ExcelExportUtils {
             createCell(row,columnCount++,etatInventaire.getDatePeremption(), style);
             createCell(row,columnCount++,etatInventaire.getLot(), style);
             createCell(row,columnCount++,etatInventaire.getIdMotif(), style);
+            createCell(row,columnCount++,etatInventaire.getQte(), style);
             createCell(row,columnCount++,etatInventaire.getLibelleMotif(), style);
 
         }

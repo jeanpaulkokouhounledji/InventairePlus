@@ -7,6 +7,8 @@ import com.aurore.pharmaciel_inventaire.services.ProduitService;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +37,16 @@ public class TraitementController {
     public void generateEtatInventaire(@PathVariable String codeInventaire,@PathVariable String codeRayon){
         traitementService.generateEtatInventaire(codeInventaire,codeRayon);
     }*/
+
+    //export des ecarts
+    @GetMapping(value = "/traitement/export/ecarts/all")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=Customers_Information.xlsx";
+        response.setHeader(headerKey, headerValue);
+        traitementService.exportEcartToExcel(response);
+    }
 
     @PostMapping(value = "/save")
     public Traitement saveTraitement(@RequestBody Traitement traitement){

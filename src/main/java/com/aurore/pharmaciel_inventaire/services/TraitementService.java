@@ -2,6 +2,8 @@ package com.aurore.pharmaciel_inventaire.services;
 
 import com.aurore.pharmaciel_inventaire.entities.Traitement;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +13,9 @@ public interface TraitementService {
 
     //generation des etats
     //void generateEtatInventaire(String codeInventaire, String codeRayon);
+
+    //exportation ecarts
+    List<Traitement> exportEcartToExcel(HttpServletResponse response) throws IOException;
 
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);

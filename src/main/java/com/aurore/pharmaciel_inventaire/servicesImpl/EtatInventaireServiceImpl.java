@@ -41,6 +41,7 @@ public class EtatInventaireServiceImpl implements EtatInventaireService {
         return etatInventaires;
     }
 
+
     @Override
     public EtatInventaire createEtatInventaire(EtatInventaire etatInventaire) {
         return etatInventaireRepository.save(etatInventaire);

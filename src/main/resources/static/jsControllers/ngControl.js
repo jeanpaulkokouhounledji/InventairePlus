@@ -4,7 +4,7 @@
 var app = angular.module('pharmaxielweb',['ngTable']);
 
 //focus sur un input utilisation : <input type="text" ng-focus="isFocused" ng-focus-lost="loseFocus()">
-app.directive('ngFocus', function($timeout) {
+/*app.directive('ngFocus', function($timeout) {
     return {
         link: function ( scope, element, attrs ) {
             scope.$watch( attrs.ngFocus, function ( val ) {
@@ -20,7 +20,7 @@ app.directive('ngFocus', function($timeout) {
             });
         }
     };
-});
+});*/
 
 app.directive('convertToNumber', function() {
     return {
@@ -633,12 +633,12 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     $scope.getTypeComptage();
 
     //autofocus function
-    $scope.autofocusExtraField = function() {
+   /* $scope.autofocusExtraField = function() {
         if ($scope.codeDouchette === 'd') {
             var extraFieldElement = document.getElementById('codeU');
             extraFieldElement.focus();
         }
-    };
+    };*/
 
     //parametres utilisateur
     $scope.getUserDetails = function (){
@@ -657,6 +657,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     //ouvrir la fenetre de comptage
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
+        $scope.handleAutofocus();
     };
     //liste des rayons d'un utilisateur
     $scope.localisationUser = function(username){
@@ -682,7 +683,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.handleAutofocus();
                 $scope.listProduits(parseInt($scope.splitArray[0]),parseInt($scope.splitArray[1]));
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Suppression Effectuée",
                         type: "success",
                         styling: "bootstrap3",
@@ -694,7 +695,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 },
                 function errorCallback() {
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Échec de la suppression, Veuillez réessayez",
                         type: "error",
                         styling: "bootstrap3",
@@ -718,7 +719,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
                 $scope.traitement = {};
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Nouveau produit enrégistré avec succès",
                         type: "success",
                         styling: "bootstrap3",
@@ -730,7 +731,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 },
                 function errorCallback() {
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Echec d'enrégistrement du produit",
                         type: "error",
                         styling: "bootstrap3",
@@ -1057,7 +1058,7 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
                     $scope.traitData = response.data;
                     $scope.listTraitement();
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Traitement enrégistré avec succès",
                         type: "success",
                         styling: "bootstrap3",
@@ -1069,7 +1070,7 @@ function ecartsController($scope , $http , $filter , fileUpload , NgTableParams 
                 },
                 function errorCallback() {
                     new PNotify({
-                        title: "INAM | Conventionnement",
+                        title: "INVENTAIRE PLUS | Notification",
                         text: "Echec d'enrégistrement du produit",
                         type: "error",
                         styling: "bootstrap3",
@@ -1330,6 +1331,36 @@ function historiqueController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.getUserDetails();
+
+
+    //parametres utilisateur
+    $scope.localisationComptees = function (){
+        $http.get("/pharmaxiel/api/v1/stats/all/localisations/traitement")
+            .then(function (response) {
+                $scope.countedLocalisations = response.data;
+            })
+    }
+    $scope.localisationComptees();
+
+    //nombre de produits comptes pour une localisation compte
+    $scope.nbProduitsCompte = function (localisation){
+        $http.get("/pharmaxiel/api/v1/stats/count/produitCompte/parLocalisation/" + localisation)
+            .then(function (response) {
+                $scope.nbConte = parseInt(response.data);
+            })
+    }
+
+
+    //nombre de tous les produits pour une localisation compte
+    $scope.nbAllProduitsCompte = function (localisation){
+        $http.get("/pharmaxiel/api/v1/stats/count/produitsByLocalisation/" + localisation)
+            .then(function (response) {
+                $scope.nbAllProduit = parseInt(response.data);
+            })
+    }
+
+
+
 }
 
 //controleur du profil utilisateur

@@ -9,11 +9,15 @@ import java.util.List;
 
 public interface TraitementRepository extends JpaRepository<Traitement,Long>{
 
-  /*  @Query("select t from Traitement t where t.qteCompte<>t.qteDisponible" +
-            " or t.prixVente<>t.stockProduit.prixVente " +
-            "or t.datePeremption<>t.stockProduit.datePeremption " +
-            "or t.fournisseur.codeFournisseur<>t.stockProduit.fournisseur.codeFournisseur " +
-            "or t.participer.localisation.id<>t.stockProduit.produit.idLocalisation") */
+
+    //localisation existant dans le comptage
+    @Query("select distinct t.stockProduit.produit.localisation.libelle from Traitement t")
+    List<String> getCountedLocalisation();
+
+    //compage des lignes comptés par localisation
+    @Query("select count(t) from Traitement t where t.stockProduit.produit.localisation.libelle=:x")
+    long nbTraitementByLocalisation(@Param("x") String localisation);
+
     @Query("select t from Traitement t where (t.qteCompte<>t.qteDisponible " +
             "or t.prixVente<>t.stockProduit.prixVente " +
             "or t.datePeremption<>t.stockProduit.datePeremption " +

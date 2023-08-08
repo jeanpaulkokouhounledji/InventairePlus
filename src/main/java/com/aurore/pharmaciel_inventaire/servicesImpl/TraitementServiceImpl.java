@@ -2,13 +2,16 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
+import com.aurore.pharmaciel_inventaire.services.GenererFichierImportService.EcartExcelExportUtils;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,6 +48,14 @@ public class TraitementServiceImpl implements TraitementService {
     }
 
     private double ecart = .0;
+
+    @Override
+    public List<Traitement> exportEcartToExcel(HttpServletResponse response) throws IOException {
+        List<Traitement> traitements = traitementRepository.listTraitementsAvecEcarts();
+        EcartExcelExportUtils excelExportUtils = new EcartExcelExportUtils(traitements);
+        excelExportUtils.exportDataToExcel(response);
+        return traitements;
+    }
 
     //generation d'etat d'un rayon d'inventaire traité
    /* @Override
