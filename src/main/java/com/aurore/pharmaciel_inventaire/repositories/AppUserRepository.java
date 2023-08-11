@@ -24,6 +24,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Query("select u from AppUser u where u.username<>'administrator' order by u.id desc")
     List<AppUser> findAll();
 
-    /*@Query()
-    void deleteUserRole(@Param("x") String x);*/
+    @Query(value = "DELETE * FROM app_user_app_roles WHERE app_user_app_roles.app_user_id=:x",nativeQuery = true)
+    void deleteUserRole(@Param("x") Long x);
 }

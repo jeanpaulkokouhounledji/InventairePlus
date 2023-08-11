@@ -5,9 +5,13 @@ import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.entities.Participer;
 import com.aurore.pharmaciel_inventaire.entities.Produit;
 import com.aurore.pharmaciel_inventaire.services.ParticiperService;
+import org.hibernate.mapping.Map;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import static com.aurore.pharmaciel_inventaire.utils.JavaConstant.API_BASE_URL;
 
@@ -50,10 +54,9 @@ public class ParticiperController {
         return participerService.getInventaireForUser(username);
     }
 
-    //trouver les localisations liees à un inventaire
     @GetMapping(value = "/localisationByInventaire/{codeInventaire}")
-    public List<Localisation> getLocalisationByInventaire(@PathVariable String codeInventaire){
-        return participerService.localisationByInventaire(codeInventaire);
+    public Collection statsByLocalisation(@PathVariable String codeInventaire){
+       return participerService.localisationByInventaire(codeInventaire);
     }
 
 }

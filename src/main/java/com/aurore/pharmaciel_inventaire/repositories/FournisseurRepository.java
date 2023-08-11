@@ -19,5 +19,7 @@ public interface FournisseurRepository extends JpaRepository<Fournisseur,Long> {
 
     Fournisseur findFournisseurByRaisonSociale(@Param("x") String x);
 
+    @Query("select count(f) from Fournisseur f")
+    long getCountFournisseurs();
 
 }

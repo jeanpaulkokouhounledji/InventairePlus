@@ -20,6 +20,9 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+            <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
+        </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
@@ -53,9 +56,6 @@
                         <div class="row justify-content-between">
                             <div class="col-sm-4 col-lg-4">
                                 <div class="custom-title">Gestion des écarts</div>
-                            </div>
-                            <div class="col-sm-4 col-lg-4">
-                                <div class="custom-title"><a class="btn btn-sm btn-pill btn-dark" href="/pharmaxiel/api/v1/traitement/traitement/export/ecarts/all"><i class="fa fa-file-excel-o"></i> Exporter la liste des écarts</a></div>
                             </div>
                         </div>
                     </div>
@@ -107,8 +107,13 @@
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
-                                <div class="row">
-                                    <div class="col-sm">Suivi des écarts de l'inventaire N° <span class="font-weight-bold">{{chosedInventaireNumero}}</span> de la localisation  <span class="font-weight-bold">{{chosedLocalisationCode}}</span></div>
+                                <div class="row justify-content-between">
+                                    <div class="col-sm-8 col-lg-8">
+                                        Suivi des écarts de l'inventaire N° <span class="font-weight-bold">{{chosedInventaireNumero}}</span> de la localisation  <span class="font-weight-bold">{{chosedLocalisationCode}}</span>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-4 text-right">
+                                        <a class="btn btn-dark btn-pill btn-sm" ng-href="/pharmaxiel/api/v1/traitement/traitement/export/ecarts/all"><i class="fa fa-file-excel-o"></i> Exportez la liste des écarts</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

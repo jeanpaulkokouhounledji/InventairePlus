@@ -15,4 +15,7 @@ public interface LocalisationRepository extends JpaRepository<Localisation,Long>
 
     @Query("select l from Localisation l where l.id=:id")
     Localisation findById(@Param("id") long id);
+
+    @Query("select count(l) from Localisation l")
+    long getCountLocalisations();
 }

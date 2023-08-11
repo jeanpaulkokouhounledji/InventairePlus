@@ -22,4 +22,7 @@ public interface ProduitRepository extends JpaRepository<Produit,Long> {
     @Query("select count(p) from Produit p where p.localisation.libelle=:x")
     long getProduitNumberByLocalisation(@Param("x") String localisation);
 
+    @Query("select count(p) from Produit p")
+    long getCountProduits();
+
 }

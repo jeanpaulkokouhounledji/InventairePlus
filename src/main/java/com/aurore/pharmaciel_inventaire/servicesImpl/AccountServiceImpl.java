@@ -128,4 +128,9 @@ public class AccountServiceImpl implements AccountService {
         return appUserRepository.findAllActif();
     }
 
+    @Override
+    public void deleteUserRoles(Long id) {
+        appUserRepository.deleteUserRole(id);
+    }
+
 }

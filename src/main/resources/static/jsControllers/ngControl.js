@@ -22,6 +22,36 @@ var app = angular.module('pharmaxielweb',['ngTable']);
     };
 });*/
 
+
+/*scope.getImportStatas = function (){
+    $http.get("/pharmaxiel/api/v1/stats/fichierimport")
+        .then(function (response) {
+                $scope.usersList();
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Etat d\'import actualisé",
+                    type: "success",
+                    styling: "bootstrap3",
+                    delay: 5000,
+                    history: false,
+                    sticker: true,
+
+                });
+            },
+            function errorCallback(response) {
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Erreur lors de la reccupération des statistiques d\'import",
+                    type: "error",
+                    styling: "bootstrap3",
+                    delay: 3000,
+                    history: false,
+                    sticker: true,
+                });
+
+            })
+};*/
+
 app.directive('convertToNumber', function() {
     return {
         require: 'ngModel',
@@ -94,10 +124,14 @@ app.service('fileUpload', ['$http', function ($http) {
         var fd = new FormData();
         fd.append('file', file);
         $http.post(uploadUrl, fd, {
+
             transformRequest: angular.identity,
+
             headers: {'Content-Type': undefined}
-        })
-            .then(function(){
+
+        }).then(function(){
+
+
 
                     new PNotify({
                         title: "Notification Pharmaxiel_web",
@@ -290,6 +324,36 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
                     new PNotify({
                         title: "Inventaire+ | Notification",
                         text: "Désolé, une erreur est survenu lors de la sélection",
+                        type: "error",
+                        styling: "bootstrap3",
+                        delay: 3000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                })
+    };
+    $scope.deleteRoles = function (id){
+        $http.delete("/pharmaxiel/api/v1/delete/rolesbuuser/"+id)
+            .then(function (response) {
+                   // $scope.appUser = response.data;
+                    $scope.usersList();
+                    //$scope.toggleForm();
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Succès de la suppression",
+                        type: "success",
+                        styling: "bootstrap3",
+                        delay: 5000,
+                        history: false,
+                        sticker: true,
+                    });
+
+                },
+                function errorCallback(response) {
+                    new PNotify({
+                        title: "Inventaire+ | Notification",
+                        text: "Erreur de suppression",
                         type: "error",
                         styling: "bootstrap3",
                         delay: 3000,
@@ -608,7 +672,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     //code unique produit
     $scope.codeUniqueProduit = "";
     //localisation choisi
-    $scope.localisationActive = 0;
+    $scope.localisationActive = 0 ;
 
     $scope.splitArray = [];
 
@@ -667,6 +731,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
             })
     };
+
     //Inventaire actif d'un utilisateur
     $scope.inventaireUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/inventaireParticiper/"+username)
@@ -675,6 +740,16 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 //alert("===============");
             })
     };
+     //localisation par utilisateur
+    $scope.selectedInventaire = function(id){
+        id = parseInt(id);
+        $http.get("/pharmaxiel/api/v1/localisation/localisation/by/"+id)
+            .then(function(response) {
+                $scope.localisation= response.data;
+                //alert("===============");
+            })
+    };
+
     //supression d'un comptage
     $scope.deleteTraitement = function (id){
         $http.delete("/pharmaxiel/api/v1/traitement/delete/"+id)
@@ -859,7 +934,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.produitsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
                     page: 1,
-                    count: 10
+                    count: 500
                 }, {
                     total: $scope.produitData.length,
                     getData: function (params) {
@@ -1323,6 +1398,15 @@ function updateStockController($scope , $http , $filter , fileUpload , NgTablePa
 //controller de la age historique
 app.controller('historiqueController',historiqueController);
 function historiqueController($scope , $http , $filter , fileUpload , NgTableParams){
+    $scope.showForm = false;
+
+    $scope.toggleForm = function () {
+        $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
+        if($scope.showForm==true){
+            $scope.handleAutofocus();
+        }
+    }
+
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
@@ -1332,6 +1416,14 @@ function historiqueController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.getUserDetails();
 
+    //liste des inventaires
+    $scope.inventaireList = function (){
+        $http.get("/pharmaxiel/api/v1/inventaire/list")
+            .then(function (response) {
+                $scope.allInventaire = response.data;
+            })
+    };
+    $scope.inventaireList();
 
     //parametres utilisateur
     $scope.localisationComptees = function (){
@@ -1350,12 +1442,43 @@ function historiqueController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
 
+    //localisations par inventaire
+    $scope.statistiqueParLocalisation = function(inventaireCode){
+        $http.get("/pharmaxiel/api/v1/stats/localisationByInventaire/"+inventaireCode)
+            .then(function (response) {
+                $scope.localisationsAndStats = response.data;
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Données actualisées",
+                    type: "success",
+                    styling: "bootstrap3",
+                    delay: 2000,
+                    history: false,
+                    sticker: true,
+                },
+
+                    function errorCallback(response) {
+                        new PNotify({
+                            title: "Inventaire+ | Notification",
+                            text: "Erreur lors de la reccupération des données",
+                            type: "error",
+                            styling: "bootstrap3",
+                            delay: 3000,
+                            history: false,
+                            sticker: true,
+                        });
+
+                    });
+            })
+    };
+
+
 
     //nombre de tous les produits pour une localisation compte
     $scope.nbAllProduitsCompte = function (localisation){
         $http.get("/pharmaxiel/api/v1/stats/count/produitsByLocalisation/" + localisation)
             .then(function (response) {
-                $scope.nbAllProduit = parseInt(response.data);
+                return $scope.nbAllProduit = parseInt(response.data);
             })
     }
 

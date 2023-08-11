@@ -1,6 +1,6 @@
 <!--formulaire de suivi du dossier-->
 
-<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="updateStockController">
+<section layout:decorate="~{layout}" ng-app="pharmaxielweb" ng-controller="historiqueController">
 
     <!--    menu de la page-->
     <span layout:fragment="custum-menu">
@@ -37,10 +37,8 @@
     <div layout:fragment="custum-permalien" >
         <div class="row">
             <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 card-header text-center mt-3 mb-3">
-                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > FICHIER DE MISE A JOUR</h4>
-                <div layout:fragment="username">
-                    <h4 class="text-center text-danger">{{user.nomPrenom}}</h4>
-                </div>
+                <h4 style="letter-spacing: 1px;text-transform: uppercase"> INVENTAIRE<sup>+</sup> > HISTORIQUES</h4>
+                <!--        <h6 style="letter-spacing: 1px;">Veuillez sélectionner une application</h6>-->
             </div>
         </div>
 
@@ -61,8 +59,8 @@
                         <div class="row justify-content-between">
                             <!--                            liste des inventaires -->
                             <div class="col-sm-12 col-lg-8 form-group-sm mb-2">
-                                <label><span class="text-danger">*</span> Choisissez Un Inventaire</label>
-                                <select class="form-control form-control-sm" name="inv" ng-model="chosedInventaireNumero" ng-change="localisationByInventaire(chosedInventaireNumero);"  required="required">
+                                <label><span class="text-danger">*</span> Choisissez un inventaire pour le suivi</label>
+                                <select class="form-control form-control-sm" name="inv" ng-model="chosedInventaireNumero" ng-change="statistiqueParLocalisation(chosedInventaireNumero);"  required="required">
                                     <optgroup label="Sélectionnez un inventaire"></optgroup>
                                     <option ng-repeat="opt in allInventaire" value="{{opt.numero}}" >
                                         {{opt.numero}}
@@ -74,6 +72,7 @@
                     </form>
                 </div>
             </div>
+
             <div class="col-sm-6 col-lg-6 card card-shadow mb-4" ng-if="chosedInventaireNumero==null">
                 <h5 class="text-center alert alert-warning" style="margin-top: 10%;"> Choisissez un inventaire pour afficher ce contenu !</h5>
             </div>
@@ -83,7 +82,8 @@
                     <div class="custom-title-wrap bar-primary">
                         <div class="custom-title">
                             <div class="row">
-                                <div class="col-sm">Téléchargements par localisation </span></div>
+                                <div class="col-sm-8">Suivi du comptage <i class="text-warning fa fa-pie-chart fa-2x"></i></div>
+                                <div class="col-sm-4"><button class="btn btn-dark btn-sm btn-pill form-control" ng-click="statistiqueParLocalisation(chosedInventaireNumero);"><i class="fa fa-rotate-right"></i> Actualiser </button></div>
                             </div>
                         </div>
                     </div>
@@ -92,40 +92,24 @@
                     <div class="table-responsive">
                         <table class="display table table-striped" cellspacing="0">
                             <tbody>
-                                <tr ng-repeat="t in participerLocalisations">
-                                    <td data-title="'Localisation'">{{t.libelle}}</td>
-                                    <td>
-                                        <a class="btn btn-sm btn-pill btn-outline-dark font-weight-bold form-control"
-                                           ng-href="/pharmaxiel/api/v1/etat/traitement/generate/etatInventaire/{{chosedInventaireNumero}}/{{t.code}}">
-                                            <i class="text-warning fa fa-download"></i> Télécharger </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-2 justify-content-around">
-
-            <div class="col-sm-6 col-lg-6 card card-shadow mb-4">
-                <div class="card-header border-0">
-                    <div class="custom-title-wrap bar-primary">
-                        <div class="custom-title">
-                            <div class="row">
-                                <div class="col-sm">Téléchargement du fichier unique </span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-2">
-                    <div class="table-responsive">
-                        <table class="display table table-striped" cellspacing="0">
-                            <tbody>
-                            <tr class="text-center">
+                            <tr class="bg-dark text-light">
+                                <th>Localisation</th>
+                                <th>Nb inventorié</th>
+                                <th>Nb total</th>
+                                <th class="text-right">Taux d'inventaire</th>
+                            </tr>
+                            <tr ng-repeat="t in localisationsAndStats ">
                                 <td>
-                                    <a class="btn btn-sm btn-pill btn-outline-dark font-weight-bold" ng-href="/pharmaxiel/api/v1/etat/traitement/generate/etatInventaire/all"><i class="text-warning fa fa-download"></i> Télécharger </a>
+                                    <h4>{{t.localisation}}</h4>
+                                </td>
+                                <td>
+                                    <h4>{{t.nombreCompte}}</h4>
+                                </td>
+                                <td>
+                                    <h4>{{t.nombreEnBase}}</h4>
+                                </td>
+                                <td class="text-right">
+                                    <h3>{{t.etat}} <i class="text-warning fa fa-percent"></i></h3>
                                 </td>
                             </tr>
                             </tbody>
@@ -134,5 +118,8 @@
                 </div>
             </div>
         </div>
+        <!--        Formulaire de gestion -->
+        <!--      <img src="assets/img/OIP.jpg" width="300px" height="300px" alt="Site en construction">-->
     </div>
+
 </section>

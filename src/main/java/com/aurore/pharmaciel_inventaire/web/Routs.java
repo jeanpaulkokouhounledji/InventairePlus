@@ -7,14 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class Routs {
 
 
+    @RequestMapping(value = "login")
+    public String login(){
+        return "loginPage";
+    }
+
     @RequestMapping(value = "/")
     public String accueil(){
         return "pages/homePage";
     }
-
-    @RequestMapping(value = "login")
-    public String login(){
-        return "loginPage";
+    //suivi du comptage
+    @RequestMapping(value = "/suivi")
+    public String suiviComptage(){
+        return "pages/suiviPage";
     }
 
     @RequestMapping(value = "auth")

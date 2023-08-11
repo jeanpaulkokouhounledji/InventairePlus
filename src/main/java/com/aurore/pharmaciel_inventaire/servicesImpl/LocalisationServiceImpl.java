@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,5 +23,10 @@ public class LocalisationServiceImpl implements LocalisationService {
     @Override
     public List<Localisation> listLocalisations() {
         return localisationRepository.findAll();
+    }
+
+    @Override
+    public Optional<Localisation> findLocalisationById(Long id) {
+        return localisationRepository.findById(id);
     }
 }

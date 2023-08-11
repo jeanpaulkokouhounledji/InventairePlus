@@ -33,4 +33,7 @@ public interface StockProduitRepository extends JpaRepository<StockProduit,Long>
             "and st.produit not in (select t.stockProduit.produit from Traitement t where t.participer.id=:y) order by st.produit.libelle asc")
     List<StockProduit> findAllStock(@Param("x") Long x,@Param("y") Long y);
 
+    @Query("select count(s) from StockProduit s")
+    long getCountStockProduit();
+
 }

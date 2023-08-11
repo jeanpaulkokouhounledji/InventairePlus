@@ -19,6 +19,9 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+            <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
+        </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
@@ -63,13 +66,7 @@
                                            <div class="form-group">
                                                <label>Sélectionnez le fichier modèle d'import</label>
                                                <input type="file" name="importProduit" file-model="importProduit" class="form-control col-sm-4 offset-4 font-weight-bold"/>
-                                               <!--<select class="offset-sm-4 col-sm-4 form-control form-control-sm" ng-model="charge">
-                                                   <optgroup label="Type de données à charger"></optgroup>
-                                                   <option ng-value="0"> Liste des produits</option>
-                                                   <option ng-value="1"> Liste des stocks de produits</option>
-                                                   <option ng-value="2"> Liste des fournisseurs</option>
-                                                   <option ng-value="3"> Liste des localisations</option>
-                                               </select>-->
+
                                                <label class="text-danger" ng-show="importProduit==null" >Champ requis</label>
                                            </div>
                                             <button class="btn btn-sm btn-pill btn-dark" ng-disabled="importProduit==null" ng-confirm-click="Voulez-vous vraiment lancer le chargement des données ?" confirmed-click="chargerDonneesProduits();">
@@ -78,53 +75,7 @@
                                         </div>
                                     </tr>
                                 </thead>
-                                <!--<tbody>
-                                    <tr ng-show="charge==0">
-                                        <td style="width: 30%">
-                                            <span class="text-danger">*</span> Chargez la liste des produits
-                                        </td>
-                                        <td style="width: 30%">
-                                            <input type="file" name="importProduit" file-model="importProduit" class="form-control font-weight-bold"/>
-                                        </td>
-                                        <td style="width: 30%" class="text-center">
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="importProduit==null" ng-confirm-click="Lancer le chargement de la liste des produits ?" confirmed-click="chargerProduits();"><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
-                                        </td>
-                                    </tr>
-                                    <tr ng-show="charge==1">
-                                        <td style="width: 30%">
-                                           <span class="text-danger">*</span> Chargez la liste des données en stock
-                                        </td>
-                                        <td style="width: 30%">
-                                            <input type="file" name="importStockProduit" file-model="importStockProduit" class="form-control font-weight-bold"/>
-                                        </td>
-                                        <td style="width: 30%" class="text-center">
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="importStockProduit==null" ng-confirm-click="Lancer le chargement de la liste des données de stock ?" confirmed-click="chargerProduitStock();"><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
-                                        </td>
-                                    </tr>
-                                    <tr ng-show="charge==2">
-                                        <td style="width: 30%">
-                                            <span class="text-danger">*</span> Chargez la liste des fournisseurs
-                                        </td>
-                                        <td style="width: 30%">
-                                            <input type="file" name="importFournisseur" file-model="importFournisseur" class="form-control font-weight-bold"/>
-                                        </td>
-                                        <td style="width: 30%" class="text-center">
-                                            <button class="btn btn-sm btn-pill btn-dark"  ng-disabled="importFournisseur==null" ng-confirm-click="Lancer le chargement de la liste des fournisseurs ?" confirmed-click="chargerFournisseurs();"><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
-                                        </td>
-                                    </tr>
-                                    <tr ng-show="charge==3">
-                                        <td>
-                                            <span class="text-danger">*</span> Chargez la liste des localisations
-                                        </td>
-                                        <td>
-                                            <input type="file" name="importLocalisation" file-model="importLocalisation" class="form-control font-weight-bold"/>
-                                        </td>
-                                        <td style="width: 30%" class="text-center">
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="importLocalisation==null" ng-confirm-click="Lancer le chargement de la liste des localisations ?" confirmed-click="chargerLocalisations();"><i class="text-warning fa fa-download"></i> Lancer le chargement</button>
-                                        </td>
-                                    </tr>
 
-                                </tbody>-->
                             </table>
                         </div>
                     </div>

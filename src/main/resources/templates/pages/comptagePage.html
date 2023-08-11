@@ -20,6 +20,9 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+            <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
+        </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
@@ -50,8 +53,8 @@
                 <button class="btn btn-dark btn-pill mb-2" ng-click="toggleForm();listTraitement()"><i class="fa fa-edit fa-2x"></i> Cliquez pour choisir une localisation</button>
             </div>
 <!--            Afficher le reyon en cours d'inventaire-->
-            <div class="">
-                 <h2>{{}}</h2>
+            <div class="text-center">
+                 <h2 ng-if="localisation!=null">Localisation sélectionnée: {{localisation.libelle}}</h2>
             </div>
             <div class="" ng-if="codeDouchette==='m'">
                 <button class="btn btn-dark btn-pill mb-2" data-toggle="modal" data-target="#param"><i class="fa fa-plus fa-2x"></i> Ajouter un nouveau produit</button>
@@ -86,7 +89,7 @@
 
                             <div class="col-sm-3 form-group-sm mb-2" ng-show="codeDouchette!=''">
                                 <label><span class="text-danger">*</span> Localisation</label>
-                                <select class="form-control form-control-sm" ng-model="chosedParticiper" ng-change="splitHandler();" required>
+                                <select class="form-control form-control-sm" ng-model="chosedParticiper" ng-change="splitHandler();selectedInventaire(splitArray[0]);" required>
                                     <optgroup label="Sélectionnez une localisation"></optgroup>
                                     <option ng-repeat="opt in participerByUser" value="{{opt.localisation.id + '-' + opt.id}}">
                                         {{opt.localisation.libelle}}
@@ -95,7 +98,7 @@
                                 <label class="text-danger">Champ requis</label>
                             </div>
                             <div class="col-sm-2 form-group-sm mb-2">
-                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
+                                <button class="btn btn-sm btn-pill btn-outline-dark mt-3" ng-show="chosedParticiper[0]!=null" ng-click="listProduits(splitArray[0],splitArray[1]);toggleForm();"><i class="fa fa-cogs fa-2x"></i> <b>Compter</b></button>
                             </div>
                         </div>
                     </form>

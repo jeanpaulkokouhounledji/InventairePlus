@@ -118,6 +118,25 @@
                 </a>
             </div>
 
+ <!--            application comptage-->
+            <div class="col-xl-4 col-sm-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+                <a href="suivi" class="text-dark">
+                    <div class="card card-shadow mb-4 pt-3 pb-3">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center ">
+                                <div class="mr-4 rounded-circle bg-dark sr-icon-box ">
+                                    <i class="fa fa-pie-chart"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="text-uppercase mb-0 weight200">Suivi du comptage</h3>
+                                    <span class="text-muted">Gérez le suivi du comptage</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
             <!--            application de tableaux de bord-->
             <div class="col-xl-4 col-sm-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
                  <a href="ecarts" class="text-dark">

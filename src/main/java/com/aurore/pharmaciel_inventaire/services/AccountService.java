@@ -33,4 +33,7 @@ public interface AccountService {
 
     //selection des utilisateurs actifs
     List<AppUser> selectActifUsers();
+
+    //delete appuser roles
+    void deleteUserRoles(Long id);
 }

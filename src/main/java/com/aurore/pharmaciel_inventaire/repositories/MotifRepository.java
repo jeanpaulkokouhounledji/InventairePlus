@@ -11,4 +11,7 @@ public interface MotifRepository extends JpaRepository<Motif, Long> {
     //requet de reccuperations des localisations
     @Query("select m from Motif m")
     List<Motif> findAll();
+
+    @Query("select count(m) from Motif m")
+    long getCountMotifs();
 }

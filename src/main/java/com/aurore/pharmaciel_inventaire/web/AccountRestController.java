@@ -35,6 +35,11 @@ public class AccountRestController {
         this.appUserRepository = appUserRepository;
     }
 
+    @DeleteMapping(value = "/delete/rolesbuuser/{id}")
+    public void deleteUserRoles(Long id) {
+        appUserRepository.deleteUserRole(id);
+    }
+
     @PutMapping(path = "/changeAccountStatus/{id}")
     public ResponseEntity<?> activerDesactiverUnCompte(@PathVariable("id") Long id){
         AppUser appUser = accountService.changeStatus(id);

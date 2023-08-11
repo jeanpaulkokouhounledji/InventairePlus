@@ -20,6 +20,9 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+            <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
+        </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="ecarts"><i class="fa fa-plus"></i>&nbsp; Gestion des écarts</a>
         </li>
@@ -238,6 +241,7 @@
                                                 <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'">{{$index + 1}}</td>
                                                 <td data-title="'Utilisateur(s)'" sortable="'nomPrenom'" filter="{ 'nomPrenom' : 'text'}">{{p.nomPrenom}}</td>
                                                 <td data-title="'Rôle(s)'" sortable="'appRoles[0].definition'"  filter="{ 'appRoles[0].definition' : 'text'}">{{p.appRoles[0].definition}}</td>
+<!--                                                <td data-title="'Action'"><button class="btn btn-pill btn-sm btn-dark" ng-click="deleteRoles(p.id);"><i class="fa fa-trash text-warning"></i></button> </td>-->
                                            </tr>
                                         </tbody>
                                     </table>
