@@ -25,4 +25,8 @@ public interface ProduitRepository extends JpaRepository<Produit,Long> {
     @Query("select count(p) from Produit p")
     long getCountProduits();
 
+    //suppression de toutes les lignes
+    @Query(value = "delete from produit ",nativeQuery = true)
+    void deleteAll();
+
 }

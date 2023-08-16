@@ -16,5 +16,7 @@ public interface InventaireRepository extends JpaRepository<Inventaire,Long> {
     @Query("select i from Inventaire i where i.statut=true order by i.id desc")
     List<Inventaire> allInventaireActif();
 
+    @Query(value = "delete from inventaire ",nativeQuery = true)
+    void deleteAll();
 
 }

@@ -16,6 +16,7 @@ public interface TraitementService {
 
     //exportation ecarts
     List<Traitement> exportEcartToExcel(HttpServletResponse response) throws IOException;
+    List<Traitement> exportComptageEnCoursToExcel(HttpServletResponse response) throws IOException;
 
     //sauvegarde d'une ligne de traitement
     Traitement saveTraitement(Traitement traitement);

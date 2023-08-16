@@ -37,4 +37,10 @@ public interface TraitementRepository extends JpaRepository<Traitement,Long>{
     @Query("delete Traitement t where t.participer.id=:x")
     void deleteTraitementByParticiperId(@Param("x") long x);
 
+    @Query("select t from Traitement t where t.stockProduit.id= :x")
+    Traitement getTraitementByPstockBid(@Param("x") Long id);
+
+    @Query("delete from Traitement ")
+    void deleteAll();
+
 }

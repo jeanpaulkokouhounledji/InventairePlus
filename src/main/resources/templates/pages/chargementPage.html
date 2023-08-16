@@ -19,7 +19,7 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
@@ -51,9 +51,16 @@
 
         <div class="mt-2">
             <div class="card card-shadow mb-4">
-                <div class="card-header border-0">
+                <div class="card-header border-0 justify-content-between">
                     <div class="custom-title-wrap bar-primary">
-                        <div class="custom-title">Chargement des fichiers d'import de données</div>
+                        <div class="custom-title">
+                            <div class="row justify-content-between">
+                                <div class="col-sm-8 col-lg-8">Chargement des fichiers d'import de données</div>
+                               <!-- <div class="col-sm-4 col-lg-4 text-right">
+                                    <button class="btn btn-danger btn-pill btn-sm"  ng-confirm-click="Attention ! Action irréversible, certaines données seront définitivement supprimées" confirmed-click="dropData();"><i class="fa fa-trash-o"></i> Nettoyer la base </button>
+                                </div>-->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -69,9 +76,12 @@
 
                                                <label class="text-danger" ng-show="importProduit==null" >Champ requis</label>
                                            </div>
-                                            <button class="btn btn-sm btn-pill btn-dark" ng-disabled="importProduit==null" ng-confirm-click="Voulez-vous vraiment lancer le chargement des données ?" confirmed-click="chargerDonneesProduits();">
+                                            <button ng-if="etatChargement == 0" class="btn btn-sm btn-pill btn-dark" ng-disabled="importProduit==null" ng-confirm-click="Voulez-vous vraiment lancer le chargement des données ?" confirmed-click="chargerDonneesProduits();">
                                                 <i class="text-warning fa fa-download"></i> Lancer le chargement
                                             </button>
+                                            <div ng-if="etatChargement == 1">
+                                                <span class="text-danger alert alert-warning"> Chargement...veuillez patienter</span>
+                                            </div>
                                         </div>
                                     </tr>
                                 </thead>
@@ -80,7 +90,92 @@
                         </div>
                     </div>
                 </div>
+
+               <!-- <div class="card-body">
+                    <div class="pt-2">
+                        {{uploadDetails}}
+                    </div>
+                </div>
+-->
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-xl-3 col-sm-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-body">
+                        <div class="media d-flex align-items-center">
+                            <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                <i class="vl_list"></i>
+                            </div>
+                            <div class="media-body">
+                                <h1 class="text-uppercase mb-0 weight500">{{uploadDetails.nbFournisseurs}}</h1>
+                                <span class="text-muted">Fournisseurs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-body">
+                        <div class="media d-flex align-items-center">
+                            <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                <i class="vl_list"></i>
+                            </div>
+                            <div class="media-body">
+                                <h1 class="text-uppercase mb-0 weight500">{{uploadDetails.nbLocalisations}}</h1>
+                                <span class="text-muted">Localisations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-body">
+                        <div class="media d-flex align-items-center">
+                            <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                <i class="vl_list"></i>
+                            </div>
+                            <div class="media-body">
+                                <h1 class="text-uppercase mb-0 weight500">{{uploadDetails.nbMotifs}}</h1>
+                                <span class="text-muted">Motifs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-3">
+                <div class="card card-shadow mb-4">
+                    <div class="card-body">
+                        <div class="media d-flex align-items-center">
+                            <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                <i class="vl_list"></i>
+                            </div>
+                            <div class="media-body">
+                                <h1 class="text-uppercase mb-0 weight500">{{uploadDetails.nbProduits}}</h1>
+                                <span class="text-muted">Produits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-3">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-body">
+                            <div class="media d-flex align-items-center">
+                                <div class="mr-4 rounded-circle bg-success sr-icon-box ">
+                                    <i class="vl_list"></i>
+                                </div>
+                                <div class="media-body">
+                                    <h1 class="text-uppercase mb-0 weight500">{{uploadDetails.nbStocksProduits}}</h1>
+                                    <span class="text-muted">Stock Produits</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
 </section>

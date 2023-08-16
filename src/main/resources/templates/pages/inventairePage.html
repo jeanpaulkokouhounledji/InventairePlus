@@ -20,7 +20,7 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
@@ -68,20 +68,21 @@
                         <div class="row justify-content-center">
                             <div class="col-sm-4 form-group-sm mb-2">
                                 <label>Libellé</label>
-                                <input type="text" name="libelle" ng-model="inventaire.libelle" placeholder="Libellé de l'inventaire" class="form-control form-control-sm" required="required">
+                                <input type="text" name="libelle" ng-model="inventaire.libelle" placeholder="Libellé de l'inventaire" class="form-control form-control-sm" required>
                             </div>
-                           <!-- <div class="col-sm-4 form-group-sm mb-2 text-center" ng-if="inventaire.date!=''">
-                                <h6>Dernière modification</h6>
-                                <h4>{{inventaire.date}}</h4>
-                            </div>-->
-                           <!-- <div class="col-sm-4 form-group-sm mb-2">
-                                <label>Date de l'inventaire</label>
-                                <input type="date" name="dateInv" ng-model="inventaire.date" class="form-control form-control-sm">
-                            </div>-->
+                            <div class="col-sm-4 form-group-sm mb-2">
+                                <label>Afficher la Qté en base ? {{inventaire.showQteStock}}</label>
+                                <select class="form-control form-control-sm" ng-model="inventaire.showQteStock">
+                                    <optgroup label="Sélectionnez une reponse">
+                                        <option value="oui">Oui</option>
+                                        <option value="non">Non</option>
+                                    </optgroup>
+                                </select>
+                            </div>
                         </div>
                         <div class="text-center row justify-content-center mt-4">
                             <div class="col-sm-2">
-                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-click="createInventaire();"><i class="fa fa-check fa-2x"></i> <b>Créer l'inventaire</b> </button>
+                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-disabled="inventaire.libelle==null||inventaire.showQteStock==null" ng-confirm-click="Voulez-vous vraiment céer cette ligne d'inventaire ?" confirmed-click="createInventaire();"><i class="fa fa-check fa-2x"></i> <b> Valider </b> </button>
                             </div>
                             <div class="col-sm-2">
                                 <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="toggleForm();resetInventaire()"><i class="fa fa-times fa-2x"></i> <b>Annuler/ Fermer</b></button>
@@ -105,14 +106,15 @@
                         <div class="table-responsive">
                             <table ng-table="inventairesTable" class="display table table-striped" cellspacing="0">
                                 <tbody>
-                                    <tr ng-repeat="i in data">
+                                    <tr ng-repeat="i in data" >
                                         <td style="width: 5%;text-align: center;" data-title="'N°'">{{$index + 1}}</td>
                                         <td sortable="'numero'" data-title="'N° d\'inventaire'" filter="{ 'numero' : 'text'}">{{i.numero}}</td>
                                         <td sortable="'libelle'" data-title="'Libellé de l\'inventaire'" filter="{ 'libelle' : 'text'}">{{i.libelle}}</td>
                                         <td style="width: 10%;text-align: center;" sortable="'statut'"  data-title="'Statut'">
-                                            <button ng-show="i.statut==false" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-danger"><b>cloturé</b></button>
-                                            <button ng-show="i.statut==true" ng-click="activeOrDesactivate(i.id);" class="btn btn-light text-success"><b>En cours</b></button>
+                                            <button ng-show="i.statut==false" ng-click="activeOrDesactivate(i.id);" class="btn btn-pill btn-sm btn-light text-danger"><b>cloturé</b></button>
+                                            <button ng-show="i.statut==true" ng-click="activeOrDesactivate(i.id);" class="btn btn-pill btn-sm btn-light text-success"><b>En cours</b></button>
                                         </td>
+                                        <td  data-title="'Qté en base'" >{{i.showQteStock=='oui'?"Oui":"Non"}}</td>
                                         <td sortable="'date'"  data-title="'Date de création'" filter="{ 'date' : 'text'}">{{i.date}}</td>
                                         <td style="width: 25%;text-align: center;" data-title="'Action'" >
                                             <button class="btn btn-pill btn-sm btn-dark" ng-click="editInventaire(i.id);toggleForm();" ng-disabled="i.statut==true"><i class="fa fa-edit"></i> Editer</button>
@@ -197,13 +199,13 @@
                                 <div class="table-responsive">
                                     <table ng-table="participationsTable" class="display table table-striped" cellspacing="0">
                                         <tbody>
-                                        <tr ng-repeat="p in dat">
-<!--                                            <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>-->
-                                            <td sortable="'p.appUser.nomPrenom'" style="width: 25%;" data-title="'Utilisateur(s)'" filter="{ 'p.appUser.nomPrenom' : 'text'}">{{p.appUser.nomPrenom}}</td>
-                                            <td sortable="'p.inventaire.numero'" style="width: 25%;" data-title="'Inventaire(s)'" filter="{ 'p.inventaire.numero' : 'text'}">{{p.inventaire.numero}}</td>
-                                            <td style="width: 40%;text-align: center;" sortable="'p.localisation.code'" data-title="'Localisation(s)'" filter="{ 'p.localisation.code' : 'text'}">{{p.localisation.code}}</td>
-                                            <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous supprimer l'affectation de << {{ p.appUser.nomPrenom }} >> à la localisation << {{p.localisation.libelle}} >> ?" confirmed-click="deleteParticiper(p.id)" ><i class="fa fa-times"></i></button></td>
-                                        </tr>
+                                            <tr ng-repeat="p in dat" ng-if="p.inventaire.numero==inventaire.numero">
+    <!--                                            <td style="width: 10%;text-align: center;" sortable="'id'" data-title="'N°'" filter="{ 'id' : 'text'}">{{$index + 1}}</td>-->
+                                                <td sortable="'p.appUser.nomPrenom'" style="width: 25%;" data-title="'Utilisateur(s)'" filter="{ 'p.appUser.nomPrenom' : 'text'}">{{p.appUser.nomPrenom}}</td>
+                                                <td sortable="'p.inventaire.numero'" style="width: 25%;" data-title="'Inventaire(s)'" filter="{ 'p.inventaire.numero' : 'text'}">{{p.inventaire.numero}}</td>
+                                                <td style="width: 40%;text-align: center;" sortable="'p.localisation.code'" data-title="'Localisation(s)'" filter="{ 'p.localisation.code' : 'text'}">{{p.localisation.code}}</td>
+                                                <td style="width: 10%;text-align: center;" data-title="'Action'" ><button class="btn btn-sm btn-pill btn-dark" ng-confirm-click="Voulez-vous supprimer l'affectation de << {{ p.appUser.nomPrenom }} >> à la localisation << {{p.localisation.libelle}} >> ?" confirmed-click="deleteParticiper(p.id)" ><i class="fa fa-times"></i></button></td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

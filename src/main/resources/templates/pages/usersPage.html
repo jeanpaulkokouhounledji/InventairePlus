@@ -20,7 +20,7 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
@@ -215,11 +215,11 @@
                                             </div>
                                         </div>
                                         <div class="text-center row justify-content-center mt-4">
-                                            <div class="col-sm">
-                                                <button class="btn form-control col-sm-3 btn-sm btn-dark btn-pill" ng-confirm-click="Attribuer le rôle à l'utilisateur  ?" confirmed-click="addRoleTOUser(participerUsername,roleName);"><i class="fa fa-check fa-2x"></i> <b>Affecter le rôle</b> </button>
+                                            <div class="col-sm-4">
+                                                <button class="btn form-control btn-sm btn-dark btn-pill" ng-confirm-click="Attribuer le rôle à l'utilisateur  ?" confirmed-click="addRoleTOUser(participerUsername,roleName);"><i class="fa fa-check fa-2x"></i> <b>Affecter le rôle</b> </button>
                                             </div>
-                                            <div class="col-sm">
-                                                <button class="btn form-control col-sm-3 btn-sm btn-outline-dark btn-pill" ng-click="participerUsername=null;roleName=null"><i class="fa fa-times fa-2x"></i> <b>Annuler</b></button>
+                                            <div class="col-sm-4">
+                                                <button class="btn form-control btn-sm btn-outline-dark btn-pill" ng-click="participerUsername=null;roleName=null"><i class="fa fa-times fa-2x"></i> <b>Annuler</b></button>
                                             </div>
                                         </div>
                                     </form>

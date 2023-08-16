@@ -62,7 +62,7 @@ public class EcartExcelExportUtils {
         style.setAlignment(HorizontalAlignment.CENTER);
         createCell(row,0,"Etat Ecart",style);
         sheet.addMergedRegion(new CellRangeAddress(0,0,0,14));
-        font.setFontHeightInPoints((short) 10);
+        font.setFontHeightInPoints((short) 11);
         row = sheet.createRow(1);
         font.setBold(true);
         font.setFontHeight(16.0);
@@ -81,6 +81,7 @@ public class EcartExcelExportUtils {
         createCell(row,11,"DATE PEREMPTION STOCK",style);
         createCell(row,12,"DATE COMPTAGE",style);
         createCell(row,13,"INVENTORISTE",style);
+        createCell(row,14,"INVENTAIRE",style);
 
     }
 
@@ -115,6 +116,7 @@ public class EcartExcelExportUtils {
             createCell(row,columnCount++,t.getStockProduit().getDatePeremption(),style);
             createCell(row,columnCount++,t.getDatePeremption(),style);
             createCell(row,columnCount++,t.getParticiper().getAppUser().getNomPrenom(),style);
+            createCell(row,columnCount++,t.getParticiper().getInventaire().getNumero(),style);
 
         }
     }

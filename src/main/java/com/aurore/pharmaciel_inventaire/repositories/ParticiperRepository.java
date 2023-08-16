@@ -28,4 +28,7 @@ public interface ParticiperRepository extends JpaRepository<Participer,Long> {
     @Query("select distinct p.localisation from Participer p where p.inventaire.numero=:x")
     List<Localisation> localisationByInventaire(@Param("x") String x);
 
+    @Query(value = "delete from participer ",nativeQuery = true)
+    void deleteAll();
+
 }

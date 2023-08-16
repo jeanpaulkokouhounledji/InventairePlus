@@ -27,9 +27,10 @@ public class Inventaire implements Serializable {
     @Column(nullable = false, length = 200)
     private String libelle = "";
 
-//    @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
+    private String showQteStock;
+
     @Column
-//    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private String date;
 
     @Column(nullable = false)

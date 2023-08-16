@@ -131,7 +131,7 @@ app.service('fileUpload', ['$http', function ($http) {
 
         }).then(function(){
 
-
+                    $scope.getUploadDetails();
 
                     new PNotify({
                         title: "Notification Pharmaxiel_web",
@@ -276,6 +276,7 @@ function userController($scope , $http , $filter , fileUpload , NgTableParams ){
                     $scope.appUser = response.data;
                     $scope.resetUser();
                     $scope.usersList();
+                    $scope.listActif();
                     $scope.toggleForm();
 
                     new PNotify({
@@ -627,14 +628,14 @@ function inventaireController($scope , $http , $filter , fileUpload , NgTablePar
                 $scope.participerData = response.data;
                 $scope.participationsTable = new NgTableParams({
                     //nombre de lignes a afficher par defaut
-                    page: 1,
-                    count: 5
+                    /*page: 1,
+                    count: 5*/
                 }, {
                     total: $scope.participerData.length,
                     getData: function (params) {
                         $scope.dat = params.sorting() ? $filter('orderBy')($scope.participerData, params.orderBy()) : $scope.participerData;
                         $scope.dat = params.filter() ? $filter('filter')($scope.dat, params.filter()) : $scope.dat;
-                        $scope.dat = $scope.dat.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        //$scope.dat = $scope.dat.slice((params.page() - 1) * params.count(), params.page() * params.count());
                         return $scope.dat;
                     }
                 });
@@ -676,9 +677,12 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     $scope.splitArray = [];
 
+    //model de la quantite saisie
+    $scope.qteCompte = 0;
+
     //$scope.splitArray = $scope.chosedParticiper.split('-');
 
-
+    $scope.idPart = 0;
     $scope.maDate = "";
     $scope.maDateD = "";
     $scope.searchTag = "";
@@ -696,14 +700,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     }
     $scope.getTypeComptage();
 
-    //autofocus function
-   /* $scope.autofocusExtraField = function() {
-        if ($scope.codeDouchette === 'd') {
-            var extraFieldElement = document.getElementById('codeU');
-            extraFieldElement.focus();
-        }
-    };*/
-
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
@@ -715,14 +711,17 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.getUserDetails();
+
     $scope.reset = function () {
         $scope.stockProduit = {};
     };
+
     //ouvrir la fenetre de comptage
     $scope.toggleForm = function () {
         $scope.showForm==false?$scope.showForm=true:$scope.showForm=false;
         $scope.handleAutofocus();
     };
+
     //liste des rayons d'un utilisateur
     $scope.localisationUser = function(username){
         $http.get("/pharmaxiel/api/v1/participer/localisationByUser/"+username)
@@ -740,6 +739,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
                 //alert("===============");
             })
     };
+
      //localisation par utilisateur
     $scope.selectedInventaire = function(id){
         id = parseInt(id);
@@ -870,7 +870,7 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
     //sauvegarde reelle du traitement pour doucette
     $scope.saveRealTraitementDouchette = function(id_stockproduit,id_participer,id_fournisseur,qteCompte,datePeremption,prixVente){
         id_participer = parseInt(id_participer);
-        $http.post("/pharmaxiel/api/v1/traitement/realSave/"+ id_stockproduit + "/" + id_participer + "/"+ id_fournisseur + "/" + qteCompte +"/"+ datePeremption + "/" +prixVente)
+        $http.post("/pharmaxiel/api/v1/traitement/realSaveDouchette/"+ id_stockproduit + "/" + id_participer + "/"+ id_fournisseur + "/" + qteCompte +"/"+ datePeremption + "/" +prixVente)
             .then(function (response) {
                     $scope.savedTraitement = response.data;
 
@@ -908,8 +908,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
                 })
     };
-
-    $scope.idPart = 0;
 
     //liste des fournisseurs
     $scope.fournisseurList = function (){
@@ -973,30 +971,6 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     };
     $scope.listTraitement();
-
-    /* $scope.listProduits = function () {
-         $http.get("/pharmaxiel/api/v1/stockproduit/list")
-             .then(function (response) {
-                 $scope.produitData = response.data;
-                 $scope.produitsTable = new NgTableParams({
-                     //nombre de lignes a afficher par defaut
-                     page: 1,
-                     count: 500
-                 }, {
-                     total: $scope.produitData.length,
-                     getData: function (params) {
-                         $scope.dataP = params.sorting() ? $filter('orderBy')($scope.produitData, params.orderBy()) : $scope.produitData;
-                         $scope.dataP = params.filter() ? $filter('filter')($scope.dataP, params.filter()) : $scope.dataP;
-                         $scope.dataP = $scope.dataP.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                         return $scope.dataP;
-                     }
-                 });
-                 // $scope.traitement = null;
-                 $scope.produitData.data = null;
-             });
-
-     };
-     $scope.listProduits();*/
 
     //reccuperation d'un produit pour le comptage
     $scope.produitDouchette = function (codeUnique) {
@@ -1238,6 +1212,8 @@ function acceuilController($scope , $http , $filter , fileUpload , NgTableParams
 app.controller('chargementController',chargementController);
 function chargementController($scope , $http , $filter , fileUpload , NgTableParams){
 
+    $scope.etatChargement = 0;
+
     //parametres utilisateur
     $scope.getUserDetails = function (){
         $http.get("/pharmaxiel/api/v1/getLogedUser")
@@ -1246,6 +1222,119 @@ function chargementController($scope , $http , $filter , fileUpload , NgTablePar
             })
     }
     $scope.getUserDetails();
+
+    $scope.uploadFichier = function(file, uploadUrl){
+        var fd = new FormData();
+
+        $scope.etatChargement = 1;
+
+        /*new PNotify({
+            title: "Notification Pharmaxiel_web",
+            type: "warning",
+            text: "Chargement, veuillez patienter ...",
+            nonblock: {
+                nonblock: true
+            },
+            addclass: "success",
+            styling: 'bootstrap3',
+            hide: true,
+
+        });*/
+
+        fd.append('file', file);
+        $http.post(uploadUrl, fd, {
+
+            transformRequest: angular.identity,
+
+            headers: {'Content-Type': undefined}
+
+
+        }).then(function(){
+
+            $scope.getUploadDetails();
+
+            $scope.etatChargement = 0;
+
+            new PNotify({
+                title: "Notification Pharmaxiel_web",
+                type: "success",
+                text: "Données chargées avec succès",
+                nonblock: {
+                    nonblock: true
+                },
+                addclass: "success",
+                styling: 'bootstrap3',
+                hide: true,
+
+            });
+
+            //$scope.notification("message envoyé avec succès","success");
+            //alert("Fichier importé");
+        },function errorCallback(response) {
+
+            $scope.etatChargement = 0;
+
+            new PNotify({
+                title: "Inventaire+ | Notification",
+                text: "Désolé, une erreur est survenue lors du chargement",
+                type: "error",
+                styling: "bootstrap3",
+                delay: 3000,
+                history: false,
+                sticker: true,
+            });
+
+        });
+    }
+
+    //reccuperation du nombre des donnees chargés
+    $scope.getUploadDetails = function (){
+        $http.get("/pharmaxiel/api/v1/stats/fichierimport")
+            .then(function (response) {
+                $scope.uploadDetails = response.data;
+               // alert("Etat de chargement acualisé");
+            })
+    }
+    $scope.getUploadDetails();
+
+    //drop data tables
+    $scope.dropData = function (){
+        $http.post("/pharmaxiel/api/v1/stats/resetTables")
+            .then(function (response) {
+                $scope.dropState = response.data;
+
+                new PNotify({
+                    title: "Notification Pharmaxiel_web",
+                    type: "success",
+                    text: "Données vidées avec succès",
+                    nonblock: {
+                        nonblock: true
+                    },
+                    addclass: "success",
+                    styling: 'bootstrap3',
+                    hide: true,
+
+                });
+
+                $scope.getUploadDetails();
+
+            },function errorCallback(response) {
+
+                $scope.etatChargement = 0;
+
+                new PNotify({
+                    title: "Inventaire+ | Notification",
+                    text: "Erreur lors de la suppression",
+                    type: "error",
+                    styling: "bootstrap3",
+                    delay: 3000,
+                    history: false,
+                    sticker: true,
+                });
+
+            })
+    }
+
 
     //chargement de tous les éléments en un
     $scope.chargerDonneesProduits = function(){
@@ -1258,7 +1347,10 @@ function chargementController($scope , $http , $filter , fileUpload , NgTablePar
             if (file!=undefined){
                 var uploadUrl = "/chargement/chargement_all";
 
-                fileUpload.uploadFileToUrl(file, uploadUrl);
+                //fileUpload.uploadFileToUrl(file, uploadUrl);
+                $scope.uploadFichier(file, uploadUrl);
+
+                //$scope.getUploadDetails();
 
                 $("#importProduit").val(null);
             }

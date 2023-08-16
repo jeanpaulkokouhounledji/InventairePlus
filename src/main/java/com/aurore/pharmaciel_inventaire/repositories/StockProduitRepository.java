@@ -36,4 +36,8 @@ public interface StockProduitRepository extends JpaRepository<StockProduit,Long>
     @Query("select count(s) from StockProduit s")
     long getCountStockProduit();
 
+    //suppression de toutes les lignes
+    @Query(value = "delete from stock_produit ",nativeQuery = true)
+    void deleteAll();
+
 }

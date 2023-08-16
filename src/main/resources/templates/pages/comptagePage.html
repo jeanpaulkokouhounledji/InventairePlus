@@ -20,7 +20,7 @@
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="comptage"><i class="fa fa-adjust"></i>&nbsp; Comptage</a>
         </li>
-        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='AGENT' || user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
+        <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
             <a class="nav-link text-light" href="suivi"><i class="fa fa-pie-chart"></i>&nbsp; Suivi du comptage</a>
         </li>
         <li class="nav-item ml-sm-2 ml-lg-4" ng-if="user.roles[0]=='ADMIN' || user.roles[0]=='GESSYS'">
@@ -33,6 +33,7 @@
             <a class="nav-link text-light" href="historique"><i class="fa fa-history"></i>&nbsp; Historiques</a>
         </li>
     </span>
+
 
     <div layout:fragment="custum-permalien" >
         <div class="row">
@@ -107,14 +108,17 @@
         </div>
 
         <!--        tableau de gestion -->
-        <div class="row mt-xl-3" ng-if="showForm==false">
+        <div class="row mt-xl-3" ng-if="showForm==false&&idPart!=0">
             <div class="col-sm-12">
                 <div class="card card-shadow mb-4">
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
-                                <div class="row">
-                                    <div class="col-sm-4">Suivi Du Comptage</div>
+                                <div class="row justify-content-between">
+                                    <div class="col-sm-8 col-lg-8">Suivi du comptage</div>
+                                    <div class="col-sm-4 col-lg-4 text-right">
+                                        <a class="btn btn-dark btn-pill btn-sm" ng-href="/pharmaxiel/api/v1/traitement/export/comptageencours/all"><i class="fa fa-file-excel-o"></i> Exportez le comptage en cours</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -192,21 +196,22 @@
                                                     </select>
                                                 </div>
                                             </td>
-    <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
                                             <td style="width: 10%" data-title="'Date Peremption'">
                                                 <div class="form-group">
-<!--                                                    <small class="text-danger">{{ps.dateTemp}}</small>-->
                                                     <input ng-model="maDate" value="{{ps.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">
                                                 </div>
                                             </td>
                                             <td style="width: 10%" data-title="'Qté Comptée'">
                                                 <div class="form-group">
-<!--                                                    <small class="text-danger">{{ps.qteCompteStock}}</small>-->
-                                                    <input ng-model="ps.qteCompteStock" name="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
+                                                    <input ng-model="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
                                                 </div>
                                             </td>
-                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,splitArray[1],ps.fournisseurStock,ps.qteCompteStock,maDate,ps.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
-<!--                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,chosedParticiper,codeFournisseur,qteCompte,datePeremption,prixVente);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>-->
+                                            <td style="width: 10%" data-title="'Qté en stock'" ng-if="userInventaire.showQteStock=='oui'">
+                                                <div class="form-group">
+                                                    <input ng-model="ps.qteCompteStock" type="number" class="form-control form-control-sm text-center" disabled>
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark"  ng-click="saveRealTraitement(ps.codeUnique,splitArray[1],ps.fournisseurStock,qteCompte,maDate,ps.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>
                                 </tbody>
@@ -232,13 +237,11 @@
                                             </td>
                                             <td style="width: 10%" data-title="'Prix Vente'">
                                                 <div class="form-group-sm">
-                                                    <!--                                                    <small class="text-danger">{{ps.prixVenteStock}}</small>-->
                                                     <input ng-model="produitDataDouchette.prixVenteStock" type="number" class="form-control form-control-sm text-center" required="required">
                                                 </div>
                                             </td>
                                             <td style="width: 15%" data-title="'Fournisseur'">
                                                 <div class="form-group">
-                                                    <!--                                                    <small class="text-danger">{{ps.fournisseurStock}}</small>-->
                                                     <select class="form-control form-control-sm" ng-model="produitDataDouchette.fournisseurStock"  required="required">
                                                         <option ng-repeat="f in listFournisseurs" value="{{f.raisonSociale}}">
                                                             {{f.raisonSociale}}
@@ -246,21 +249,22 @@
                                                     </select>
                                                 </div>
                                             </td>
-                                            <!--                                        <td style="width: 10%" data-title="'Date Peremption'"><input ng-model="datePeremption" name="datePeremption" value="{{ps.peremptionStock}}"  type="text" class="form-control form-control-sm text-center" required="required"></td>-->
                                             <td style="width: 10%" data-title="'Date Peremption'">
                                                 <div class="form-group">
-<!--                                                    <small class="text-danger">{{produitDataDouchette.peremptionStock}}</small>-->
                                                     <input ng-model="maDateD" value="{{produitDataDouchette.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">
-<!--                                                    <input ng-model="produitDataDouchette.peremptionStock" value="{{produitDataDouchette.peremptionStock}}" type="date"  class="form-control form-control-sm" required="required">-->
                                                 </div>
                                             </td>
                                             <td style="width: 10%" data-title="'Qté Comptée'">
                                                 <div class="form-group">
-                                                    <!--                                                    <small class="text-danger">{{ps.qteCompteStock}}</small>-->
-                                                    <input ng-model="produitDataDouchette.qteCompteStock" type="number" class="form-control form-control-sm text-center" required="required">
+                                                    <input ng-model="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
                                                 </div>
                                             </td>
-                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark" ng-click="saveRealTraitementDouchette(produitDataDouchette.codeUnique,splitArray[1],produitDataDouchette.fournisseurStock,produitDataDouchette.qteCompteStock,maDateD,produitDataDouchette.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%" data-title="'Qté en stock'" ng-if="userInventaire.showQteStock=='oui'">
+                                                <div class="form-group">
+                                                    <input ng-model="produitDataDouchette.qteCompteStock" type="number" class="form-control form-control-sm text-center" disabled>
+                                                </div>
+                                            </td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark" ng-click="saveRealTraitementDouchette(produitDataDouchette.codeUnique,splitArray[1],produitDataDouchette.fournisseurStock,qteCompte,maDateD,produitDataDouchette.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>
                                 </tbody>
@@ -281,8 +285,11 @@
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-primary">
                             <div class="custom-title">
-                                <div class="row">
-                                    <div class="col-sm-4">Inventaire en cours</div>
+                                <div class="row justify-content-between">
+                                    <div class="col-sm-8 col-lg-8">Inventaire en cours</div>
+                                    <div class="col-sm-4 col-lg-4 text-right">
+                                        <a class="btn btn-dark btn-pill btn-sm" ng-href="/pharmaxiel/api/v1/traitement/export/comptageencours/all"><i class="fa fa-file-excel-o"></i> Exportez le comptage en cours</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -14,4 +14,9 @@ public interface MotifRepository extends JpaRepository<Motif, Long> {
 
     @Query("select count(m) from Motif m")
     long getCountMotifs();
+
+    //suppression de toutes les lignes
+    @Query(value = "delete from motif ",nativeQuery = true)
+    void deleteAll();
+
 }

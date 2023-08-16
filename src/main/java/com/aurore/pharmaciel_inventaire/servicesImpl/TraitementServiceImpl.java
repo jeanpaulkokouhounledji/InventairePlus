@@ -2,6 +2,7 @@ package com.aurore.pharmaciel_inventaire.servicesImpl;
 
 import com.aurore.pharmaciel_inventaire.entities.*;
 import com.aurore.pharmaciel_inventaire.repositories.*;
+import com.aurore.pharmaciel_inventaire.services.GenererFichierImportService.ComptageEnCoursEportUtils;
 import com.aurore.pharmaciel_inventaire.services.GenererFichierImportService.EcartExcelExportUtils;
 import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.security.core.context.SecurityContext;
@@ -54,6 +55,14 @@ public class TraitementServiceImpl implements TraitementService {
         List<Traitement> traitements = traitementRepository.listTraitementsAvecEcarts();
         EcartExcelExportUtils excelExportUtils = new EcartExcelExportUtils(traitements);
         excelExportUtils.exportDataToExcel(response);
+        return traitements;
+    }
+
+    @Override
+    public List<Traitement> exportComptageEnCoursToExcel(HttpServletResponse response) throws IOException {
+        List<Traitement> traitements = traitementRepository.findAll();
+        ComptageEnCoursEportUtils comptageEnCoursEportUtils = new ComptageEnCoursEportUtils(traitements);
+        comptageEnCoursEportUtils.exportDataToExcel(response);
         return traitements;
     }
 

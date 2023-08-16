@@ -4,11 +4,7 @@ import com.aurore.pharmaciel_inventaire.entities.Localisation;
 import com.aurore.pharmaciel_inventaire.repositories.*;
 import com.aurore.pharmaciel_inventaire.services.ParticiperService;
 import com.aurore.pharmaciel_inventaire.services.StatsService;
-import org.hibernate.mapping.Map;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -37,7 +33,11 @@ public class StatsController {
 
     private final StockProduitRepository stockProduitRepository;
 
-    public StatsController(StatsService statsService, ParticiperService participerService, FournisseurRepository fournisseurRepository, LocalisationRepository localisationRepository, MotifRepository motifRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository) {
+    private final InventaireRepository inventaireRepository;
+
+    private final ParticiperRepository participerRepository;
+
+    public StatsController(StatsService statsService, ParticiperService participerService, FournisseurRepository fournisseurRepository, LocalisationRepository localisationRepository, MotifRepository motifRepository, ProduitRepository produitRepository, StockProduitRepository stockProduitRepository, InventaireRepository inventaireRepository, ParticiperRepository participerRepository) {
         this.statsService = statsService;
         this.participerService = participerService;
         this.fournisseurRepository = fournisseurRepository;
@@ -45,6 +45,8 @@ public class StatsController {
         this.motifRepository = motifRepository;
         this.produitRepository = produitRepository;
         this.stockProduitRepository = stockProduitRepository;
+        this.inventaireRepository = inventaireRepository;
+        this.participerRepository = participerRepository;
     }
 
     @GetMapping(value = "/count/produitsByLocalisation/{localisation}")
@@ -112,5 +114,17 @@ public class StatsController {
        map.put("nbProduits", nbProduits);
        map.put("nbStocksProduits", nbStocksProduits);
        return map;
+    }
+
+    @PostMapping(value = "/resetTables")
+    public void dropData(){
+        stockProduitRepository.deleteAll();
+        participerRepository.deleteAll();
+        localisationRepository.deleteAll();
+        produitRepository.deleteAll();
+        fournisseurRepository.deleteAll();
+        motifRepository.deleteAll();
+        inventaireRepository.deleteAll();
+
     }
 }

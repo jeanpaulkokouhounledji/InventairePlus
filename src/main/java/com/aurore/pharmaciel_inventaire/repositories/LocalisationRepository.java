@@ -18,4 +18,9 @@ public interface LocalisationRepository extends JpaRepository<Localisation,Long>
 
     @Query("select count(l) from Localisation l")
     long getCountLocalisations();
+
+    //suppression de toutes les lignes
+    @Query(value = "delete from localisation ",nativeQuery = true)
+    void deleteAll();
+
 }

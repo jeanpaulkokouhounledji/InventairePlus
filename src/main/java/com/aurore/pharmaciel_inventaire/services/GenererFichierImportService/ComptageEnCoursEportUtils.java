@@ -1,8 +1,7 @@
 package com.aurore.pharmaciel_inventaire.services.GenererFichierImportService;
 
-import com.aurore.pharmaciel_inventaire.entities.EtatInventaire;
-import com.aurore.pharmaciel_inventaire.repositories.EtatInventaireRepository;
-import com.ctc.wstx.util.WordResolver;
+import com.aurore.pharmaciel_inventaire.entities.Traitement;
+import com.aurore.pharmaciel_inventaire.repositories.TraitementRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -16,18 +15,18 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
-public class ExcelExportUtils {
+public class ComptageEnCoursEportUtils {
+
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
 
-    private EtatInventaireRepository etatInventaireRepository;
+    private TraitementRepository traitementRepository;
 
-    private List<EtatInventaire> etatInventaireList;
+    private List<Traitement> traitementsList;
 
-    public ExcelExportUtils(List<EtatInventaire> etatInventaireList){
-        this.etatInventaireList = etatInventaireList;
+    public ComptageEnCoursEportUtils(List<Traitement> traitementsList){
+        this.traitementsList = traitementsList;
         workbook = new XSSFWorkbook();
     }
 
@@ -49,7 +48,7 @@ public class ExcelExportUtils {
     }
 
     private void createHeaderRow(){
-        sheet = workbook.createSheet("Etat Inventaire");
+        sheet = workbook.createSheet("etat");
 
         Row row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
@@ -58,61 +57,64 @@ public class ExcelExportUtils {
         font.setFontHeight(20.0);
         style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
-        createCell(row,0,"Etat Inventaire",style);
-        sheet.addMergedRegion(new CellRangeAddress(0,0,0,14));
+        createCell(row,0,"Etat du comptage en cours",style);
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,9));
         font.setFontHeightInPoints((short) 11);
         row = sheet.createRow(1);
         font.setBold(true);
         font.setFontHeight(16.0);
         style.setFont(font);
-        createCell(row,0,"ID_LIGNE",style);
-        createCell(row,1,"ID_PROUIT",style);
-        createCell(row,2,"CODE_CIP",style);
-        createCell(row,3,"LIBELLE_PRODUIT",style);
-        createCell(row,4,"ID_FORNISSEUR",style);
-        createCell(row,5,"PRIX_ACHAT",style);
-        createCell(row,6,"PRIX_VENTE",style);
-        createCell(row,7,"DATE_PEREMPTION",style);
-        createCell(row,8,"LOT",style);
-        createCell(row,9,"ID_MOTIF",style);
-        createCell(row,10,"QUANTE",style);
-        createCell(row,11,"LIBELLE_MOTIF",style);
+        createCell(row,0,"CODE CIP",style);
+        createCell(row,1,"PRODUIT",style);
+        createCell(row,2,"QUANTITE INVENTORIE",style);
+        createCell(row,3,"PRIX VENTE INVENTORIE",style);
+        createCell(row,4,"FOURNISSEUR INVENTORIE",style);
+        createCell(row,5,"LOCALISATION INVENTORIE",style);
+        createCell(row,6,"DATE PEREMPTION INVENTAIRE",style);
+        createCell(row,7,"DATE COMPTAGE",style);
+        createCell(row,8,"INVENTORISTE",style);
+        createCell(row,9,"INVENTAIRE",style);
 
     }
 
-    private void writeEtatInvaireData(){
+    private void writeTraitementData(){
         int rowCount = 2;
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
         font.setFontHeight(14.0);
         style.setFont(font);
 
-        for (EtatInventaire etatInventaire : etatInventaireList){
+        //formatage de la date
+     /*   final String format = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);*/
+
+        for (Traitement t : traitementsList){
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-            createCell(row,columnCount++,etatInventaire.getIdLigne(), style);
-            createCell(row,columnCount++,etatInventaire.getIdProduit(), style);
-            createCell(row,columnCount++,etatInventaire.getCodeCip(), style);
-            createCell(row,columnCount++,etatInventaire.getLibelle(), style);
-            createCell(row,columnCount++,etatInventaire.getIdFournisseur(), style);
-            createCell(row,columnCount++,etatInventaire.getPrixAchat(), style);
-            createCell(row,columnCount++,etatInventaire.getPrixVente(), style);
-            createCell(row,columnCount++,etatInventaire.getDatePeremption(), style);
-            createCell(row,columnCount++,etatInventaire.getLot(), style);
-            createCell(row,columnCount++,etatInventaire.getIdMotif(), style);
-            createCell(row,columnCount++,etatInventaire.getQte(), style);
-            createCell(row,columnCount++,etatInventaire.getLibelleMotif(), style);
+
+            //Date date = new Date(t.getDatePeremption());
+
+            createCell(row,columnCount++,t.getCodeCip()==null?t.getStockProduit().getProduit().getCodeProduit():t.getCodeCip(),style);
+            createCell(row,columnCount++,t.getLibelleProduit()!=null?t.getLibelleProduit():t.getStockProduit().getProduit().getLibelle(),style);
+            createCell(row,columnCount++,t.getQteCompte(),style);
+            createCell(row,columnCount++,t.getPrixVente(),style);
+            createCell(row,columnCount++,t.getFournisseur().getRaisonSociale(),style);
+            createCell(row,columnCount++,t.getParticiper().getLocalisation().getLibelle(),style);
+            createCell(row,columnCount++,t.getDatePeremption(),style);
+            createCell(row,columnCount++,t.getDateComptage().toString(),style);
+            createCell(row,columnCount++,t.getParticiper().getAppUser().getNomPrenom(),style);
+            createCell(row,columnCount++,t.getParticiper().getInventaire().getNumero(),style);
 
         }
     }
 
     public void exportDataToExcel(HttpServletResponse response) throws IOException {
         createHeaderRow();
-        writeEtatInvaireData();
+        writeTraitementData();
         ServletOutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
+        workbook.createSheet("Etat du comptage en cours");
         workbook.close();
         outputStream.close();
     }
-
 }

@@ -22,4 +22,8 @@ public interface FournisseurRepository extends JpaRepository<Fournisseur,Long> {
     @Query("select count(f) from Fournisseur f")
     long getCountFournisseurs();
 
+    //suppression de toutes les lignes
+    @Query(value = "delete from fournisseur ",nativeQuery = true)
+    void deleteAll();
+
 }
