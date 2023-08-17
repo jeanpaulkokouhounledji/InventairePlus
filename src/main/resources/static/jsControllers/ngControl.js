@@ -679,6 +679,8 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
 
     //model de la quantite saisie
     $scope.qteCompte = 0;
+    //model de la quantite saisie pour la douchette
+    $scope.qteCompteDouchette = 1;
 
     //$scope.splitArray = $scope.chosedParticiper.split('-');
 
@@ -977,6 +979,11 @@ function traitementController($scope , $http , $filter , fileUpload , NgTablePar
         $http.get("/pharmaxiel/api/v1/stockproduit/produit/douchette/" + codeUnique)
             .then(function (response) {
                 $scope.produitDataDouchette = response.data;
+                /*if($scope.qteCompteDouchette==0){
+                    $scope.qteCompteDouchette++;
+                }*/
+                //$scope.qteCompteDouchette++;
+                //alert($scope.produitDataDouchette);
             })
     };
 

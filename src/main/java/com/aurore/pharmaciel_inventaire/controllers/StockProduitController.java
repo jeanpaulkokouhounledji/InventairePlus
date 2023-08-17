@@ -1,8 +1,11 @@
 package com.aurore.pharmaciel_inventaire.controllers;
 
 import com.aurore.pharmaciel_inventaire.entities.StockProduit;
+import com.aurore.pharmaciel_inventaire.entities.Traitement;
 import com.aurore.pharmaciel_inventaire.repositories.StockProduitRepository;
+import com.aurore.pharmaciel_inventaire.repositories.TraitementRepository;
 import com.aurore.pharmaciel_inventaire.services.StockProduitService;
+import com.aurore.pharmaciel_inventaire.services.TraitementService;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -18,9 +21,15 @@ public class StockProduitController {
 
     private final StockProduitRepository stockProduitRepository;
 
-    public StockProduitController(StockProduitService stockProduitService, StockProduitRepository stockProduitRepository) {
+    private final TraitementRepository traitementRepository;
+
+    private final TraitementService traitementService;
+
+    public StockProduitController(StockProduitService stockProduitService, StockProduitRepository stockProduitRepository, TraitementRepository traitementRepository, TraitementService traitementService) {
         this.stockProduitService = stockProduitService;
         this.stockProduitRepository = stockProduitRepository;
+        this.traitementRepository = traitementRepository;
+        this.traitementService = traitementService;
     }
 
     //enregistrement d'un stock modifier
@@ -114,8 +123,8 @@ public class StockProduitController {
     }*/
     @GetMapping(value = "/produit/douchette/{codeUnique}")
     public HashMap<String, Object> produitParCodeUnique(@PathVariable String codeUnique){
+
          StockProduit pr = stockProduitService.findStockProduitByCodeUnique(codeUnique);
-         //Vector collection = new Vector();
 
              final String format = "yyyy-MM-dd";
              SimpleDateFormat sdf = new SimpleDateFormat(format);

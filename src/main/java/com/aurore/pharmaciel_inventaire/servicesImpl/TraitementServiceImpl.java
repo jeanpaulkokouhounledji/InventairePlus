@@ -111,9 +111,9 @@ public class TraitementServiceImpl implements TraitementService {
         traitement.setEcart(ecart);
         traitement.setStatut(1);
         traitement.setDatePeremption(traitement.getDatePeremption());
-        System.out.println("===================================================");
+       /* System.out.println("===================================================");
         System.out.println(traitement.getDatePeremption());
-        System.out.println("===================================================");
+        System.out.println("===================================================");*/
         Logs log = new Logs();
         log.setUser(securityContext.getAuthentication().getName());
         log.setDescription("Comptage du nouveau produit " + traitement.getLibelleProduit());

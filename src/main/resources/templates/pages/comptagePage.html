@@ -256,7 +256,7 @@
                                             </td>
                                             <td style="width: 10%" data-title="'Qté Comptée'">
                                                 <div class="form-group">
-                                                    <input ng-model="qteCompte" type="number" class="form-control form-control-sm text-center" required="required">
+                                                    <input ng-model="qteCompteDouchette" type="number" class="form-control form-control-sm text-center" required="required" readonly>
                                                 </div>
                                             </td>
                                             <td style="width: 10%" data-title="'Qté en stock'" ng-if="userInventaire.showQteStock=='oui'">
@@ -264,7 +264,7 @@
                                                     <input ng-model="produitDataDouchette.qteCompteStock" type="number" class="form-control form-control-sm text-center" disabled>
                                                 </div>
                                             </td>
-                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark" ng-click="saveRealTraitementDouchette(produitDataDouchette.codeUnique,splitArray[1],produitDataDouchette.fournisseurStock,qteCompte,maDateD,produitDataDouchette.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
+                                            <td style="width: 10%" data-title="'Action(s)'"><button class="btn btn-pill btn-sm btn-dark" ng-click="saveRealTraitementDouchette(produitDataDouchette.codeUnique,splitArray[1],produitDataDouchette.fournisseurStock,qteCompteDouchette,maDateD,produitDataDouchette.prixVenteStock);"><i class="fa fa-floppy-o"></i><b> Enreg.</b></button></td>
                                         </form>
                                     </tr>
                                 </tbody>

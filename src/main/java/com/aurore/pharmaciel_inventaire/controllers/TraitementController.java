@@ -77,9 +77,8 @@ public class TraitementController {
         Traitement t = traitementRepository.getTraitementByPstockBid(stp.getId());
         if(t != null){
             t.setQteCompte(t.getQteCompte() + 1);
-           return traitementService.saveTraitement(t);
+            return traitementService.saveTraitement(t);
         }else {
-            ++qteCompte;
             return traitementService.saveLeTraitement(id_stockproduit,id_participer, id_fournisseur,qteCompte,datePeremption,prixVente);
         }
 
